@@ -26,6 +26,9 @@
 		33DA66B11BB0EF5400F7978B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33DA66B01BB0EF5400F7978B /* SystemConfiguration.framework */; };
 		33DA66B31BB0EFB400F7978B /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 33DA66B21BB0EFB400F7978B /* libz.tbd */; };
 		33DA66B51BB0F01D00F7978B /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 33DA66B41BB0F01D00F7978B /* libsqlite3.tbd */; };
+		33DA66B91BB23D6000F7978B /* OTMClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66B81BB23D6000F7978B /* OTMClient.swift */; settings = {ASSET_TAGS = (); }; };
+		33DA66BB1BB23E4100F7978B /* OTMConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66BA1BB23E4100F7978B /* OTMConstants.swift */; settings = {ASSET_TAGS = (); }; };
+		33DA66BF1BB245AD00F7978B /* OTMServicesNameEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66BE1BB245AD00F7978B /* OTMServicesNameEnum.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +74,9 @@
 		33DA66B01BB0EF5400F7978B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		33DA66B21BB0EFB400F7978B /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		33DA66B41BB0F01D00F7978B /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		33DA66B81BB23D6000F7978B /* OTMClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMClient.swift; sourceTree = "<group>"; };
+		33DA66BA1BB23E4100F7978B /* OTMConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMConstants.swift; sourceTree = "<group>"; };
+		33DA66BE1BB245AD00F7978B /* OTMServicesNameEnum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMServicesNameEnum.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +140,8 @@
 		33DA666D1BB0EC9000F7978B /* On The Map */ = {
 			isa = PBXGroup;
 			children = (
+				33DA66BD1BB2453600F7978B /* Enums */,
+				33DA66B71BB23C9800F7978B /* RestUtils */,
 				33DA666E1BB0EC9000F7978B /* AppDelegate.swift */,
 				33DA66701BB0EC9000F7978B /* ViewController.swift */,
 				33DA66721BB0EC9000F7978B /* Main.storyboard */,
@@ -195,6 +203,23 @@
 				33DA66A21BB0EEC900F7978B /* AudioToolbox.framework */,
 			);
 			name = standard;
+			sourceTree = "<group>";
+		};
+		33DA66B71BB23C9800F7978B /* RestUtils */ = {
+			isa = PBXGroup;
+			children = (
+				33DA66B81BB23D6000F7978B /* OTMClient.swift */,
+				33DA66BA1BB23E4100F7978B /* OTMConstants.swift */,
+			);
+			name = RestUtils;
+			sourceTree = "<group>";
+		};
+		33DA66BD1BB2453600F7978B /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				33DA66BE1BB245AD00F7978B /* OTMServicesNameEnum.swift */,
+			);
+			name = Enums;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -328,6 +353,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				33DA66711BB0EC9000F7978B /* ViewController.swift in Sources */,
+				33DA66BF1BB245AD00F7978B /* OTMServicesNameEnum.swift in Sources */,
+				33DA66B91BB23D6000F7978B /* OTMClient.swift in Sources */,
+				33DA66BB1BB23E4100F7978B /* OTMConstants.swift in Sources */,
 				33DA666F1BB0EC9000F7978B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
