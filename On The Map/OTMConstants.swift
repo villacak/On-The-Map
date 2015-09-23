@@ -13,8 +13,8 @@ extension OTMClient {
     
     struct ConstantsParse {
         // MARK: Parse API Key
-        static let API_KEY_PART1: String = "8giE02DqBln6EvyGCirPg6FBYpG8zNFZusGFamhq"
-        static let API_KEY_PART2: String = "aiBuGRmnE489l7VeXBLCzBoFzAObn0SDgYRZ1OBk"
+        static let API_KEY_PART: String = "Your API Key"
+        static let CLIENT_KEY: String = "The client key"
     }
     
     
