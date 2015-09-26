@@ -9,8 +9,16 @@
 import UIKit
 import Parse
 
+// I'm going to keep this name, because XCode still craw if compared with other IDEs to refactor code and many other things!
 class ViewController: UIViewController {
-
+    
+    @IBOutlet weak var email: UITextField!
+    @IBOutlet weak var password: UITextField!
+    @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var signUpButton: UIButton!
+    @IBOutlet weak var signinFacebookButton: UIButton!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

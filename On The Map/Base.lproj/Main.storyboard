@@ -18,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="  Email" textAlignment="natural" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="1pD-Lf-KVS">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="  Email" textAlignment="natural" minimumFontSize="12" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="1pD-Lf-KVS">
                                 <rect key="frame" x="20" y="261" width="555" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="555" id="W0i-0i-UpK"/>
@@ -34,7 +34,7 @@
                                     <constraint firstAttribute="height" constant="30" id="He0-xq-K9f"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert" returnKeyType="done"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert" returnKeyType="done" secureTextEntry="YES"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Enf-ag-uGv">
                                 <rect key="frame" x="20" y="381" width="560" height="36"/>
@@ -120,6 +120,13 @@
                             <constraint firstItem="adL-5F-vki" firstAttribute="top" secondItem="1pD-Lf-KVS" secondAttribute="bottom" constant="30" id="ykg-Qy-qYL"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="email" destination="1pD-Lf-KVS" id="GQ4-ag-svI"/>
+                        <outlet property="loginButton" destination="Enf-ag-uGv" id="mY0-Yw-T37"/>
+                        <outlet property="password" destination="adL-5F-vki" id="Pix-IU-ZyE"/>
+                        <outlet property="signUpButton" destination="pOe-mQ-DNp" id="pzp-hg-ILI"/>
+                        <outlet property="signinFacebookButton" destination="fvH-Ot-5hb" id="oVU-mj-eBy"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
