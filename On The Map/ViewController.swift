@@ -78,25 +78,29 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     
     @IBAction func loginAction(sender: UIButton) {
         DismissKeyboard()
-        OTMClient.sharedInstance().udacityFacebookPOSTLogin(userName: email.text!, password: password.text!) {
+        OTMClient.sharedInstance().udacityFacebookPOSTLogin(userName: email.text!, password: password.text!, facebookToken: nil, isUdacity: true) {
             (success, errorString)  in
             if (success != nil) {
-                
-                print(success!)
+                // Convert the NSDictionary that is received as AnyObject to Dictionary
                 let responseAsNSDictinory: Dictionary = (success as! NSDictionary) as Dictionary
                 
-                //                    let jsonDict = try (NSJSONSerialization.JSONObjectWithData(responseAsNSDictinory, options: nil) as NSDictionary) as Dictionary
-                
+                // Check if the response contains any error or not
                 if ((responseAsNSDictinory.indexForKey("error")) != nil) {
                     let statusCode = success["status"]
                     let errorMessage = success["error"]
                     let messageString: String = "\(statusCode!) + , \(errorMessage!)"
+                    
+                    // If success returns with an error message we need to show it to the user as an alert
                     Dialog().okDismissAlert(titleStr: "Login Failed", messageStr: messageString , controller: self)
                 } else {
                     // Login success
-                    self.appDelegate.loggedOnFacebook = false
+                    self.appDelegate.loggedOnUdacity = true
+                    self.appDelegate.udacityKey = responseAsNSDictinory[OTMClient.ConstantsUdacity.ACCOUNT_KEY] as! String
+                    self.appDelegate.udacitySessionId = responseAsNSDictinory[OTMClient.ConstantsUdacity.SESSION_ID] as! String
+                    // Still need to redirect it to the next page as it's success logged
                 }
             } else {
+                // If success returns nil then it's necessary display an alert to the user
                 Dialog().okDismissAlert(titleStr: "Login Failed", messageStr: (errorString?.description)!, controller: self)
             }
         }

@@ -28,15 +28,16 @@ class OTMClient: NSObject {
     *
     * "{\"facebook_mobile\": {\"access_token\": \"<Facebook Token>"}}"
     */
-    func udacityFacebookPOSTLogin(userName userName: String, password: String, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
-    
+    func udacityFacebookPOSTLogin(userName userName: String?, password: String?, facebookToken: String?, isUdacity: Bool, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+
+        
         let request = NSMutableURLRequest(URL: NSURL(string: ConstantsUdacity.UDACITY_LOG_IN_OUT)!)
         request.HTTPMethod = ConstantsRequest.METHOD_POST
         request.addValue(ConstantsRequest.MIME_TYPE, forHTTPHeaderField: ConstantsRequest.ACCEPT)
         request.addValue(ConstantsRequest.MIME_TYPE, forHTTPHeaderField: ConstantsRequest.CONTENT_TYPE)
-        //        request.HTTPBody = "{\"udacity\": {\"username\": \"klausvillaca@gmail.com\", \"password\": \"Feedback999\"}}".dataUsingEncoding(NSUTF8StringEncoding)
-        
-        request.HTTPBody = buildUdacityBodyRequest(userName: userName, password: password)
+        request.HTTPBody = (isUdacity == true) ? buildUdacityBodyRequest(userName: userName!, password: password!) :
+                                                 buildFacebookBodyRequest(fbToken: facebookToken!)
+
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             
@@ -50,11 +51,6 @@ class OTMClient: NSObject {
                 } catch let errorCatch as NSError {
                     completionHandler(result: nil, error: errorCatch)
                 }
-                
-                // Convert NSData to String
-                // let resultStr: String = NSString(data: newData, encoding: NSUTF8StringEncoding)! as String
-                //                print(resultStr)
-                //                completionHandler(result: resultStr, error: nil)
             }
         }
         task.resume()
@@ -62,9 +58,8 @@ class OTMClient: NSObject {
     }
     
     
-    /*
-    * Udacity - Logout
-    */
+    
+    // Udacity - Logout
     func udacityPOSTLogout(completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         let request = NSMutableURLRequest(URL: NSURL(string: ConstantsUdacity.UDACITY_LOG_IN_OUT)!)
         request.HTTPMethod = ConstantsRequest.METHOD_DELETE
@@ -89,9 +84,8 @@ class OTMClient: NSObject {
     }
     
     
-    /*
-    * Udacity - Get user data
-    */
+
+    // Udacity - Get user data
     func udacityPOSTGetUserData(userId: String, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         let request = NSMutableURLRequest(URL: NSURL(string: ConstantsUdacity.UDACITY_GET_PUBLIC_DATA + userId)!)
         let session = NSURLSession.sharedSession()
@@ -125,6 +119,23 @@ class OTMClient: NSObject {
         return bodyJson
     }
 
+    
+    // Utils function to build Facebook jso
+    func buildFacebookBodyRequest(fbToken fbToken: String)-> NSData {
+        var bodyJson: NSData!
+        do {
+            var tempDictionary: [String: AnyObject] = ConstantsUdacity.UDACITY_FACEBOOK_JSON
+            var udacityTemp: [String: AnyObject] = (tempDictionary[ConstantsUdacity.FACEBOOK_MOBILE]! as? [String: AnyObject])!
+            udacityTemp[ConstantsUdacity.FACEBOOK_ACCESS_TOKEN] = fbToken
+            tempDictionary[ConstantsUdacity.FACEBOOK_MOBILE] = udacityTemp
+            
+            bodyJson = try NSJSONSerialization.dataWithJSONObject(tempDictionary, options: [])
+        } catch let errorCatch as NSError {
+            bodyJson = buildErrorMessage(errorCatch)
+        }
+        return bodyJson
+    }
+    
     
     // Build error message
     func buildErrorMessage(error: NSError)->NSData {

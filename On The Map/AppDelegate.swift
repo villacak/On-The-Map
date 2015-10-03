@@ -16,7 +16,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    var loggedOnFacebook: Bool!
+    var loggedOnUdacity: Bool!
+    var udacityKey: String!
+    var udacitySessionId: String!
+
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         

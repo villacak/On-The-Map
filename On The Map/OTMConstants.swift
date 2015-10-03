@@ -30,12 +30,23 @@ extension OTMClient {
         static let UDACITY: String = "udacity"
         static let USERNAME: String = "username"
         static let PASSWORD: String = "password"
+        static let ACCOUNT_KEY: String = "key"
+        static let SESSION_ID: String = "id"
+        
+        static let FACEBOOK_MOBILE: String = "facebook_mobile"
+        static let FACEBOOK_ACCESS_TOKEN: String = "access_token"
+
         
         static let UDACITY_LOGIN_JSON: [String : AnyObject] = [UDACITY : [
                                                                     USERNAME : "",
                                                                     PASSWORD : ""
-                                                                ]
+                                                                  ]
                                                               ]
+        
+        static let UDACITY_FACEBOOK_JSON: [String : AnyObject] = [FACEBOOK_MOBILE : [
+                                                                    FACEBOOK_ACCESS_TOKEN : ""
+                                                                      ]
+                                                                 ]
     }
 
     
