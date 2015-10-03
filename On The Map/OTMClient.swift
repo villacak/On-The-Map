@@ -19,28 +19,43 @@ class OTMClient: NSObject {
         components.queryItems = queryItems
         return components.percentEncodedQuery ?? ConstantsGeneral.EMPTY_STR
     }
-
+    
     
     /*
-     * Udacity - Login
-     *
-     * "{\"udacity\": {\"username\": \"\(userName)\", \"password\": \"\(password)\"}}"
-     * 
-     * "{\"facebook_mobile\": {\"access_token\": \"<Facebook Token>"}}"
-     */
-    func udacityFacebookPOSTLogin(bodyJson bodyJson: String, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+    * Udacity - Login
+    *
+    * "{\"udacity\": {\"username\": \"\(userName)\", \"password\": \"\(password)\"}}"
+    *
+    * "{\"facebook_mobile\": {\"access_token\": \"<Facebook Token>"}}"
+    */
+    func udacityFacebookPOSTLogin(userName userName: String, password: String, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+    
         let request = NSMutableURLRequest(URL: NSURL(string: ConstantsUdacity.UDACITY_LOG_IN_OUT)!)
         request.HTTPMethod = ConstantsRequest.METHOD_POST
         request.addValue(ConstantsRequest.MIME_TYPE, forHTTPHeaderField: ConstantsRequest.ACCEPT)
         request.addValue(ConstantsRequest.MIME_TYPE, forHTTPHeaderField: ConstantsRequest.CONTENT_TYPE)
-        request.HTTPBody = bodyJson.dataUsingEncoding(NSUTF8StringEncoding)
+        //        request.HTTPBody = "{\"udacity\": {\"username\": \"klausvillaca@gmail.com\", \"password\": \"Feedback999\"}}".dataUsingEncoding(NSUTF8StringEncoding)
+        
+        request.HTTPBody = buildUdacityBodyRequest(userName: userName, password: password)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
-            if error != nil { // Handle error…
-                return
+            
+            if (error != nil) {
+                completionHandler(result: nil, error: error)
+            } else {
+                let newData: NSData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5))
+                do {
+                    let jsonResult: NSDictionary? = try NSJSONSerialization.JSONObjectWithData(newData, options:NSJSONReadingOptions.MutableContainers) as? NSDictionary
+                    completionHandler(result: jsonResult, error: nil)
+                } catch let errorCatch as NSError {
+                    completionHandler(result: nil, error: errorCatch)
+                }
+                
+                // Convert NSData to String
+                // let resultStr: String = NSString(data: newData, encoding: NSUTF8StringEncoding)! as String
+                //                print(resultStr)
+                //                completionHandler(result: resultStr, error: nil)
             }
-            let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5))
-            print(NSString(data: newData, encoding: NSUTF8StringEncoding))
         }
         task.resume()
         return task
@@ -48,8 +63,8 @@ class OTMClient: NSObject {
     
     
     /*
-     * Udacity - Logout
-     */
+    * Udacity - Logout
+    */
     func udacityPOSTLogout(completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         let request = NSMutableURLRequest(URL: NSURL(string: ConstantsUdacity.UDACITY_LOG_IN_OUT)!)
         request.HTTPMethod = ConstantsRequest.METHOD_DELETE
@@ -75,8 +90,8 @@ class OTMClient: NSObject {
     
     
     /*
-     * Udacity - Get user data
-     */
+    * Udacity - Get user data
+    */
     func udacityPOSTGetUserData(userId: String, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         let request = NSMutableURLRequest(URL: NSURL(string: ConstantsUdacity.UDACITY_GET_PUBLIC_DATA + userId)!)
         let session = NSURLSession.sharedSession()
@@ -91,75 +106,40 @@ class OTMClient: NSObject {
         return task
     }
     
-    // MARK: - GET
-//    func taskForGETMethod(method: String, parameters: [String : AnyObject], completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
-//        
-//        /* 1. Set the parameters */
-//        var mutableParameters = parameters
-//        mutableParameters[ParameterKeys.ApiKey] = Constants.ApiKey
-//        
-//        /* 2/3. Build the URL and configure the request */
-//        let urlString = Constants.BaseURLSecure + method + TMDBClient.escapedParameters(mutableParameters)
-//        let url = NSURL(string: urlString)!
-//        let request = NSURLRequest(URL: url)
-//        
-//        /* 4. Make the request */
-//        let task = session.dataTaskWithRequest(request) {data, response, downloadError in
-//            
-//            /* 5/6. Parse the data and use the data (happens in completion handler) */
-//            if let error = downloadError {
-//                let newError = TMDBClient.errorForData(data, response: response, error: error)
-//                completionHandler(result: nil, error: downloadError)
-//            } else {
-//                TMDBClient.parseJSONWithCompletionHandler(data, completionHandler: completionHandler)
-//            }
-//        }
-//        
-//        /* 7. Start the request */
-//        task.resume()
-//        
-//        return task
-//    }
-//
+    
+    
+    // Utils function to build Udacity json
+    func buildUdacityBodyRequest(userName userName: String, password: String)-> NSData {
+        var bodyJson: NSData!
+        do {
+            var tempDictionary: [String: AnyObject] = ConstantsUdacity.UDACITY_LOGIN_JSON
+            var udacityTemp: [String: AnyObject] = (tempDictionary[ConstantsUdacity.UDACITY]! as? [String: AnyObject])!
+            udacityTemp[ConstantsUdacity.USERNAME] = userName
+            udacityTemp[ConstantsUdacity.PASSWORD] = password
+            tempDictionary[ConstantsUdacity.UDACITY] = udacityTemp
+            
+            bodyJson = try NSJSONSerialization.dataWithJSONObject(tempDictionary, options: [])
+        } catch let errorCatch as NSError {
+            bodyJson = buildErrorMessage(errorCatch)
+        }
+        return bodyJson
+    }
 
-    // MARK: - POST
-//    func taskForPOSTUdacityMethod(method: String, parameters: [String : AnyObject], jsonBody: [String:AnyObject], completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
-//        
-//        /* 1. Set the parameters */
-//        var mutableParameters = parameters
-//        mutableParameters[ConstantsParse.API_KEY] = Constants.ApiKey
-//        
-//        /* 2/3. Build the URL and configure the request */
-//        let urlString = Constants.BaseURLSecure + method + TMDBClient.escapedParameters(mutableParameters)
-//        let url = NSURL(string: urlString)!
-//        let request = NSMutableURLRequest(URL: url)
-//        var jsonifyError: NSError? = nil
-//        request.HTTPMethod = "POST"
-//        request.addValue("application/json", forHTTPHeaderField: "Accept")
-//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-//        do {
-//            request.HTTPBody = try NSJSONSerialization.dataWithJSONObject(jsonBody, options: [])
-//        } catch let error as NSError {
-//            jsonifyError = error
-//            request.HTTPBody = nil
-//        }
-//        
-//        /* 4. Make the request */
-//        let task = session.dataTaskWithRequest(request) {data, response, downloadError in
-//            
-//            /* 5/6. Parse the data and use the data (happens in completion handler) */
-//            if let error = downloadError {
-//                let newError = TMDBClient.errorForData(data, response: response, error: error)
-//                completionHandler(result: nil, error: downloadError)
-//            } else {
-//                TMDBClient.parseJSONWithCompletionHandler(data, completionHandler: completionHandler)
-//            }
-//        }
-//        
-//        /* 7. Start the request */
-//        task.resume()
-//        
-//        return task
-//    }
-
+    
+    // Build error message
+    func buildErrorMessage(error: NSError)->NSData {
+        let dataReadyToReturn: NSData = ("{\"errorMessage\": \"" + error.description + "\"}").dataUsingEncoding(NSUTF8StringEncoding)!
+        return dataReadyToReturn
+    }
+    
+    
+    // MARK: Shared Instance
+    
+    class func sharedInstance() -> OTMClient {
+        struct Singleton {
+            static var sharedInstance = OTMClient()
+        }
+        return Singleton.sharedInstance
+    }
+    
 }

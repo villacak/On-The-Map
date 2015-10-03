@@ -18,32 +18,31 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     @IBOutlet weak var signUpButton: UIButton!
     @IBOutlet weak var signinFacebookButton: UIButton!
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         appDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
-        
+               
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
         view.addGestureRecognizer(tap)
         
         subscribeToKeyboardNotifications()
         
-//        let testObject = PFObject(className: "TestObject")
-//        testObject["foo"] = "bar"
-//        testObject.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
-//            print("Object has been saved.")
-//        }
+        //        let testObject = PFObject(className: "TestObject")
+        //        testObject["foo"] = "bar"
+        //        testObject.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
+        //            print("Object has been saved.")
+        //        }
     }
     
     
-    override func viewWillAppear(animated: Bool) {
-        self.viewWillAppear(true)
+    override func viewWillDisappear(animated: Bool) {
+        self.viewWillDisappear(true)
         unsubscribeFromKeyboardNotifications()
     }
     
     
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -74,12 +73,33 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
     }
-
+    
     
     
     @IBAction func loginAction(sender: UIButton) {
         DismissKeyboard()
-        
+        OTMClient.sharedInstance().udacityFacebookPOSTLogin(userName: email.text!, password: password.text!) {
+            (success, errorString)  in
+            if (success != nil) {
+                
+                print(success!)
+                let responseAsNSDictinory: Dictionary = (success as! NSDictionary) as Dictionary
+                
+                //                    let jsonDict = try (NSJSONSerialization.JSONObjectWithData(responseAsNSDictinory, options: nil) as NSDictionary) as Dictionary
+                
+                if ((responseAsNSDictinory.indexForKey("error")) != nil) {
+                    let statusCode = success["status"]
+                    let errorMessage = success["error"]
+                    let messageString: String = "\(statusCode!) + , \(errorMessage!)"
+                    Dialog().okDismissAlert(titleStr: "Login Failed", messageStr: messageString , controller: self)
+                } else {
+                    // Login success
+                    self.appDelegate.loggedOnFacebook = false
+                }
+            } else {
+                Dialog().okDismissAlert(titleStr: "Login Failed", messageStr: (errorString?.description)!, controller: self)
+            }
+        }
     }
     
     

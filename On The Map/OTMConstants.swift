@@ -26,6 +26,16 @@ extension OTMClient {
         static let UDACITY_GET_PUBLIC_DATA: String = "https://www.udacity.com/api/users/"
         static let COOKIE_NAME: String = "XSRF-TOKEN"
         static let COOKIE_TOKEN: String = "X-XSRF-TOKEN"
+        
+        static let UDACITY: String = "udacity"
+        static let USERNAME: String = "username"
+        static let PASSWORD: String = "password"
+        
+        static let UDACITY_LOGIN_JSON: [String : AnyObject] = [UDACITY : [
+                                                                    USERNAME : "",
+                                                                    PASSWORD : ""
+                                                                ]
+                                                              ]
     }
 
     
@@ -48,6 +58,6 @@ extension OTMClient {
         static let INVALID_LOGIN = "Username and/or passord is wrong!"
         static let LOGGED_OUT_SUCCESS = "You have been logged out with success"
         static let DOUBLE_CREDENTIALS = "Did not specify exactly one credential"
+        static let INVALID_DATA = "Invalid data"
     }
-    
 }
