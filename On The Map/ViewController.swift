@@ -42,6 +42,11 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     }
     
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+        self.navigationController?.navigationBarHidden = true
+    }
+    
     override func viewWillDisappear(animated: Bool) {
 //        self.viewWillDisappear(true)
         unsubscribeFromKeyboardNotifications()
@@ -115,7 +120,7 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     
     @IBAction func signUpAction(sender: UIButton) {
         DismissKeyboard()
-        self.performSegueWithIdentifier("Signup", sender: self)
+//        self.performSegueWithIdentifier("Signup", sender: self)
         
         //        let signupViewController:UdacitySignupViewController = UdacitySignupViewController()
         //        self.presentViewController(signupViewController, animated: true, completion: nil)
@@ -124,6 +129,9 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     
 //    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 //        if (segue.identifier == "Signup") {
+//            var navController: UINavigationController = segue.destinationViewController
+//            EventsTableViewController *eventsController = [navController topViewController];
+//
 //            let destinationNavigationController: UINavigationController = segue.destinationViewController as! UINavigationController
 //            let targetController: UdacitySignupViewController = destinationNavigationController.topViewController as! UdacitySignupViewController
 //        }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ZTZ-OQ-W6q">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -81,6 +81,7 @@
                                 <state key="normal" title="Sign Up"/>
                                 <connections>
                                     <action selector="signUpAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="eJ9-O7-aBr"/>
+                                    <segue destination="llc-Df-yl9" kind="show" identifier="Signup" id="dRS-ic-nwd"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fvH-Ot-5hb">
@@ -99,7 +100,7 @@
                                     <action selector="signInFacebookButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6q5-8Y-LHC"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loginViewUdacityImage" translatesAutoresizingMaskIntoConstraints="NO" id="AZW-YM-Eob">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="loginViewUdacityImage" translatesAutoresizingMaskIntoConstraints="NO" id="AZW-YM-Eob">
                                 <rect key="frame" x="228" y="116" width="144" height="128"/>
                                 <animations/>
                                 <constraints>
@@ -143,6 +144,7 @@
                             <constraint firstItem="adL-5F-vki" firstAttribute="top" secondItem="1pD-Lf-KVS" secondAttribute="bottom" constant="30" id="ykg-Qy-qYL"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="Xh7-yQ-rYK"/>
                     <connections>
                         <outlet property="email" destination="1pD-Lf-KVS" id="GQ4-ag-svI"/>
                         <outlet property="loginButton" destination="Enf-ag-uGv" id="mY0-Yw-T37"/>
@@ -150,12 +152,11 @@
                         <outlet property="signUpButton" destination="pOe-mQ-DNp" id="pzp-hg-ILI"/>
                         <outlet property="signinFacebookButton" destination="fvH-Ot-5hb" id="oVU-mj-eBy"/>
                         <segue destination="vVD-ue-tE9" kind="show" identifier="ToTabBarController" id="mpk-9F-rZZ"/>
-                        <segue destination="fTJ-Pu-CD1" kind="presentation" identifier="Signup" id="tsh-DX-veb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="305" y="290"/>
+            <point key="canvasLocation" x="1117" y="290"/>
         </scene>
         <!--List-->
         <scene sceneID="jrK-LB-8OA">
@@ -175,7 +176,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kIo-39-F59" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3485" y="620"/>
+            <point key="canvasLocation" x="4297" y="620"/>
         </scene>
         <!--Map-->
         <scene sceneID="pAA-qf-Dh8">
@@ -195,7 +196,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GXb-J9-zfz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1861" y="-41"/>
+            <point key="canvasLocation" x="2673" y="-41"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="Hla-yn-TUU">
@@ -214,7 +215,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VCj-e9-5V2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1041" y="290"/>
+            <point key="canvasLocation" x="1853" y="290"/>
         </scene>
         <!--Udacity Signup View Controller-->
         <scene sceneID="G9m-XM-eEq">
@@ -250,11 +251,6 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="LLw-Sd-pCx">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="BCe-r4-def">
-                            <connections>
-                                <action selector="cancelAction:" destination="llc-Df-yl9" id="W4H-5P-STZ"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="Jur-Fr-q6R">
                             <connections>
                                 <action selector="refreshAction:" destination="llc-Df-yl9" id="5ep-K2-oZM"/>
@@ -268,26 +264,26 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vsa-2I-5de" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1041" y="1022"/>
+            <point key="canvasLocation" x="1117" y="1038"/>
         </scene>
         <!--Navigation Controller-->
-        <scene sceneID="Y4D-Ad-enq">
+        <scene sceneID="Ppd-Ao-uXA">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fTJ-Pu-CD1" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="ZTZ-OQ-W6q" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="dfp-5t-jNe">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="CF8-lc-By6">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <animations/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="llc-Df-yl9" kind="relationship" relationship="rootViewController" id="Ncq-NV-qoA"/>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="ZZX-OQ-ldb"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="buL-m5-q6i" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JO5-WX-dKd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="305" y="1022"/>
+            <point key="canvasLocation" x="305" y="290"/>
         </scene>
     </scenes>
     <resources>

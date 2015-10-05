@@ -24,14 +24,15 @@ class UdacitySignupViewController: UIViewController, UIWebViewDelegate {
         myWebView.delegate = self
         
         self.navigationItem.title = "Udacity Mobile Login"
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .Plain, target: self, action: "cancelAuth")
-        
+
         request = NSURLRequest(URL: url)
         myWebView.loadRequest(request)
     }
     
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.navigationBarHidden = false
         if request != nil {
             self.myWebView.loadRequest(request!)
         }
@@ -39,6 +40,7 @@ class UdacitySignupViewController: UIViewController, UIWebViewDelegate {
     
     
     func webViewDidStartLoad(webView: UIWebView) {
+        activityIndicator.hidden = false
         activityIndicator.startAnimating()
     }
     
@@ -46,15 +48,7 @@ class UdacitySignupViewController: UIViewController, UIWebViewDelegate {
     // MARK: - UIWebViewDelegate
     func webViewDidFinishLoad(webView: UIWebView) {
         activityIndicator.stopAnimating()
-        
-        if(webView.request!.URL!.absoluteString == OTMClient.ConstantsUdacity.UDACITY_SIGN_UP) {
-            self.dismissViewControllerAnimated(true, completion: {})
-        }
-    }
-    
-    
-    @IBAction func cancelAction(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        activityIndicator.hidden = true
     }
     
     
