@@ -28,6 +28,8 @@ extension OTMClient {
         static let COOKIE_NAME: String = "XSRF-TOKEN"
         static let COOKIE_TOKEN: String = "X-XSRF-TOKEN"
         
+        static let ACCOUNT: String = "account"
+        static let SESSION: String = "session"
         static let UDACITY: String = "udacity"
         static let USERNAME: String = "username"
         static let PASSWORD: String = "password"
@@ -52,24 +54,25 @@ extension OTMClient {
 
     
     struct ConstantsRequest {
-        static let METHOD_POST = "POST"
-        static let METHOD_GET = "GET"
-        static let METHOD_DELETE = "DELETE"
+        static let METHOD_POST: String = "POST"
+        static let METHOD_GET: String = "GET"
+        static let METHOD_DELETE: String = "DELETE"
         
-        static let MIME_TYPE = "application/json"
-        static let CONTENT_TYPE = "Content-Type"
-        static let ACCEPT = "Accept"
+        static let MIME_TYPE: String = "application/json"
+        static let CONTENT_TYPE: String = "Content-Type"
+        static let ACCEPT: String = "Accept"
     }
     
     
     struct ConstantsGeneral {
-        static let EMPTY_STR = ""
+        static let EMPTY_STR: String = ""
+        static let MAP_VIEW_VIEW: String = "MapViewSB"
     }
     
     struct ConstantsMessages {
-        static let INVALID_LOGIN = "Username and/or passord is wrong!"
-        static let LOGGED_OUT_SUCCESS = "You have been logged out with success"
-        static let DOUBLE_CREDENTIALS = "Did not specify exactly one credential"
-        static let INVALID_DATA = "Invalid data"
+        static let INVALID_LOGIN: String = "Username and/or passord is wrong!"
+        static let LOGGED_OUT_SUCCESS: String = "You have been logged out with success"
+        static let DOUBLE_CREDENTIALS: String = "Did not specify exactly one credential"
+        static let INVALID_DATA: String = "Invalid data"
     }
 }

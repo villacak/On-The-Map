@@ -100,7 +100,7 @@
                                     <action selector="signInFacebookButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6q5-8Y-LHC"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="loginViewUdacityImage" translatesAutoresizingMaskIntoConstraints="NO" id="AZW-YM-Eob">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loginViewUdacityImage" translatesAutoresizingMaskIntoConstraints="NO" id="AZW-YM-Eob">
                                 <rect key="frame" x="228" y="116" width="144" height="128"/>
                                 <animations/>
                                 <constraints>
@@ -129,7 +129,7 @@
                             <constraint firstAttribute="leadingMargin" secondItem="1pD-Lf-KVS" secondAttribute="leading" id="HMi-Zz-8y6"/>
                             <constraint firstItem="nfg-Hx-Dzd" firstAttribute="top" secondItem="Enf-ag-uGv" secondAttribute="bottom" constant="20" id="JWO-jI-vEW"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Enf-ag-uGv" secondAttribute="trailing" id="PGL-mX-ecc"/>
-                            <constraint firstItem="AZW-YM-Eob" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="96" id="QTA-zE-Jbd"/>
+                            <constraint firstItem="AZW-YM-Eob" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="52" id="QTA-zE-Jbd"/>
                             <constraint firstItem="pOe-mQ-DNp" firstAttribute="leading" secondItem="nfg-Hx-Dzd" secondAttribute="trailing" constant="8" id="SHz-db-Ziq"/>
                             <constraint firstAttribute="trailingMargin" secondItem="adL-5F-vki" secondAttribute="trailing" constant="5" id="SKi-vc-tqk"/>
                             <constraint firstItem="Enf-ag-uGv" firstAttribute="top" secondItem="adL-5F-vki" secondAttribute="bottom" constant="30" id="eAv-sw-Mh1"/>
@@ -176,12 +176,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kIo-39-F59" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4297" y="620"/>
+            <point key="canvasLocation" x="2673" y="659"/>
         </scene>
         <!--Map-->
         <scene sceneID="pAA-qf-Dh8">
             <objects>
-                <viewController id="8e4-6r-9gA" customClass="MapViewController" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MapViewSB" id="8e4-6r-9gA" customClass="MapViewController" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="9nC-3f-rtQ"/>
                         <viewControllerLayoutGuide type="bottom" id="Vhq-g6-od8"/>
@@ -189,10 +189,28 @@
                     <view key="view" contentMode="scaleToFill" id="i10-yS-cEb">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="DWH-Ah-Tda">
+                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                                <animations/>
+                                <connections>
+                                    <outlet property="delegate" destination="8e4-6r-9gA" id="kWx-HS-zQY"/>
+                                </connections>
+                            </mapView>
+                        </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="DWH-Ah-Tda" secondAttribute="trailing" id="HwD-O9-sea"/>
+                            <constraint firstItem="DWH-Ah-Tda" firstAttribute="bottom" secondItem="Vhq-g6-od8" secondAttribute="top" id="Hwa-zg-iUY"/>
+                            <constraint firstItem="DWH-Ah-Tda" firstAttribute="leading" secondItem="i10-yS-cEb" secondAttribute="leading" id="Wqo-FU-NGv"/>
+                            <constraint firstItem="DWH-Ah-Tda" firstAttribute="top" secondItem="9nC-3f-rtQ" secondAttribute="bottom" id="sYM-i0-49t"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Map" image="mapAndPinIcon" selectedImage="mapAndPinIcon" id="QLm-7g-eXh"/>
+                    <connections>
+                        <outlet property="mapView" destination="DWH-Ah-Tda" id="Npi-tv-Yw5"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GXb-J9-zfz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -201,7 +219,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="Hla-yn-TUU">
             <objects>
-                <tabBarController id="vVD-ue-tE9" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabBarControllerSB" id="vVD-ue-tE9" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="47i-bS-82y">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>

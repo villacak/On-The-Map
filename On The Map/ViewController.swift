@@ -33,7 +33,7 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
         // I think Udacity should have their own API for the same purpose as it's just learning.
         signinFacebookButton.hidden = true
         signinFacebookButton.enabled = false
-        
+         
         //        let testObject = PFObject(className: "TestObject")
         //        testObject["foo"] = "bar"
         //        testObject.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
@@ -48,7 +48,7 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     }
     
     override func viewWillDisappear(animated: Bool) {
-//        self.viewWillDisappear(true)
+        //        self.viewWillDisappear(true)
         unsubscribeFromKeyboardNotifications()
     }
     
@@ -93,22 +93,24 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
             (success, errorString)  in
             if (success != nil) {
                 // Convert the NSDictionary that is received as AnyObject to Dictionary
-                let responseAsNSDictinory: Dictionary = (success as! NSDictionary) as Dictionary
+                let responseAsNSDictinory: Dictionary<String, AnyObject> = (success as! NSDictionary) as! Dictionary<String, AnyObject>
                 
                 // Check if the response contains any error or not
                 if ((responseAsNSDictinory.indexForKey("error")) != nil) {
-                    let statusCode = success["status"]
-                    let errorMessage = success["error"]
-                    let messageString: String = "\(statusCode!) + , \(errorMessage!)"
+                    let statusCode = success["status"]!
+                    let errorMessage = success["error"]!
+                    let messageString: String = "\(statusCode!), \(errorMessage!)"
                     
                     // If success returns with an error message we need to show it to the user as an alert
                     Dialog().okDismissAlert(titleStr: "Login Failed", messageStr: messageString , controller: self)
                 } else {
-                    // Login success
-                    self.appDelegate.loggedOnUdacity = true
-                    self.appDelegate.udacityKey = responseAsNSDictinory[OTMClient.ConstantsUdacity.ACCOUNT_KEY] as! String
-                    self.appDelegate.udacitySessionId = responseAsNSDictinory[OTMClient.ConstantsUdacity.SESSION_ID] as! String
-                    // Still need to redirect it to the next page as it's success logged
+                    let isSuccess = self.successLogin(responseAsNSDictinory)
+                    
+                    // If success extracting data then call the TabBarController Map view
+                    if (isSuccess) {
+                        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarControllerSB") as! UITabBarController
+                        self.presentViewController(controller, animated: true, completion: nil)
+                    }
                 }
             } else {
                 // If success returns nil then it's necessary display an alert to the user
@@ -120,28 +122,32 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     
     @IBAction func signUpAction(sender: UIButton) {
         DismissKeyboard()
-//        self.performSegueWithIdentifier("Signup", sender: self)
-        
-        //        let signupViewController:UdacitySignupViewController = UdacitySignupViewController()
-        //        self.presentViewController(signupViewController, animated: true, completion: nil)
     }
     
-    
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        if (segue.identifier == "Signup") {
-//            var navController: UINavigationController = segue.destinationViewController
-//            EventsTableViewController *eventsController = [navController topViewController];
-//
-//            let destinationNavigationController: UINavigationController = segue.destinationViewController as! UINavigationController
-//            let targetController: UdacitySignupViewController = destinationNavigationController.topViewController as! UdacitySignupViewController
-//        }
-//    }
     
     // Facebook buttom is disabled
     @IBAction func signInFacebookButton(sender: UIButton) {
         DismissKeyboard()
     }
     
+    
+    
+    // Success login helper,
+    // Stores key and id in AppDelegate to use for sub-sequent requests
+    func successLogin(responseDictionary: Dictionary<String, AnyObject>)-> Bool {
+        var isSuccess:Bool = false
+        self.appDelegate.loggedOnUdacity = true
+        let account: Dictionary<String, AnyObject> = responseDictionary[OTMClient.ConstantsUdacity.ACCOUNT] as! Dictionary<String, AnyObject>
+        self.appDelegate.udacityKey = account[OTMClient.ConstantsUdacity.ACCOUNT_KEY] as! String
+        
+        let session: Dictionary<String, AnyObject> = responseDictionary[OTMClient.ConstantsUdacity.SESSION] as! Dictionary<String, AnyObject>
+        self.appDelegate.udacitySessionId = session[OTMClient.ConstantsUdacity.SESSION_ID] as! String
+        
+        if (self.appDelegate.udacityKey != nil && self.appDelegate.udacitySessionId != nil) {
+            isSuccess = true
+        }
+        return isSuccess
+    }
     
 }
 
