@@ -22,11 +22,17 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
         super.viewDidLoad()
         
         appDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
-               
+        
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
         view.addGestureRecognizer(tap)
         
         subscribeToKeyboardNotifications()
+        
+        // I'm hidding the Facebook button as I don't have account on it and never had plans to have it.
+        // I have my own reasons to don't want my name in their savers.
+        // I think Udacity should have their own API for the same purpose as it's just learning.
+        signinFacebookButton.hidden = true
+        signinFacebookButton.enabled = false
         
         //        let testObject = PFObject(className: "TestObject")
         //        testObject["foo"] = "bar"
@@ -37,7 +43,7 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     
     
     override func viewWillDisappear(animated: Bool) {
-        self.viewWillDisappear(true)
+//        self.viewWillDisappear(true)
         unsubscribeFromKeyboardNotifications()
     }
     
@@ -109,9 +115,21 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     
     @IBAction func signUpAction(sender: UIButton) {
         DismissKeyboard()
+        self.performSegueWithIdentifier("Signup", sender: self)
+        
+        //        let signupViewController:UdacitySignupViewController = UdacitySignupViewController()
+        //        self.presentViewController(signupViewController, animated: true, completion: nil)
     }
     
     
+//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+//        if (segue.identifier == "Signup") {
+//            let destinationNavigationController: UINavigationController = segue.destinationViewController as! UINavigationController
+//            let targetController: UdacitySignupViewController = destinationNavigationController.topViewController as! UdacitySignupViewController
+//        }
+//    }
+    
+    // Facebook buttom is disabled
     @IBAction func signInFacebookButton(sender: UIButton) {
         DismissKeyboard()
     }

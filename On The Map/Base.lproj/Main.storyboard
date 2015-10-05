@@ -9,7 +9,7 @@
         <!--Main Login-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" userLabel="Main Login" customClass="ViewController" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="OTMFBAuthViewController" id="BYZ-38-t0r" userLabel="Main Login" customClass="ViewController" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -149,47 +149,13 @@
                         <outlet property="password" destination="adL-5F-vki" id="Pix-IU-ZyE"/>
                         <outlet property="signUpButton" destination="pOe-mQ-DNp" id="pzp-hg-ILI"/>
                         <outlet property="signinFacebookButton" destination="fvH-Ot-5hb" id="oVU-mj-eBy"/>
+                        <segue destination="vVD-ue-tE9" kind="show" identifier="ToTabBarController" id="mpk-9F-rZZ"/>
+                        <segue destination="fTJ-Pu-CD1" kind="presentation" identifier="Signup" id="tsh-DX-veb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="305" y="290"/>
-        </scene>
-        <!--Web Auth-->
-        <scene sceneID="2mV-Au-4bs">
-            <objects>
-                <viewController id="VxB-Vu-Idg" userLabel="Web Auth" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="ov9-j8-50h"/>
-                        <viewControllerLayoutGuide type="bottom" id="nIG-Yu-AL3"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="xQU-g0-xIg">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h6B-Af-Zpa">
-                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
-                                <animations/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="600" id="ISX-CN-Z0j"/>
-                                    <constraint firstAttribute="height" constant="580" id="iki-4g-lFV"/>
-                                </constraints>
-                            </webView>
-                        </subviews>
-                        <animations/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="nIG-Yu-AL3" firstAttribute="top" secondItem="h6B-Af-Zpa" secondAttribute="bottom" id="KkO-d6-A6a"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="h6B-Af-Zpa" secondAttribute="trailing" constant="-20" id="LM4-ej-c2O"/>
-                            <constraint firstItem="h6B-Af-Zpa" firstAttribute="leading" secondItem="xQU-g0-xIg" secondAttribute="leadingMargin" constant="-20" id="mup-xp-ns4"/>
-                            <constraint firstItem="h6B-Af-Zpa" firstAttribute="top" secondItem="ov9-j8-50h" secondAttribute="bottom" id="uCn-JA-ziH"/>
-                        </constraints>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="5Wh-Tz-IZK" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="305" y="1003"/>
         </scene>
         <!--List-->
         <scene sceneID="jrK-LB-8OA">
@@ -209,12 +175,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kIo-39-F59" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1861" y="620"/>
+            <point key="canvasLocation" x="3485" y="620"/>
         </scene>
         <!--Map-->
         <scene sceneID="pAA-qf-Dh8">
             <objects>
-                <viewController id="8e4-6r-9gA" sceneMemberID="viewController">
+                <viewController id="8e4-6r-9gA" customClass="MapViewController" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="9nC-3f-rtQ"/>
                         <viewControllerLayoutGuide type="bottom" id="Vhq-g6-od8"/>
@@ -249,6 +215,79 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VCj-e9-5V2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1041" y="290"/>
+        </scene>
+        <!--Udacity Signup View Controller-->
+        <scene sceneID="G9m-XM-eEq">
+            <objects>
+                <viewController id="llc-Df-yl9" customClass="UdacitySignupViewController" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="OqC-IF-ogq"/>
+                        <viewControllerLayoutGuide type="bottom" id="gL6-97-h2B"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="z5v-yt-HIx">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q8J-oy-2L1">
+                                <rect key="frame" x="0.0" y="72" width="600" height="528"/>
+                                <animations/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </webView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Zrj-X3-A0n">
+                                <rect key="frame" x="290" y="326" width="20" height="20"/>
+                                <animations/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="q8J-oy-2L1" firstAttribute="leading" secondItem="z5v-yt-HIx" secondAttribute="leading" id="9C1-Y5-7a3"/>
+                            <constraint firstItem="Zrj-X3-A0n" firstAttribute="centerX" secondItem="q8J-oy-2L1" secondAttribute="centerX" id="Caw-m5-dcK"/>
+                            <constraint firstItem="q8J-oy-2L1" firstAttribute="bottom" secondItem="gL6-97-h2B" secondAttribute="top" id="En0-hH-8xJ"/>
+                            <constraint firstItem="q8J-oy-2L1" firstAttribute="top" secondItem="OqC-IF-ogq" secondAttribute="bottom" constant="8" symbolic="YES" id="gXA-FM-bYI"/>
+                            <constraint firstAttribute="trailing" secondItem="q8J-oy-2L1" secondAttribute="trailing" id="lFV-aG-6vO"/>
+                            <constraint firstItem="Zrj-X3-A0n" firstAttribute="centerY" secondItem="q8J-oy-2L1" secondAttribute="centerY" id="yQV-uY-7wH"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="LLw-Sd-pCx">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="BCe-r4-def">
+                            <connections>
+                                <action selector="cancelAction:" destination="llc-Df-yl9" id="W4H-5P-STZ"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="Jur-Fr-q6R">
+                            <connections>
+                                <action selector="refreshAction:" destination="llc-Df-yl9" id="5ep-K2-oZM"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="activityIndicator" destination="Zrj-X3-A0n" id="Eb9-n5-lpU"/>
+                        <outlet property="myWebView" destination="q8J-oy-2L1" id="Ooj-NV-Cfd"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Vsa-2I-5de" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1041" y="1022"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Y4D-Ad-enq">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fTJ-Pu-CD1" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="dfp-5t-jNe">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="llc-Df-yl9" kind="relationship" relationship="rootViewController" id="Ncq-NV-qoA"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="buL-m5-q6i" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="305" y="1022"/>
         </scene>
     </scenes>
     <resources>

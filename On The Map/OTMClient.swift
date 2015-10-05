@@ -26,6 +26,7 @@ class OTMClient: NSObject {
     *
     * "{\"udacity\": {\"username\": \"\(userName)\", \"password\": \"\(password)\"}}"
     *
+    * Facebook functionality is disabled
     * "{\"facebook_mobile\": {\"access_token\": \"<Facebook Token>"}}"
     */
     func udacityFacebookPOSTLogin(userName userName: String?, password: String?, facebookToken: String?, isUdacity: Bool, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
@@ -35,8 +36,10 @@ class OTMClient: NSObject {
         request.HTTPMethod = ConstantsRequest.METHOD_POST
         request.addValue(ConstantsRequest.MIME_TYPE, forHTTPHeaderField: ConstantsRequest.ACCEPT)
         request.addValue(ConstantsRequest.MIME_TYPE, forHTTPHeaderField: ConstantsRequest.CONTENT_TYPE)
-        request.HTTPBody = (isUdacity == true) ? buildUdacityBodyRequest(userName: userName!, password: password!) :
-                                                 buildFacebookBodyRequest(fbToken: facebookToken!)
+        request.HTTPBody = buildUdacityBodyRequest(userName: userName!, password: password!)
+        
+        // Would be used if I had a Facebook account
+        //        request.HTTPBody = (isUdacity == true) ? buildUdacityBodyRequest(userName: userName!, password: password!) : buildFacebookBodyRequest(fbToken: facebookToken!)
 
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
@@ -121,20 +124,20 @@ class OTMClient: NSObject {
 
     
     // Utils function to build Facebook jso
-    func buildFacebookBodyRequest(fbToken fbToken: String)-> NSData {
-        var bodyJson: NSData!
-        do {
-            var tempDictionary: [String: AnyObject] = ConstantsUdacity.UDACITY_FACEBOOK_JSON
-            var udacityTemp: [String: AnyObject] = (tempDictionary[ConstantsUdacity.FACEBOOK_MOBILE]! as? [String: AnyObject])!
-            udacityTemp[ConstantsUdacity.FACEBOOK_ACCESS_TOKEN] = fbToken
-            tempDictionary[ConstantsUdacity.FACEBOOK_MOBILE] = udacityTemp
-            
-            bodyJson = try NSJSONSerialization.dataWithJSONObject(tempDictionary, options: [])
-        } catch let errorCatch as NSError {
-            bodyJson = buildErrorMessage(errorCatch)
-        }
-        return bodyJson
-    }
+//    func buildFacebookBodyRequest(fbToken fbToken: String)-> NSData {
+//        var bodyJson: NSData!
+//        do {
+//            var tempDictionary: [String: AnyObject] = ConstantsUdacity.UDACITY_FACEBOOK_JSON
+//            var udacityTemp: [String: AnyObject] = (tempDictionary[ConstantsUdacity.FACEBOOK_MOBILE]! as? [String: AnyObject])!
+//            udacityTemp[ConstantsUdacity.FACEBOOK_ACCESS_TOKEN] = fbToken
+//            tempDictionary[ConstantsUdacity.FACEBOOK_MOBILE] = udacityTemp
+//            
+//            bodyJson = try NSJSONSerialization.dataWithJSONObject(tempDictionary, options: [])
+//        } catch let errorCatch as NSError {
+//            bodyJson = buildErrorMessage(errorCatch)
+//        }
+//        return bodyJson
+//    }
     
     
     // Build error message

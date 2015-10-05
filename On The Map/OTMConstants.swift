@@ -24,6 +24,7 @@ extension OTMClient {
     struct ConstantsUdacity {
         static let UDACITY_LOG_IN_OUT: String = "https://www.udacity.com/api/session"
         static let UDACITY_GET_PUBLIC_DATA: String = "https://www.udacity.com/api/users/"
+        static let UDACITY_SIGN_UP: String = "https://www.udacity.com/account/auth#!/signup"
         static let COOKIE_NAME: String = "XSRF-TOKEN"
         static let COOKIE_TOKEN: String = "X-XSRF-TOKEN"
         
@@ -33,8 +34,8 @@ extension OTMClient {
         static let ACCOUNT_KEY: String = "key"
         static let SESSION_ID: String = "id"
         
-        static let FACEBOOK_MOBILE: String = "facebook_mobile"
-        static let FACEBOOK_ACCESS_TOKEN: String = "access_token"
+//        static let FACEBOOK_MOBILE: String = "facebook_mobile"
+//        static let FACEBOOK_ACCESS_TOKEN: String = "access_token"
 
         
         static let UDACITY_LOGIN_JSON: [String : AnyObject] = [UDACITY : [
@@ -43,10 +44,10 @@ extension OTMClient {
                                                                   ]
                                                               ]
         
-        static let UDACITY_FACEBOOK_JSON: [String : AnyObject] = [FACEBOOK_MOBILE : [
-                                                                    FACEBOOK_ACCESS_TOKEN : ""
-                                                                      ]
-                                                                 ]
+//        static let UDACITY_FACEBOOK_JSON: [String : AnyObject] = [FACEBOOK_MOBILE : [
+//                                                                    FACEBOOK_ACCESS_TOKEN : ""
+//                                                                      ]
+//                                                                 ]
     }
 
     
