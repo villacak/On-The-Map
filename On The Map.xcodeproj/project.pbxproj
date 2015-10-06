@@ -12,6 +12,7 @@
 		3341919D1BC0737B003B3A17 /* FacebookWebLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3341919C1BC0737B003B3A17 /* FacebookWebLogin.swift */; settings = {ASSET_TAGS = (); }; };
 		33918F821BC0816F007A43A5 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33918F811BC0816F007A43A5 /* MapViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		33918F841BC0825D007A43A5 /* UdacitySignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33918F831BC0825D007A43A5 /* UdacitySignupViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		33D74EB11BC34A2A009DB02D /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33D74EB01BC34A2A009DB02D /* ActivityIndicatorView.swift */; settings = {ASSET_TAGS = (); }; };
 		33DA666F1BB0EC9000F7978B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA666E1BB0EC9000F7978B /* AppDelegate.swift */; };
 		33DA66711BB0EC9000F7978B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66701BB0EC9000F7978B /* ViewController.swift */; };
 		33DA66741BB0EC9000F7978B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 33DA66721BB0EC9000F7978B /* Main.storyboard */; };
@@ -62,6 +63,7 @@
 		3341919C1BC0737B003B3A17 /* FacebookWebLogin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FacebookWebLogin.swift; sourceTree = "<group>"; };
 		33918F811BC0816F007A43A5 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		33918F831BC0825D007A43A5 /* UdacitySignupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacitySignupViewController.swift; sourceTree = "<group>"; };
+		33D74EB01BC34A2A009DB02D /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		33DA666B1BB0EC9000F7978B /* On The Map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "On The Map.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		33DA666E1BB0EC9000F7978B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		33DA66701BB0EC9000F7978B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -258,6 +260,7 @@
 				33F98A361BBA2EBA00536720 /* Utils.swift */,
 				3320FF061BBB73B0003543BC /* Dialog.swift */,
 				3341919A1BBE1E22003B3A17 /* UtilsRequests.swift */,
+				33D74EB01BC34A2A009DB02D /* ActivityIndicatorView.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -405,6 +408,7 @@
 				33DA66BB1BB23E4100F7978B /* OTMConstants.swift in Sources */,
 				33DA666F1BB0EC9000F7978B /* AppDelegate.swift in Sources */,
 				33F98A371BBA2EBA00536720 /* Utils.swift in Sources */,
+				33D74EB11BC34A2A009DB02D /* ActivityIndicatorView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -18,6 +18,9 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     @IBOutlet weak var signUpButton: UIButton!
     @IBOutlet weak var signinFacebookButton: UIButton!
     
+    
+    var activityIndicatorView: ActivityIndicatorView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -29,11 +32,15 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
         subscribeToKeyboardNotifications()
         
         // I'm hidding the Facebook button as I don't have account on it and never had plans to have it.
-        // I have my own reasons to don't want my name in their savers.
         // I think Udacity should have their own API for the same purpose as it's just learning.
         signinFacebookButton.hidden = true
         signinFacebookButton.enabled = false
          
+        activityIndicatorView = ActivityIndicatorView(title: "Processing Login...", center: self.view.center)
+        view.addSubview(self.activityIndicatorView.getViewActivityIndicator())
+        activityIndicatorView.hideActivityIndicator()
+
+        
         //        let testObject = PFObject(className: "TestObject")
         //        testObject["foo"] = "bar"
         //        testObject.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
@@ -89,20 +96,26 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     
     @IBAction func loginAction(sender: UIButton) {
         DismissKeyboard()
+        
+        activityIndicatorView.showActivityIndicator()
+        activityIndicatorView.startAnimating()
+        UIApplication.sharedApplication().beginIgnoringInteractionEvents()
+        
+        
         OTMClient.sharedInstance().udacityFacebookPOSTLogin(userName: email.text!, password: password.text!, facebookToken: nil, isUdacity: true) {
             (success, errorString)  in
             if (success != nil) {
                 // Convert the NSDictionary that is received as AnyObject to Dictionary
                 let responseAsNSDictinory: Dictionary<String, AnyObject> = (success as! NSDictionary) as! Dictionary<String, AnyObject>
                 
+                // Dismiss modal
+                self.activityIndicatorView.hideActivityIndicator()
+                self.activityIndicatorView.stopAnimating()
+                UIApplication.sharedApplication().endIgnoringInteractionEvents()
+                
                 // Check if the response contains any error or not
                 if ((responseAsNSDictinory.indexForKey("error")) != nil) {
-                    let statusCode = success["status"]!
-                    let errorMessage = success["error"]!
-                    let messageString: String = "\(statusCode!), \(errorMessage!)"
-                    
-                    // If success returns with an error message we need to show it to the user as an alert
-                    Dialog().okDismissAlert(titleStr: "Login Failed", messageStr: messageString , controller: self)
+                    self.parseErrorReturned(responseAsNSDictinory)
                 } else {
                     let isSuccess = self.successLogin(responseAsNSDictinory)
                     
@@ -113,6 +126,11 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
                     }
                 }
             } else {
+                // Dismiss modal
+                self.activityIndicatorView.hideActivityIndicator()
+                self.activityIndicatorView.stopAnimating()
+                UIApplication.sharedApplication().endIgnoringInteractionEvents()
+                
                 // If success returns nil then it's necessary display an alert to the user
                 Dialog().okDismissAlert(titleStr: "Login Failed", messageStr: (errorString?.description)!, controller: self)
             }
@@ -130,6 +148,17 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
         DismissKeyboard()
     }
     
+    
+    
+    // Parse error returned
+    func parseErrorReturned(responseDictionary: Dictionary<String, AnyObject>) {
+        let statusCode = responseDictionary["status"] as! String
+        let errorMessage = responseDictionary["error"] as! String
+        let messageString: String = "\(statusCode), \(errorMessage)"
+        
+        // If success returns with an error message we need to show it to the user as an alert
+        Dialog().okDismissAlert(titleStr: "Login Failed", messageStr: messageString , controller: self)
+    }
     
     
     // Success login helper,

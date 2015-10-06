@@ -12,6 +12,7 @@ import MapKit
 class MapViewController: UIViewController, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,14 +30,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         self.navigationController?.navigationBarHidden = false
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func mapViewDidFinishLoadingMap(mapView: MKMapView) {
+        activityIndicator.stopAnimating()
+        activityIndicator.hidden = true
     }
-    */
-
+    
+    func mapViewWillStartLoadingMap(mapView: MKMapView) {
+        activityIndicator.hidden = false
+        activityIndicator.startAnimating()
+    }
 }

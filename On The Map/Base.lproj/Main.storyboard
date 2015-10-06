@@ -197,18 +197,25 @@
                                     <outlet property="delegate" destination="8e4-6r-9gA" id="kWx-HS-zQY"/>
                                 </connections>
                             </mapView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="rYe-0L-Qnd">
+                                <rect key="frame" x="290" y="298" width="20" height="20"/>
+                                <animations/>
+                            </activityIndicatorView>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="DWH-Ah-Tda" secondAttribute="trailing" id="HwD-O9-sea"/>
-                            <constraint firstItem="DWH-Ah-Tda" firstAttribute="bottom" secondItem="Vhq-g6-od8" secondAttribute="top" id="Hwa-zg-iUY"/>
-                            <constraint firstItem="DWH-Ah-Tda" firstAttribute="leading" secondItem="i10-yS-cEb" secondAttribute="leading" id="Wqo-FU-NGv"/>
-                            <constraint firstItem="DWH-Ah-Tda" firstAttribute="top" secondItem="9nC-3f-rtQ" secondAttribute="bottom" id="sYM-i0-49t"/>
+                            <constraint firstItem="rYe-0L-Qnd" firstAttribute="centerY" secondItem="DWH-Ah-Tda" secondAttribute="centerY" id="OrN-9U-424"/>
+                            <constraint firstItem="DWH-Ah-Tda" firstAttribute="bottom" secondItem="Vhq-g6-od8" secondAttribute="top" id="SNd-cB-qxA"/>
+                            <constraint firstAttribute="trailing" secondItem="DWH-Ah-Tda" secondAttribute="trailing" id="XPK-OP-F22"/>
+                            <constraint firstItem="DWH-Ah-Tda" firstAttribute="top" secondItem="9nC-3f-rtQ" secondAttribute="bottom" id="Y3u-Rv-Ori"/>
+                            <constraint firstItem="DWH-Ah-Tda" firstAttribute="leading" secondItem="i10-yS-cEb" secondAttribute="leading" id="agD-e1-yK1"/>
+                            <constraint firstItem="rYe-0L-Qnd" firstAttribute="centerX" secondItem="DWH-Ah-Tda" secondAttribute="centerX" id="tug-uN-M6M"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Map" image="mapAndPinIcon" selectedImage="mapAndPinIcon" id="QLm-7g-eXh"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="rYe-0L-Qnd" id="QOa-WA-Bys"/>
                         <outlet property="mapView" destination="DWH-Ah-Tda" id="Npi-tv-Yw5"/>
                     </connections>
                 </viewController>
