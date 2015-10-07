@@ -24,7 +24,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
-        tabBarController?.navigationController!.navigationBarHidden = true
+//        tabBarController?.navigationController!.navigationBarHidden = true
     
     }
 

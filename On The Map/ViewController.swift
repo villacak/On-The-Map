@@ -83,46 +83,49 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     
     @IBAction func loginAction(sender: UIButton) {
         DismissKeyboard()
-        navigationController?.navigationBarHidden = true
+        navigationController?.navigationBarHidden = false
+        
+        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarControllerSB") as! UITabBarController
+        self.presentViewController(controller, animated: true, completion: nil)
+
       
-        activityIndicatorView.showActivityIndicator()
-        activityIndicatorView.startAnimating()
-        UIApplication.sharedApplication().beginIgnoringInteractionEvents()
-        
-        
-        OTMClient.sharedInstance().udacityFacebookPOSTLogin(userName: email.text!, password: password.text!, facebookToken: nil, isUdacity: true) {
-            (success, errorString)  in
-            if (success != nil) {
-                // Convert the NSDictionary that is received as AnyObject to Dictionary
-                let responseAsNSDictinory: Dictionary<String, AnyObject> = (success as! NSDictionary) as! Dictionary<String, AnyObject>
-                
-                // Dismiss modal
-                self.activityIndicatorView.hideActivityIndicator()
-                self.activityIndicatorView.stopAnimating()
-                UIApplication.sharedApplication().endIgnoringInteractionEvents()
-                
-                // Check if the response contains any error or not
-                if ((responseAsNSDictinory.indexForKey("error")) != nil) {
-                    self.parseErrorReturned(responseAsNSDictinory)
-                } else {
-                    let isSuccess = self.successLogin(responseAsNSDictinory)
-                    
-                    // If success extracting data then call the TabBarController Map view
-                    if (isSuccess) {
-                        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarControllerSB") as! UITabBarController
-                        self.presentViewController(controller, animated: true, completion: nil)
-                    }
-                }
-            } else {
-                // Dismiss modal
-                self.activityIndicatorView.hideActivityIndicator()
-                self.activityIndicatorView.stopAnimating()
-                UIApplication.sharedApplication().endIgnoringInteractionEvents()
-                
-                // If success returns nil then it's necessary display an alert to the user
-                Dialog().okDismissAlert(titleStr: "Login Failed", messageStr: (errorString?.description)!, controller: self)
-            }
-        }
+//        activityIndicatorView.showActivityIndicator()
+//        activityIndicatorView.startAnimating()
+//        UIApplication.sharedApplication().beginIgnoringInteractionEvents()
+//        
+//        OTMClient.sharedInstance().udacityFacebookPOSTLogin(userName: email.text!, password: password.text!, facebookToken: nil, isUdacity: true) {
+//            (success, errorString)  in
+//            if (success != nil) {
+//                // Convert the NSDictionary that is received as AnyObject to Dictionary
+//                let responseAsNSDictinory: Dictionary<String, AnyObject> = (success as! NSDictionary) as! Dictionary<String, AnyObject>
+//                
+//                // Dismiss modal
+//                self.activityIndicatorView.hideActivityIndicator()
+//                self.activityIndicatorView.stopAnimating()
+//                UIApplication.sharedApplication().endIgnoringInteractionEvents()
+//                
+//                // Check if the response contains any error or not
+//                if ((responseAsNSDictinory.indexForKey("error")) != nil) {
+//                    self.parseErrorReturned(responseAsNSDictinory)
+//                } else {
+//                    let isSuccess = self.successLogin(responseAsNSDictinory)
+//                    
+//                    // If success extracting data then call the TabBarController Map view
+//                    if (isSuccess) {
+//                        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarControllerSB") as! UITabBarController
+//                        self.presentViewController(controller, animated: true, completion: nil)
+//                    }
+//                }
+//            } else {
+//                // Dismiss modal
+//                self.activityIndicatorView.hideActivityIndicator()
+//                self.activityIndicatorView.stopAnimating()
+//                UIApplication.sharedApplication().endIgnoringInteractionEvents()
+//                
+//                // If success returns nil then it's necessary display an alert to the user
+//                Dialog().okDismissAlert(titleStr: "Login Failed", messageStr: (errorString?.description)!, controller: self)
+//            }
+//        }
     }
     
     
