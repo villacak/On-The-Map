@@ -23,7 +23,7 @@ class UdacitySignupViewController: UIViewController, UIWebViewDelegate {
         
         myWebView.delegate = self
         
-        self.navigationItem.title = "Udacity Mobile Login"
+        navigationItem.title = "Udacity Mobile Login"
 
         request = NSURLRequest(URL: url)
         myWebView.loadRequest(request)

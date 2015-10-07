@@ -14,20 +14,18 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
+    var otmTabBarController: OTMTabBarController!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+    
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
-        self.navigationController?.navigationBarHidden = false
+        tabBarController?.navigationController!.navigationBarHidden = true
+    
     }
 
     func mapViewDidFinishLoadingMap(mapView: MKMapView) {
@@ -39,4 +37,5 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         activityIndicator.hidden = false
         activityIndicator.startAnimating()
     }
+    
 }

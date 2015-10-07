@@ -191,8 +191,18 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="DWH-Ah-Tda">
-                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                                <rect key="frame" x="5" y="72" width="590" height="476"/>
                                 <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="600" id="LYg-bC-H2c"/>
+                                    <constraint firstAttribute="height" constant="487" id="QaY-y6-WD8"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="LYg-bC-H2c"/>
+                                        <exclude reference="QaY-y6-WD8"/>
+                                    </mask>
+                                </variation>
                                 <connections>
                                     <outlet property="delegate" destination="8e4-6r-9gA" id="kWx-HS-zQY"/>
                                 </connections>
@@ -200,20 +210,52 @@
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="rYe-0L-Qnd">
                                 <rect key="frame" x="290" y="298" width="20" height="20"/>
                                 <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="05P-UR-qOl"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="05P-UR-qOl"/>
+                                    </mask>
+                                </variation>
                             </activityIndicatorView>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="rYe-0L-Qnd" firstAttribute="centerY" secondItem="DWH-Ah-Tda" secondAttribute="centerY" id="OrN-9U-424"/>
-                            <constraint firstItem="DWH-Ah-Tda" firstAttribute="bottom" secondItem="Vhq-g6-od8" secondAttribute="top" id="SNd-cB-qxA"/>
-                            <constraint firstAttribute="trailing" secondItem="DWH-Ah-Tda" secondAttribute="trailing" id="XPK-OP-F22"/>
-                            <constraint firstItem="DWH-Ah-Tda" firstAttribute="top" secondItem="9nC-3f-rtQ" secondAttribute="bottom" id="Y3u-Rv-Ori"/>
-                            <constraint firstItem="DWH-Ah-Tda" firstAttribute="leading" secondItem="i10-yS-cEb" secondAttribute="leading" id="agD-e1-yK1"/>
-                            <constraint firstItem="rYe-0L-Qnd" firstAttribute="centerX" secondItem="DWH-Ah-Tda" secondAttribute="centerX" id="tug-uN-M6M"/>
+                            <constraint firstItem="DWH-Ah-Tda" firstAttribute="bottom" secondItem="Vhq-g6-od8" secondAttribute="top" id="2be-Em-TMP"/>
+                            <constraint firstItem="DWH-Ah-Tda" firstAttribute="centerX" secondItem="rYe-0L-Qnd" secondAttribute="centerX" id="3jR-Zk-6nJ"/>
+                            <constraint firstItem="DWH-Ah-Tda" firstAttribute="centerY" secondItem="i10-yS-cEb" secondAttribute="centerY" constant="10" id="41d-s4-zBT"/>
+                            <constraint firstItem="DWH-Ah-Tda" firstAttribute="leading" secondItem="i10-yS-cEb" secondAttribute="leading" id="8Ql-Dz-cU7"/>
+                            <constraint firstItem="Vhq-g6-od8" firstAttribute="top" secondItem="DWH-Ah-Tda" secondAttribute="bottom" constant="8" id="B1L-3U-Q0u"/>
+                            <constraint firstItem="rYe-0L-Qnd" firstAttribute="leading" secondItem="i10-yS-cEb" secondAttribute="leadingMargin" constant="270" id="D6n-y7-8Db"/>
+                            <constraint firstItem="DWH-Ah-Tda" firstAttribute="centerY" secondItem="rYe-0L-Qnd" secondAttribute="centerY" id="F6h-k5-R3U"/>
+                            <constraint firstItem="DWH-Ah-Tda" firstAttribute="leading" secondItem="i10-yS-cEb" secondAttribute="leadingMargin" constant="-15" id="FxJ-0n-AtG"/>
+                            <constraint firstItem="rYe-0L-Qnd" firstAttribute="centerX" secondItem="i10-yS-cEb" secondAttribute="centerX" id="Mif-Oe-zhH"/>
+                            <constraint firstItem="DWH-Ah-Tda" firstAttribute="top" secondItem="9nC-3f-rtQ" secondAttribute="bottom" id="Owu-Yx-J0v"/>
+                            <constraint firstItem="rYe-0L-Qnd" firstAttribute="centerX" secondItem="DWH-Ah-Tda" secondAttribute="centerX" id="d5l-z6-cg9"/>
+                            <constraint firstItem="Vhq-g6-od8" firstAttribute="top" secondItem="rYe-0L-Qnd" secondAttribute="bottom" constant="233" id="e5u-aI-fT3"/>
+                            <constraint firstItem="Vhq-g6-od8" firstAttribute="top" secondItem="rYe-0L-Qnd" secondAttribute="bottom" constant="238" id="o2g-YM-TG1"/>
+                            <constraint firstAttribute="trailing" secondItem="DWH-Ah-Tda" secondAttribute="trailing" id="s33-wE-4VO"/>
+                            <constraint firstItem="rYe-0L-Qnd" firstAttribute="leading" secondItem="DWH-Ah-Tda" secondAttribute="trailing" constant="-310" id="s3t-jw-2QR"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="2be-Em-TMP"/>
+                                <exclude reference="8Ql-Dz-cU7"/>
+                                <exclude reference="F6h-k5-R3U"/>
+                                <exclude reference="Owu-Yx-J0v"/>
+                                <exclude reference="s33-wE-4VO"/>
+                                <exclude reference="D6n-y7-8Db"/>
+                                <exclude reference="d5l-z6-cg9"/>
+                                <exclude reference="s3t-jw-2QR"/>
+                                <exclude reference="e5u-aI-fT3"/>
+                            </mask>
+                        </variation>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Map" image="mapAndPinIcon" selectedImage="mapAndPinIcon" id="QLm-7g-eXh"/>
+                    <tabBarItem key="tabBarItem" title="Map" image="mapAndPinIcon" selectedImage="mapAndPinIcon" id="5cq-hb-skq"/>
+                    <toolbarItems/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="activityIndicator" destination="rYe-0L-Qnd" id="QOa-WA-Bys"/>
                         <outlet property="mapView" destination="DWH-Ah-Tda" id="Npi-tv-Yw5"/>
@@ -226,7 +268,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="Hla-yn-TUU">
             <objects>
-                <tabBarController storyboardIdentifier="TabBarControllerSB" id="vVD-ue-tE9" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabBarControllerSB" id="vVD-ue-tE9" customClass="OTMTabBarController" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="47i-bS-82y">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -294,7 +336,7 @@
         <!--Navigation Controller-->
         <scene sceneID="Ppd-Ao-uXA">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="ZTZ-OQ-W6q" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="InitNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="ZTZ-OQ-W6q" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="CF8-lc-By6">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>

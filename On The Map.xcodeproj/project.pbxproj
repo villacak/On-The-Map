@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		331B552A1BC4B2BA000812F5 /* OTMTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331B55291BC4B2BA000812F5 /* OTMTabBarController.swift */; settings = {ASSET_TAGS = (); }; };
 		3320FF071BBB73B0003543BC /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3320FF061BBB73B0003543BC /* Dialog.swift */; settings = {ASSET_TAGS = (); }; };
 		3341919B1BBE1E22003B3A17 /* UtilsRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3341919A1BBE1E22003B3A17 /* UtilsRequests.swift */; settings = {ASSET_TAGS = (); }; };
 		3341919D1BC0737B003B3A17 /* FacebookWebLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3341919C1BC0737B003B3A17 /* FacebookWebLogin.swift */; settings = {ASSET_TAGS = (); }; };
@@ -58,6 +59,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		331B55291BC4B2BA000812F5 /* OTMTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMTabBarController.swift; sourceTree = "<group>"; };
 		3320FF061BBB73B0003543BC /* Dialog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dialog.swift; sourceTree = "<group>"; };
 		3341919A1BBE1E22003B3A17 /* UtilsRequests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilsRequests.swift; sourceTree = "<group>"; };
 		3341919C1BC0737B003B3A17 /* FacebookWebLogin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FacebookWebLogin.swift; sourceTree = "<group>"; };
@@ -261,6 +263,7 @@
 				3320FF061BBB73B0003543BC /* Dialog.swift */,
 				3341919A1BBE1E22003B3A17 /* UtilsRequests.swift */,
 				33D74EB01BC34A2A009DB02D /* ActivityIndicatorView.swift */,
+				331B55291BC4B2BA000812F5 /* OTMTabBarController.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -396,6 +399,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				33DA66C11BB37ED900F7978B /* OTMDialogs.swift in Sources */,
+				331B552A1BC4B2BA000812F5 /* OTMTabBarController.swift in Sources */,
 				3341919B1BBE1E22003B3A17 /* UtilsRequests.swift in Sources */,
 				3341919D1BC0737B003B3A17 /* FacebookWebLogin.swift in Sources */,
 				33DA66711BB0EC9000F7978B /* ViewController.swift in Sources */,

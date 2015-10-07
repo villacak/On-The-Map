@@ -18,28 +18,25 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     @IBOutlet weak var signUpButton: UIButton!
     @IBOutlet weak var signinFacebookButton: UIButton!
     
-    
     var activityIndicatorView: ActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         appDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
         view.addGestureRecognizer(tap)
-        
         subscribeToKeyboardNotifications()
         
         // I'm hidding the Facebook button as I don't have account on it and never had plans to have it.
         // I think Udacity should have their own API for the same purpose as it's just learning.
         signinFacebookButton.hidden = true
         signinFacebookButton.enabled = false
-         
+        
+        // Config my custom activityIndicator
         activityIndicatorView = ActivityIndicatorView(title: "Processing Login...", center: self.view.center)
         view.addSubview(self.activityIndicatorView.getViewActivityIndicator())
         activityIndicatorView.hideActivityIndicator()
-
         
         //        let testObject = PFObject(className: "TestObject")
         //        testObject["foo"] = "bar"
@@ -51,19 +48,12 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
-        self.navigationController?.navigationBarHidden = true
+        navigationController?.navigationBarHidden = true
     }
     
+   
     override func viewWillDisappear(animated: Bool) {
-        //        self.viewWillDisappear(true)
         unsubscribeFromKeyboardNotifications()
-    }
-    
-    
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     
@@ -76,14 +66,12 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     }
     
     
-    
     // Keyboard notify notification center the keyboard will hide
     func keyboardWillHide(notification: NSNotification) {
         if (view.frame.origin.y <= 0 && (email.isFirstResponder() || password.isFirstResponder())) {
             view.frame.origin.y += getKeyboardHeight(notification)
         }
     }
-    
     
     
     //Calls this function when the tap is recognized.
@@ -93,10 +81,10 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     }
     
     
-    
     @IBAction func loginAction(sender: UIButton) {
         DismissKeyboard()
-        
+        navigationController?.navigationBarHidden = true
+      
         activityIndicatorView.showActivityIndicator()
         activityIndicatorView.startAnimating()
         UIApplication.sharedApplication().beginIgnoringInteractionEvents()
