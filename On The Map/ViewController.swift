@@ -19,22 +19,18 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     @IBOutlet weak var signinFacebookButton: UIButton!
     
     var activityIndicatorView: ActivityIndicatorView!
-//    var otmTabBarController: OTMTabBarController!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        appDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
         otmTabBarController = tabBarController as! OTMTabBarController
-        print("viewDidLoad")
-        print("ViewControllar Session ID is \(otmTabBarController.udacitySessionId)")
-        print("ViewControllar Key ID is \(otmTabBarController.udacityKey)")
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
         view.addGestureRecognizer(tap)
         subscribeToKeyboardNotifications()
         
         // Config my custom activityIndicator
-        activityIndicatorView = ActivityIndicatorView(title: "Processing Login...", center: self.view.center)
+        activityIndicatorView = ActivityIndicatorView(title: OTMClient.ConstantsMessages.LOGIN_PROCESSING, center: self.view.center)
         view.addSubview(self.activityIndicatorView.getViewActivityIndicator())
         activityIndicatorView.hideActivityIndicator()
     
@@ -50,22 +46,20 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
         navigationController?.navigationBarHidden = true
+        otmTabBarController.tabBar.hidden = true
         
         // I'm hidding the Facebook button as I don't have account on it and never had plans to have it.
         // I think Udacity should have their own API for the same purpose as it's just learning.
         signinFacebookButton.hidden = true
         signinFacebookButton.enabled = false
-        
-        print("viewWillAppear")
-        print("ViewControllar Session ID is \(otmTabBarController.udacitySessionId)")
-        print("ViewControllar Key ID is \(otmTabBarController.udacityKey)")
-
     }
     
    
+    
     override func viewWillDisappear(animated: Bool) {
         unsubscribeFromKeyboardNotifications()
     }
+    
     
     
     // Keyboard notify notification center the keyboard will show
@@ -77,6 +71,7 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     }
     
     
+    
     // Keyboard notify notification center the keyboard will hide
     func keyboardWillHide(notification: NSNotification) {
         if (view.frame.origin.y <= 0 && (email.isFirstResponder() || password.isFirstResponder())) {
@@ -85,12 +80,14 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     }
     
     
+    
     //Calls this function when the tap is recognized.
     func DismissKeyboard(){
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
     }
     
+   
     
     @IBAction func loginAction(sender: UIButton) {
         DismissKeyboard()
@@ -142,9 +139,11 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     }
     
     
+    
     @IBAction func signUpAction(sender: UIButton) {
         DismissKeyboard()
     }
+    
     
     
     // Facebook buttom is disabled
@@ -156,32 +155,31 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     
     // Parse error returned
     func parseErrorReturned(responseDictionary: Dictionary<String, AnyObject>) {
-        let statusCode = responseDictionary["status"] as! String
-        let errorMessage = responseDictionary["error"] as! String
+        let statusCode = responseDictionary[OTMClient.ConstantsUdacity
+            .STATUS] as! String
+        let errorMessage = responseDictionary[OTMClient.ConstantsUdacity.ERROR] as! String
         let messageString: String = "\(statusCode), \(errorMessage)"
         
         // If success returns with an error message we need to show it to the user as an alert
-        Dialog().okDismissAlert(titleStr: "Login Failed", messageStr: messageString , controller: self)
+        Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.INVALID_LOGIN, messageStr: messageString , controller: self)
     }
+    
     
     
     // Success login helper,
     // Stores key and id in AppDelegate to use for sub-sequent requests
     func successLogin(responseDictionary: Dictionary<String, AnyObject>)-> Bool {
         var isSuccess:Bool = false
-        self.appDelegate.loggedOnUdacity = true
+        otmTabBarController.loggedOnUdacity = true
         let account: Dictionary<String, AnyObject> = responseDictionary[OTMClient.ConstantsUdacity.ACCOUNT] as! Dictionary<String, AnyObject>
         
-//        self.appDelegate.udacityKey = account[OTMClient.ConstantsUdacity.ACCOUNT_KEY] as! String
-        
-        self.otmTabBarController.udacityKey = account[OTMClient.ConstantsUdacity.ACCOUNT_KEY] as! String
+        otmTabBarController.udacityKey = account[OTMClient.ConstantsUdacity.ACCOUNT_KEY] as! String
 
         let session: Dictionary<String, AnyObject> = responseDictionary[OTMClient.ConstantsUdacity.SESSION] as! Dictionary<String, AnyObject>
-//        self.appDelegate.udacitySessionId = session[OTMClient.ConstantsUdacity.SESSION_ID] as! String
-        self.otmTabBarController.udacitySessionId = session[OTMClient.ConstantsUdacity.SESSION_ID] as! String
-        
-//        if (self.appDelegate.udacityKey != nil && self.appDelegate.udacitySessionId != nil) {
-        if (self.otmTabBarController.udacityKey == "" && self.otmTabBarController.udacitySessionId == "") {
+
+        otmTabBarController.udacitySessionId = session[OTMClient.ConstantsUdacity.SESSION_ID] as! String
+
+        if (self.otmTabBarController.udacityKey == OTMClient.ConstantsGeneral.EMPTY_STR && self.otmTabBarController.udacitySessionId == OTMClient.ConstantsGeneral.EMPTY_STR) {
             isSuccess = true
         }
         return isSuccess

@@ -15,10 +15,6 @@ import Bolts
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-    var loggedOnUdacity: Bool!
-//    var udacityKey: String!
-//    var udacitySessionId: String!
     var locationManager: CLLocationManager?
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {

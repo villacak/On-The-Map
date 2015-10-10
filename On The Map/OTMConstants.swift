@@ -35,6 +35,8 @@ extension OTMClient {
         static let PASSWORD: String = "password"
         static let ACCOUNT_KEY: String = "key"
         static let SESSION_ID: String = "id"
+        static let STATUS: String = "status"
+        static let ERROR: String = "error"
         
 //        static let FACEBOOK_MOBILE: String = "facebook_mobile"
 //        static let FACEBOOK_ACCESS_TOKEN: String = "access_token"
@@ -71,8 +73,10 @@ extension OTMClient {
     
     struct ConstantsMessages {
         static let INVALID_LOGIN: String = "Username and/or passord is wrong!"
+        static let LOGIN_FAILED: String = "Login Failed"
         static let LOGGED_OUT_SUCCESS: String = "You have been logged out with success"
         static let DOUBLE_CREDENTIALS: String = "Did not specify exactly one credential"
         static let INVALID_DATA: String = "Invalid data"
+        static let LOGIN_PROCESSING: String = "Processing login..."
     }
 }

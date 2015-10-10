@@ -10,8 +10,10 @@ import UIKit
 
 class OTMTabBarController: UITabBarController {
     
+    var loggedOnUdacity: Bool!
     var userDataArray: [UserData?] = [UserData?]()
     var udacityKey: String = OTMClient.ConstantsGeneral.EMPTY_STR
     var udacitySessionId: String = OTMClient.ConstantsGeneral.EMPTY_STR
     
+//    var locationManager: CLLocationManager?
 }
