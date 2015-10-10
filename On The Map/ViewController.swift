@@ -46,7 +46,6 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
         navigationController?.navigationBarHidden = true
-        otmTabBarController.tabBar.hidden = true
         
         // I'm hidding the Facebook button as I don't have account on it and never had plans to have it.
         // I think Udacity should have their own API for the same purpose as it's just learning.

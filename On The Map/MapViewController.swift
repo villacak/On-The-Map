@@ -33,11 +33,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func checkIfLogged() {
         if otmTabBarController.udacityKey == OTMClient.ConstantsGeneral.EMPTY_STR {
+            otmTabBarController.tabBar.hidden = true
             otmTabBarController.udacitySessionId = "Variable Test"
             otmTabBarController.udacityKey = "Key Test"
             performSegueWithIdentifier("LoginSegue", sender: self)
             self.storyboard!.instantiateViewControllerWithIdentifier("OTMFBAuthViewController")
-        }
+        } 
     }
 
     

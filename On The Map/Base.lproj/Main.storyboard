@@ -6,6 +6,7 @@
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
         <!--Main Login-->
@@ -171,7 +172,7 @@
             </objects>
             <point key="canvasLocation" x="3908" y="604"/>
         </scene>
-        <!--Map View Controller-->
+        <!--On The Map-->
         <scene sceneID="pAA-qf-Dh8">
             <objects>
                 <viewController storyboardIdentifier="MapViewSB" id="8e4-6r-9gA" customClass="MapViewController" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
@@ -247,7 +248,13 @@
                         </variation>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" id="OEx-I1-w3w"/>
+                    <navigationItem key="navigationItem" title="On The Map" id="OEx-I1-w3w">
+                        <barButtonItem key="leftBarButtonItem" title="Logout" id="YLP-HP-IvL"/>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="refresh" id="lvk-98-sC2"/>
+                            <barButtonItem image="navBarPin" id="IAm-Ak-JZQ"/>
+                        </rightBarButtonItems>
+                    </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="activityIndicator" destination="rYe-0L-Qnd" id="RrD-dJ-xg2"/>
@@ -373,5 +380,6 @@
         <image name="listIcon" width="22" height="22"/>
         <image name="loginViewUdacityImage" width="400" height="400"/>
         <image name="mapAndPinIcon" width="22" height="22"/>
+        <image name="navBarPin" width="22" height="22"/>
     </resources>
 </document>
