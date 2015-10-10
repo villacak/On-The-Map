@@ -53,4 +53,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         activityIndicator.startAnimating()
     }
     
+    @IBAction func loginAction(sender: AnyObject) {
+    }
+    
+    @IBAction func pinAction(sender: AnyObject) {
+    }
+    
+    @IBAction func refreshAction(sender: AnyObject) {
+    }
+    
 }

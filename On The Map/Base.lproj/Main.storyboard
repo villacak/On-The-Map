@@ -249,10 +249,22 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="On The Map" id="OEx-I1-w3w">
-                        <barButtonItem key="leftBarButtonItem" title="Logout" id="YLP-HP-IvL"/>
+                        <barButtonItem key="leftBarButtonItem" title="Logout" id="YLP-HP-IvL">
+                            <connections>
+                                <action selector="loginAction:" destination="8e4-6r-9gA" id="KEV-sI-wpq"/>
+                            </connections>
+                        </barButtonItem>
                         <rightBarButtonItems>
-                            <barButtonItem systemItem="refresh" id="lvk-98-sC2"/>
-                            <barButtonItem image="navBarPin" id="IAm-Ak-JZQ"/>
+                            <barButtonItem systemItem="refresh" id="lvk-98-sC2">
+                                <connections>
+                                    <action selector="refreshAction:" destination="8e4-6r-9gA" id="nJC-VD-5UF"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem image="navBarPin" id="IAm-Ak-JZQ">
+                                <connections>
+                                    <action selector="pinAction:" destination="8e4-6r-9gA" id="HgR-Lh-xnJ"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
