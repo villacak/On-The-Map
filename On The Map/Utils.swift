@@ -18,9 +18,12 @@ class ViewControllerWithKeyboardControl: UIViewController {
     var tempView: UIView!
     var tempViewController: UIViewController!
     
+    var otmTabBarController: OTMTabBarController!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         appDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        otmTabBarController = tabBarController as! OTMTabBarController
     }
     
     // Delegate when user hit the soft key Done from keyboard, we collapse the keyboard

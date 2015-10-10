@@ -19,24 +19,25 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     @IBOutlet weak var signinFacebookButton: UIButton!
     
     var activityIndicatorView: ActivityIndicatorView!
+//    var otmTabBarController: OTMTabBarController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        appDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+//        appDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        otmTabBarController = tabBarController as! OTMTabBarController
+        print("viewDidLoad")
+        print("ViewControllar Session ID is \(otmTabBarController.udacitySessionId)")
+        print("ViewControllar Key ID is \(otmTabBarController.udacityKey)")
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
         view.addGestureRecognizer(tap)
         subscribeToKeyboardNotifications()
         
-        // I'm hidding the Facebook button as I don't have account on it and never had plans to have it.
-        // I think Udacity should have their own API for the same purpose as it's just learning.
-        signinFacebookButton.hidden = true
-        signinFacebookButton.enabled = false
-        
         // Config my custom activityIndicator
         activityIndicatorView = ActivityIndicatorView(title: "Processing Login...", center: self.view.center)
         view.addSubview(self.activityIndicatorView.getViewActivityIndicator())
         activityIndicatorView.hideActivityIndicator()
+    
         
         //        let testObject = PFObject(className: "TestObject")
         //        testObject["foo"] = "bar"
@@ -49,6 +50,16 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
         navigationController?.navigationBarHidden = true
+        
+        // I'm hidding the Facebook button as I don't have account on it and never had plans to have it.
+        // I think Udacity should have their own API for the same purpose as it's just learning.
+        signinFacebookButton.hidden = true
+        signinFacebookButton.enabled = false
+        
+        print("viewWillAppear")
+        print("ViewControllar Session ID is \(otmTabBarController.udacitySessionId)")
+        print("ViewControllar Key ID is \(otmTabBarController.udacityKey)")
+
     }
     
    
@@ -84,10 +95,13 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
     @IBAction func loginAction(sender: UIButton) {
         DismissKeyboard()
         navigationController?.navigationBarHidden = false
+        otmTabBarController.udacityKey = "test"
         
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarControllerSB") as! UITabBarController
-        self.presentViewController(controller, animated: true, completion: nil)
-
+        navigationController?.popViewControllerAnimated(true)
+        
+//        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarControllerSB") as! OTMTabBarController
+//        self.presentViewController(controller, animated: true, completion: nil)
+       
       
 //        activityIndicatorView.showActivityIndicator()
 //        activityIndicatorView.startAnimating()
@@ -112,8 +126,7 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
 //                    
 //                    // If success extracting data then call the TabBarController Map view
 //                    if (isSuccess) {
-//                        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarControllerSB") as! UITabBarController
-//                        self.presentViewController(controller, animated: true, completion: nil)
+//                        navigationController?.popViewControllerAnimated(true)
 //                    }
 //                }
 //            } else {
@@ -158,12 +171,17 @@ class ViewController: ViewControllerWithKeyboardControl, UITextFieldDelegate {
         var isSuccess:Bool = false
         self.appDelegate.loggedOnUdacity = true
         let account: Dictionary<String, AnyObject> = responseDictionary[OTMClient.ConstantsUdacity.ACCOUNT] as! Dictionary<String, AnyObject>
-        self.appDelegate.udacityKey = account[OTMClient.ConstantsUdacity.ACCOUNT_KEY] as! String
         
+//        self.appDelegate.udacityKey = account[OTMClient.ConstantsUdacity.ACCOUNT_KEY] as! String
+        
+        self.otmTabBarController.udacityKey = account[OTMClient.ConstantsUdacity.ACCOUNT_KEY] as! String
+
         let session: Dictionary<String, AnyObject> = responseDictionary[OTMClient.ConstantsUdacity.SESSION] as! Dictionary<String, AnyObject>
-        self.appDelegate.udacitySessionId = session[OTMClient.ConstantsUdacity.SESSION_ID] as! String
+//        self.appDelegate.udacitySessionId = session[OTMClient.ConstantsUdacity.SESSION_ID] as! String
+        self.otmTabBarController.udacitySessionId = session[OTMClient.ConstantsUdacity.SESSION_ID] as! String
         
-        if (self.appDelegate.udacityKey != nil && self.appDelegate.udacitySessionId != nil) {
+//        if (self.appDelegate.udacityKey != nil && self.appDelegate.udacitySessionId != nil) {
+        if (self.otmTabBarController.udacityKey == "" && self.otmTabBarController.udacitySessionId == "") {
             isSuccess = true
         }
         return isSuccess

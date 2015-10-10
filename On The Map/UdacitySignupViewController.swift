@@ -16,10 +16,14 @@ class UdacitySignupViewController: UIViewController, UIWebViewDelegate {
     
     var url: NSURL = NSURL(string: OTMClient.ConstantsUdacity.UDACITY_SIGN_UP)!
     var request: NSURLRequest!
+    var otmTabBarController: OTMTabBarController!
+    
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        otmTabBarController = tabBarController as! OTMTabBarController
         
         myWebView.delegate = self
         
@@ -32,7 +36,8 @@ class UdacitySignupViewController: UIViewController, UIWebViewDelegate {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBarHidden = false
+        navigationController?.navigationBarHidden = false
+        otmTabBarController?.tabBar.hidden = true
         if request != nil {
             self.myWebView.loadRequest(request!)
         }
