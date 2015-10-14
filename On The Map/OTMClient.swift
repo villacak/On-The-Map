@@ -80,7 +80,7 @@ class OTMClient: NSObject {
                 completionHandler(result: nil, error: error)
             } else {
                 let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5)) /* subset response data! */
-                print(NSString(data: newData, encoding: NSUTF8StringEncoding))
+//                print(NSString(data: newData, encoding: NSUTF8StringEncoding))
                 self.deleteCookies()
                 do {
                     let jsonResult: NSDictionary? = try NSJSONSerialization.JSONObjectWithData(newData, options:NSJSONReadingOptions.MutableContainers) as? NSDictionary
@@ -161,9 +161,9 @@ class OTMClient: NSObject {
     func deleteCookies() {
         let cookieStorage: NSHTTPCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
         let cookies = cookieStorage.cookies as [NSHTTPCookie]?
-        print("Cookies.count: \(cookies!.count)")
+//        print("Cookies.count: \(cookies!.count)")
         for cookie in cookies! {
-            print("name: \(cookie.name) value: \(cookie.value)")
+//            print("name: \(cookie.name) value: \(cookie.value)")
             NSHTTPCookieStorage.sharedHTTPCookieStorage().deleteCookie(cookie)
         }
     }
