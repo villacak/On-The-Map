@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 
 class OTMClient: NSObject {
@@ -29,30 +30,28 @@ class OTMClient: NSObject {
     * Facebook functionality is disabled
     * "{\"facebook_mobile\": {\"access_token\": \"<Facebook Token>"}}"
     */
-    func udacityFacebookPOSTLogin(userName userName: String?, password: String?, facebookToken: String?, isUdacity: Bool, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
-
-        
+    func udacityPOSTLogin(userName userName: String?, password: String?, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         let request = NSMutableURLRequest(URL: NSURL(string: ConstantsUdacity.UDACITY_LOG_IN_OUT)!)
         request.HTTPMethod = ConstantsRequest.METHOD_POST
         request.addValue(ConstantsRequest.MIME_TYPE, forHTTPHeaderField: ConstantsRequest.ACCEPT)
         request.addValue(ConstantsRequest.MIME_TYPE, forHTTPHeaderField: ConstantsRequest.CONTENT_TYPE)
         request.HTTPBody = buildUdacityBodyRequest(userName: userName!, password: password!)
         
-        // Would be used if I had a Facebook account
-        //        request.HTTPBody = (isUdacity == true) ? buildUdacityBodyRequest(userName: userName!, password: password!) : buildFacebookBodyRequest(fbToken: facebookToken!)
-
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             
             if (error != nil) {
                 completionHandler(result: nil, error: error)
             } else {
+                self.addCookieToSharedStorage(response!)
                 let newData: NSData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5))
                 do {
                     let jsonResult: NSDictionary? = try NSJSONSerialization.JSONObjectWithData(newData, options:NSJSONReadingOptions.MutableContainers) as? NSDictionary
                     completionHandler(result: jsonResult, error: nil)
+//                    return
                 } catch let errorCatch as NSError {
                     completionHandler(result: nil, error: errorCatch)
+//                    return
                 }
             }
         }
@@ -66,14 +65,17 @@ class OTMClient: NSObject {
     func udacityPOSTLogout(completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         let request = NSMutableURLRequest(URL: NSURL(string: ConstantsUdacity.UDACITY_LOG_IN_OUT)!)
         request.HTTPMethod = ConstantsRequest.METHOD_DELETE
+        
         var xsrfCookie: NSHTTPCookie? = nil
         let sharedCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
         for cookie in sharedCookieStorage.cookies! {
             if cookie.name == ConstantsUdacity.COOKIE_NAME { xsrfCookie = cookie }
         }
+        
         if let xsrfCookie = xsrfCookie {
             request.setValue(xsrfCookie.value, forHTTPHeaderField: ConstantsUdacity.COOKIE_TOKEN)
         }
+        
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil { // Handle error…
@@ -81,13 +83,14 @@ class OTMClient: NSObject {
             }
             let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5)) /* subset response data! */
             print(NSString(data: newData, encoding: NSUTF8StringEncoding))
+            self.deleteCookies()
         }
         task.resume()
         return task
     }
     
     
-
+    
     // Udacity - Get user data
     func udacityPOSTGetUserData(userId: String, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         let request = NSMutableURLRequest(URL: NSURL(string: ConstantsUdacity.UDACITY_GET_PUBLIC_DATA + userId)!)
@@ -121,23 +124,50 @@ class OTMClient: NSObject {
         }
         return bodyJson
     }
-
     
-    // Utils function to build Facebook jso
-//    func buildFacebookBodyRequest(fbToken fbToken: String)-> NSData {
-//        var bodyJson: NSData!
-//        do {
-//            var tempDictionary: [String: AnyObject] = ConstantsUdacity.UDACITY_FACEBOOK_JSON
-//            var udacityTemp: [String: AnyObject] = (tempDictionary[ConstantsUdacity.FACEBOOK_MOBILE]! as? [String: AnyObject])!
-//            udacityTemp[ConstantsUdacity.FACEBOOK_ACCESS_TOKEN] = fbToken
-//            tempDictionary[ConstantsUdacity.FACEBOOK_MOBILE] = udacityTemp
-//            
-//            bodyJson = try NSJSONSerialization.dataWithJSONObject(tempDictionary, options: [])
-//        } catch let errorCatch as NSError {
-//            bodyJson = buildErrorMessage(errorCatch)
-//        }
-//        return bodyJson
-//    }
+    
+    // Extract token form response and store on shared cookie storage
+    func addCookieToSharedStorage(response: NSURLResponse) {
+        if let httpResponse = response as? NSHTTPURLResponse {
+            
+            if let headerFields: [String: String] = httpResponse.allHeaderFields as? [String: String] {
+                let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: response.URL!)
+                //                        let cookies: [NSHTTPCookie] = NSHTTPCookie.cookiesWithResponseHeaderFields(httpResponse.allHeaderFields, forURL: response.URL!) as! [NSHTTPCookie]
+                NSHTTPCookieStorage.sharedHTTPCookieStorage().setCookies(cookies, forURL: response.URL!, mainDocumentURL: nil)
+                //                var cookieCount: Int = 0
+                for cookie in cookies {
+                    var cookieProperties = [String: AnyObject]()
+                    cookieProperties[NSHTTPCookieName] = cookie.name //"\(ConstantsUdacity.COOKIE_NAME)\(cookieCount++)" cookie.name
+                    cookieProperties[NSHTTPCookieValue] = cookie.value
+                    cookieProperties[NSHTTPCookieDomain] = cookie.domain
+                    cookieProperties[NSHTTPCookiePath] = cookie.path
+                    cookieProperties[NSHTTPCookieVersion] = NSNumber(integer: cookie.version)
+                    cookieProperties[NSHTTPCookieExpires] = NSDate().dateByAddingTimeInterval(31536000)
+                    
+                    let newCookie = NSHTTPCookie(properties: cookieProperties)
+                    NSHTTPCookieStorage.sharedHTTPCookieStorage().setCookie(newCookie!)
+                    
+                    print("Cookie")
+                    print("name: \(cookie.name) value: \(cookie.value)")
+                }
+                
+                print("Cookies \(cookies)")
+            }
+        }
+        
+    }
+    
+    
+    func deleteCookies() {
+        let cookieStorage: NSHTTPCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+        let cookies = cookieStorage.cookies as [NSHTTPCookie]?
+        print("Cookies.count: \(cookies!.count)")
+        for cookie in cookies! {
+            print("name: \(cookie.name) value: \(cookie.value)")
+            NSHTTPCookieStorage.sharedHTTPCookieStorage().deleteCookie(cookie)
+        }
+    }
+    
     
     
     // Build error message
@@ -145,6 +175,49 @@ class OTMClient: NSObject {
         let dataReadyToReturn: NSData = ("{\"errorMessage\": \"" + error.description + "\"}").dataUsingEncoding(NSUTF8StringEncoding)!
         return dataReadyToReturn
     }
+    
+    
+    
+    // Success login helper,
+    // Stores key and id in AppDelegate to use for sub-sequent requests
+    func successResponse(responseDictionary: Dictionary<String, AnyObject>, otmTabBarController: OTMTabBarController)-> Bool {
+        var isSuccess:Bool = false
+        otmTabBarController.loggedOnUdacity = true
+        let account: Dictionary<String, AnyObject> = responseDictionary[OTMClient.ConstantsUdacity.ACCOUNT] as! Dictionary<String, AnyObject>
+        
+        otmTabBarController.udacityKey = account[OTMClient.ConstantsUdacity.ACCOUNT_KEY] as! String
+        
+        let session: Dictionary<String, AnyObject> = responseDictionary[OTMClient.ConstantsUdacity.SESSION] as! Dictionary<String, AnyObject>
+        
+        otmTabBarController.udacitySessionId = session[OTMClient.ConstantsUdacity.SESSION_ID] as! String
+        
+        if (otmTabBarController.udacityKey != OTMClient.ConstantsGeneral.EMPTY_STR && otmTabBarController.udacitySessionId != OTMClient.ConstantsGeneral.EMPTY_STR) {
+            isSuccess = true
+        }
+        return isSuccess
+    }
+    
+    
+    // Parse error returned
+    func parseErrorReturned(responseDictionary: Dictionary<String, AnyObject>)-> String {
+
+        var statusCode: String!
+        var message: String!
+        var messageToReturn: String!
+        
+        for (key, value) in responseDictionary {
+            if (key == OTMClient.ConstantsUdacity.STATUS) {
+                statusCode = String(value as! Int)
+            }
+            if (key == OTMClient.ConstantsUdacity.ERROR) {
+                message = value as! String
+                messageToReturn = "\(statusCode), \(message)"
+            }
+        }
+        return messageToReturn
+    }
+    
+    
     
     
     // MARK: Shared Instance

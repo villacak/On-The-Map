@@ -9,67 +9,77 @@
 import UIKit
 
 // Copied part from stackoverflow
-// http://stackoverflow.com/questions/28785715/how-to-display-an-activity-indicator-with-text-on-ios-8-with-swift
+// http://stackoverflow.com/questions/32269646/cannot-hide-activity-indicator-at-end-of-api-call
 //
 // The idea is have a processing modal showing to the user while the request is processed.
-class ActivityIndicatorView: NSObject {
-
-    var view: UIView!
+class ActivityIndicatorView: UIVisualEffectView {
     
-    var activityIndicator: UIActivityIndicatorView!
+    var text: String? {
+        didSet {
+            label.text = text
+        }
+    }
+    let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.White)
+    let label: UILabel = UILabel()
+    let blurEffect = UIBlurEffect(style: .Dark)
+    let vibrancyView: UIVisualEffectView
     
-    var title: String!
-    
-    init(title: String, center: CGPoint, width: CGFloat = 200.0, height: CGFloat = 50.0)
-    {
-        self.title = title
-        
-        let x = center.x - width/2.0
-        let y = center.y - height/2.0
-        
-        self.view = UIView(frame: CGRect(x: x, y: y, width: width, height: height))
-        self.view.backgroundColor = UIColor(red: 255.0/255.0, green: 204.0/255.0, blue: 51.0/255.0, alpha: 0.5)
-        self.view.layer.cornerRadius = 10
-        
-        self.activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-        self.activityIndicator.color = UIColor.blackColor()
-        self.activityIndicator.hidesWhenStopped = false
-        
-        let titleLabel = UILabel(frame: CGRect(x: 60, y: 0, width: 200, height: 50))
-        titleLabel.text = title
-        titleLabel.textColor = UIColor.blackColor()
-        
-        self.view.addSubview(self.activityIndicator)
-        self.view.addSubview(titleLabel)
+    init(text: String) {
+        self.text = text
+        self.vibrancyView = UIVisualEffectView(effect: UIVibrancyEffect(forBlurEffect: blurEffect))
+        super.init(effect: blurEffect)
+        self.setup()
     }
     
-    func getViewActivityIndicator() -> UIView
-    {
-        return self.view
+    required init(coder aDecoder: NSCoder) {
+        self.text = ""
+        self.vibrancyView = UIVisualEffectView(effect: UIVibrancyEffect(forBlurEffect: blurEffect))
+        super.init(coder: aDecoder)!
+        self.setup()
     }
     
-    func hideActivityIndicator() {
-        self.view.hidden = true
-    }
-   
-    
-    func showActivityIndicator() {
-        self.view.hidden = false
+    func setup() {
+        contentView.addSubview(vibrancyView)
+        vibrancyView.contentView.addSubview(activityIndicator)
+        vibrancyView.contentView.addSubview(label)
+        activityIndicator.startAnimating()
     }
     
-    
-    func startAnimating()
-    {
-        self.activityIndicator.startAnimating()
-        UIApplication.sharedApplication().beginIgnoringInteractionEvents()
-    }
-    
-    func stopAnimating()
-    {
-        self.activityIndicator.stopAnimating()
-        UIApplication.sharedApplication().endIgnoringInteractionEvents()
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
         
-        self.view.removeFromSuperview()
+        if let superview = self.superview {
+            
+            let width: CGFloat = 150
+            let height: CGFloat = 50.0
+            self.frame = CGRectMake(superview.frame.size.width / 2 - width / 2,
+                superview.frame.height / 2 - height,
+                width,height)
+            
+            vibrancyView.frame = self.bounds
+            
+            let activityIndicatorSize: CGFloat = 40
+            activityIndicator.frame = CGRectMake(5, height / 2 - activityIndicatorSize / 2,
+                activityIndicatorSize,
+                activityIndicatorSize)
+            
+            layer.cornerRadius = 8.0
+            layer.masksToBounds = true
+            
+            label.text = text
+            label.textAlignment = NSTextAlignment.Center
+            label.frame = CGRectMake(activityIndicatorSize + 5, 0, width - activityIndicatorSize - 20, height)
+            label.textColor = UIColor.grayColor()
+            label.font = UIFont.boldSystemFontOfSize(16)
+            
+        }
     }
-
+    
+    func show() {
+        self.hidden = false
+    }
+    
+    func hide() {
+        self.hidden = true
+    }
 }

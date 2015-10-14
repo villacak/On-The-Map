@@ -14,6 +14,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
+    
+//    var activityIndicatorView: ActivityIndicatorView!
     var otmTabBarController: OTMTabBarController!
     
     
@@ -34,8 +36,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     func checkIfLogged() {
         if otmTabBarController.udacityKey == OTMClient.ConstantsGeneral.EMPTY_STR {
             otmTabBarController.tabBar.hidden = true
-            otmTabBarController.udacitySessionId = "Variable Test"
-            otmTabBarController.udacityKey = "Key Test"
+//            otmTabBarController.udacitySessionId = "Variable Test"
+//            otmTabBarController.udacityKey = "Key Test"
             performSegueWithIdentifier("LoginSegue", sender: self)
             self.storyboard!.instantiateViewControllerWithIdentifier("OTMFBAuthViewController")
         } 
@@ -53,7 +55,43 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         activityIndicator.startAnimating()
     }
     
-    @IBAction func loginAction(sender: AnyObject) {
+    @IBAction func logoutAction(sender: AnyObject) {
+        
+        activityIndicator.hidden = false
+        activityIndicator.startAnimating()
+        
+        OTMClient.sharedInstance().udacityPOSTLogout() {
+            (success, errorString)  in
+            
+            self.activityIndicator.stopAnimating()
+            self.activityIndicator.hidden = true
+            
+            if (success != nil) {
+                let responseAsNSDictinory: Dictionary<String, AnyObject> = (success as! NSDictionary) as! Dictionary<String, AnyObject>
+                
+                // Check if the response contains any error or not
+                if ((responseAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
+                    let message: String = OTMClient.sharedInstance().parseErrorReturned(responseAsNSDictinory)
+                     Dialog().okDismissAlert(titleStr: "Login Failed", messageStr: message, controller: self)
+                } else {
+                    let isSuccess = OTMClient.sharedInstance().successResponse(responseAsNSDictinory, otmTabBarController: self.otmTabBarController)
+                    
+                    // If success extracting data then call the TabBarController Map view
+                    if (isSuccess) {
+                        self.otmTabBarController.udacitySessionId = OTMClient.ConstantsGeneral.EMPTY_STR
+                        self.otmTabBarController.udacityKey = OTMClient.ConstantsGeneral.EMPTY_STR
+                        self.navigationController?.navigationBarHidden = false
+                        self.navigationController?.popViewControllerAnimated(true)
+                    }
+                }
+            } else {
+                // If success returns nil then it's necessary display an alert to the user
+                Dialog().okDismissAlert(titleStr: "Login Failed", messageStr: (errorString?.description)!, controller: self)
+            }
+            
+        }
+       
+
     }
     
     @IBAction func pinAction(sender: AnyObject) {

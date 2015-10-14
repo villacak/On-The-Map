@@ -77,6 +77,6 @@ extension OTMClient {
         static let LOGGED_OUT_SUCCESS: String = "You have been logged out with success"
         static let DOUBLE_CREDENTIALS: String = "Did not specify exactly one credential"
         static let INVALID_DATA: String = "Invalid data"
-        static let LOGIN_PROCESSING: String = "Processing login..."
+        static let LOGIN_PROCESSING: String = "Login..."
     }
 }
