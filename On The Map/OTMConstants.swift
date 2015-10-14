@@ -74,9 +74,11 @@ extension OTMClient {
     struct ConstantsMessages {
         static let INVALID_LOGIN: String = "Username and/or passord is wrong!"
         static let LOGIN_FAILED: String = "Login Failed"
-        static let LOGGED_OUT_SUCCESS: String = "You have been logged out with success"
+        static let LOGOUT_SUCCESS: String = "Logout Success"
+        static let LOGOUT_SUCCESS_MESSAGE: String = "You have been logged out with success"
         static let DOUBLE_CREDENTIALS: String = "Did not specify exactly one credential"
         static let INVALID_DATA: String = "Invalid data"
         static let LOGIN_PROCESSING: String = "Login..."
+        static let LOGOUT_PROCESSING: String = "Logout..."
     }
 }

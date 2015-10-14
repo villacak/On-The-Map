@@ -35,6 +35,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         //            print("Object has been saved.")
         //        }
        
+        email.text = "klausvillaca@gmail.com"
+        password.text = "Feedback999"
     }
     
     
@@ -133,13 +135,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 // Check if the response contains any error or not
                 if ((responseAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
                     let messageToDialog = OTMClient.sharedInstance().parseErrorReturned(responseAsNSDictinory)
-                    self.modal(messageToDialog)
+                    Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: messageToDialog, controller: self)
                 } else {
                     isSuccess = OTMClient.sharedInstance().successResponse(responseAsNSDictinory, otmTabBarController: self.otmTabBarController)
                 }
             } else {
                 // If success returns nil then it's necessary display an alert to the user
-                self.modal((errorString?.description)!)
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: (errorString?.description)!, controller: self)
             }
             
             dispatch_async(dispatch_get_main_queue(), {
@@ -155,12 +157,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 }
             })
         }
-    }
-    
-    
-    
-    func modal(message: String) {
-        Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: message, controller: self)
     }
     
     

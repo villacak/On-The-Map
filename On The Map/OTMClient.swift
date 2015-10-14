@@ -48,10 +48,8 @@ class OTMClient: NSObject {
                 do {
                     let jsonResult: NSDictionary? = try NSJSONSerialization.JSONObjectWithData(newData, options:NSJSONReadingOptions.MutableContainers) as? NSDictionary
                     completionHandler(result: jsonResult, error: nil)
-//                    return
                 } catch let errorCatch as NSError {
                     completionHandler(result: nil, error: errorCatch)
-//                    return
                 }
             }
         }
@@ -78,12 +76,19 @@ class OTMClient: NSObject {
         
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
-            if error != nil { // Handle error…
-                return
+            if (error != nil) {
+                completionHandler(result: nil, error: error)
+            } else {
+                let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5)) /* subset response data! */
+                print(NSString(data: newData, encoding: NSUTF8StringEncoding))
+                self.deleteCookies()
+                do {
+                    let jsonResult: NSDictionary? = try NSJSONSerialization.JSONObjectWithData(newData, options:NSJSONReadingOptions.MutableContainers) as? NSDictionary
+                    completionHandler(result: jsonResult, error: nil)
+                } catch let errorCatch as NSError {
+                    completionHandler(result: nil, error: errorCatch)
+                }
             }
-            let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5)) /* subset response data! */
-            print(NSString(data: newData, encoding: NSUTF8StringEncoding))
-            self.deleteCookies()
         }
         task.resume()
         return task
@@ -146,12 +151,7 @@ class OTMClient: NSObject {
                     
                     let newCookie = NSHTTPCookie(properties: cookieProperties)
                     NSHTTPCookieStorage.sharedHTTPCookieStorage().setCookie(newCookie!)
-                    
-                    print("Cookie")
-                    print("name: \(cookie.name) value: \(cookie.value)")
                 }
-                
-                print("Cookies \(cookies)")
             }
         }
         
@@ -200,7 +200,7 @@ class OTMClient: NSObject {
     
     // Parse error returned
     func parseErrorReturned(responseDictionary: Dictionary<String, AnyObject>)-> String {
-
+        
         var statusCode: String!
         var message: String!
         var messageToReturn: String!
