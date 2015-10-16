@@ -7,6 +7,14 @@
 //
 
 
-enum ServiceName {
-    case Udacity, UdacityFacebook, Parse
+enum OTMServicesNameEnum: CustomStringConvertible {
+    case updateAt
+    case createdAt
+    
+    var description: String {
+        switch self {
+            case .createdAt: return "createAt"
+            case .updateAt: return "updateAt"
+        }
+    }
 }

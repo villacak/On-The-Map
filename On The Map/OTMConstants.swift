@@ -13,11 +13,14 @@ extension OTMClient {
     
     struct ConstantsParse {
         // MARK: Parse API Key
-        static let API_KEY_STR: String = "API_KEY"
+        static let API_KEY_STR: String = "X-Parse-REST-API-Key"
         static let API_KEY: String = "8giE02DqBln6EvyGCirPg6FBYpG8zNFZusGFamhq"
         
-        static let CLIENT_KEY_STR: String = "CLIENT_KEY_STR"
-        static let CLIENT_KEY: String = "aiBuGRmnE489l7VeXBLCzBoFzAObn0SDgYRZ1OBk"
+        static let APPLICATION_ID_STR: String = "X-Parse-Application-Id"
+        static let APPLICATION_ID_KEY: String = "aiBuGRmnE489l7VeXBLCzBoFzAObn0SDgYRZ1OBk"
+        
+        static let PARSE_STUDENT_LOCATION_URL = "https://api.parse.com/1/classes/StudentLocation"
+
     }
     
     
@@ -38,20 +41,11 @@ extension OTMClient {
         static let STATUS: String = "status"
         static let ERROR: String = "error"
         
-//        static let FACEBOOK_MOBILE: String = "facebook_mobile"
-//        static let FACEBOOK_ACCESS_TOKEN: String = "access_token"
-
-        
         static let UDACITY_LOGIN_JSON: [String : AnyObject] = [UDACITY : [
                                                                     USERNAME : "",
                                                                     PASSWORD : ""
                                                                   ]
                                                               ]
-        
-//        static let UDACITY_FACEBOOK_JSON: [String : AnyObject] = [FACEBOOK_MOBILE : [
-//                                                                    FACEBOOK_ACCESS_TOKEN : ""
-//                                                                      ]
-//                                                                 ]
     }
 
     
@@ -60,7 +54,7 @@ extension OTMClient {
         static let METHOD_GET: String = "GET"
         static let METHOD_DELETE: String = "DELETE"
         
-        static let MIME_TYPE: String = "application/json"
+        static let MIME_TYPE_POST: String = "application/json"
         static let CONTENT_TYPE: String = "Content-Type"
         static let ACCEPT: String = "Accept"
     }
@@ -80,5 +74,18 @@ extension OTMClient {
         static let INVALID_DATA: String = "Invalid data"
         static let LOGIN_PROCESSING: String = "Login..."
         static let LOGOUT_PROCESSING: String = "Logout..."
+    }
+    
+    struct ConstantsData {
+        static let objectId: String = "objectId"
+        static let uniqueKey: String = "uniqueKey"
+        static let firstName: String = "firstName"
+        static let lastName: String = "lastName"
+        static let mapString: String = "mapString"
+        static let mediaUrl: String = "mediaUrl"
+        static let latitude: String = "latitude"
+        static let longitude: String = "longitude"
+        static let createdAt: String = "createdAt"
+        static let updatedAt: String = "updatedAt"
     }
 }

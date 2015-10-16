@@ -26,15 +26,12 @@ class OTMClient: NSObject {
     * Udacity - Login
     *
     * "{\"udacity\": {\"username\": \"\(userName)\", \"password\": \"\(password)\"}}"
-    *
-    * Facebook functionality is disabled
-    * "{\"facebook_mobile\": {\"access_token\": \"<Facebook Token>"}}"
     */
     func udacityPOSTLogin(userName userName: String?, password: String?, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         let request = NSMutableURLRequest(URL: NSURL(string: ConstantsUdacity.UDACITY_LOG_IN_OUT)!)
         request.HTTPMethod = ConstantsRequest.METHOD_POST
-        request.addValue(ConstantsRequest.MIME_TYPE, forHTTPHeaderField: ConstantsRequest.ACCEPT)
-        request.addValue(ConstantsRequest.MIME_TYPE, forHTTPHeaderField: ConstantsRequest.CONTENT_TYPE)
+        request.addValue(ConstantsRequest.MIME_TYPE_POST, forHTTPHeaderField: ConstantsRequest.ACCEPT)
+        request.addValue(ConstantsRequest.MIME_TYPE_POST, forHTTPHeaderField: ConstantsRequest.CONTENT_TYPE)
         request.HTTPBody = buildUdacityBodyRequest(userName: userName!, password: password!)
         
         let session = NSURLSession.sharedSession()
@@ -59,7 +56,10 @@ class OTMClient: NSObject {
     
     
     
-    // Udacity - Logout
+    /*
+     * Udacity - Logout
+     *
+     */
     func udacityPOSTLogout(completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         let request = NSMutableURLRequest(URL: NSURL(string: ConstantsUdacity.UDACITY_LOG_IN_OUT)!)
         request.HTTPMethod = ConstantsRequest.METHOD_DELETE
@@ -80,7 +80,6 @@ class OTMClient: NSObject {
                 completionHandler(result: nil, error: error)
             } else {
                 let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5)) /* subset response data! */
-//                print(NSString(data: newData, encoding: NSUTF8StringEncoding))
                 self.deleteCookies()
                 do {
                     let jsonResult: NSDictionary? = try NSJSONSerialization.JSONObjectWithData(newData, options:NSJSONReadingOptions.MutableContainers) as? NSDictionary
@@ -96,21 +95,100 @@ class OTMClient: NSObject {
     
     
     
-    // Udacity - Get user data
-    func udacityPOSTGetUserData(userId: String, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
-        let request = NSMutableURLRequest(URL: NSURL(string: ConstantsUdacity.UDACITY_GET_PUBLIC_DATA + userId)!)
+    /*
+     * Get Students Locations
+     *
+     */
+    func parseGETStudentLocations(limit limit: String?, skip: String?, order: OTMServicesNameEnum?, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+        
+        let request = NSMutableURLRequest(URL: NSURL(string: OTMClient.ConstantsParse.PARSE_STUDENT_LOCATION_URL)!)
+        request.addValue(OTMClient.ConstantsParse.APPLICATION_ID_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.APPLICATION_ID_STR)
+        request.addValue(OTMClient.ConstantsParse.API_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.API_KEY_STR)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
-            if error != nil { // Handle error...
-                return
+            if error != nil {
+                completionHandler(result: nil, error: error)
+            } else {
+                do {
+                    let jsonResult: NSDictionary? = try NSJSONSerialization.JSONObjectWithData(data!, options:NSJSONReadingOptions.MutableContainers) as? NSDictionary
+                    completionHandler(result: jsonResult, error: nil)
+                } catch let errorCatch as NSError {
+                    completionHandler(result: nil, error: errorCatch)
+                }
+
             }
-            let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5)) /* subset response data! */
-            print(NSString(data: newData, encoding: NSUTF8StringEncoding))
+            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
         }
         task.resume()
         return task
     }
     
+    
+    /*
+     * putPOSTStudentLocation
+     *
+     */
+    func putPOSTStudentLocation(userData userData: UserData, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+        let request = NSMutableURLRequest(URL: NSURL(string: OTMClient.ConstantsParse.PARSE_STUDENT_LOCATION_URL)!)
+        request.HTTPMethod = OTMClient.ConstantsRequest.METHOD_POST
+        request.addValue(OTMClient.ConstantsParse.APPLICATION_ID_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.APPLICATION_ID_STR)
+        request.addValue(OTMClient.ConstantsParse.API_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.API_KEY_STR)
+        request.addValue(OTMClient.ConstantsRequest.MIME_TYPE_POST, forHTTPHeaderField: OTMClient.ConstantsRequest.CONTENT_TYPE)
+        request.HTTPBody = buildParseBodyRequest(userData: userData)
+        
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithRequest(request) { data, response, error in
+            if error != nil {
+                completionHandler(result: nil, error: error)
+            } else {
+                
+            }
+            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
+        }
+        task.resume()
+        return task
+    }
+    
+    //
+    
+    // Udacity - Get user data
+//    func udacityPOSTGetUserData(userId: String, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+//        let request = NSMutableURLRequest(URL: NSURL(string: ConstantsUdacity.UDACITY_GET_PUBLIC_DATA + userId)!)
+//        let session = NSURLSession.sharedSession()
+//        let task = session.dataTaskWithRequest(request) { data, response, error in
+//            if error != nil { // Handle error...
+//                return
+//            }
+//            let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5)) /* subset response data! */
+//            print(NSString(data: newData, encoding: NSUTF8StringEncoding))
+//        }
+//        task.resume()
+//        return task
+//    }
+    
+    
+    // Utils functions to build the Parse json
+    // "{\"uniqueKey\": \"1234\", \"firstName\": \"John\", \"lastName\": \"Doe\",\"mapString\": \"Mountain View, CA\", \"mediaURL\": \"https://udacity.com\",\"latitude\": 37.386052, \"longitude\": -122.083851}"
+    func buildParseBodyRequest(userData userData: UserData) -> NSData {
+        var bodyJson: NSData!
+        do {
+            var tempDictionary: [String: AnyObject] = [String: AnyObject]()
+            tempDictionary[OTMClient.ConstantsData.uniqueKey] = userData.uniqueKey
+            tempDictionary[OTMClient.ConstantsData.firstName] = userData.firstName
+            tempDictionary[OTMClient.ConstantsData.lastName] = userData.lastName
+            tempDictionary[OTMClient.ConstantsData.mapString] = userData.mapString
+            tempDictionary[OTMClient.ConstantsData.mediaUrl] = userData.mediaUrl
+            tempDictionary[OTMClient.ConstantsData.latitude] = userData.latitude
+            tempDictionary[OTMClient.ConstantsData.longitude] = userData.longitude
+            
+            bodyJson = try NSJSONSerialization.dataWithJSONObject(tempDictionary, options: [])
+        } catch let errorCatch as NSError {
+            bodyJson = buildErrorMessage(errorCatch)
+        }
+
+        
+        return bodyJson
+    }
     
     
     // Utils function to build Udacity json
@@ -137,12 +215,10 @@ class OTMClient: NSObject {
             
             if let headerFields: [String: String] = httpResponse.allHeaderFields as? [String: String] {
                 let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(headerFields, forURL: response.URL!)
-                //                        let cookies: [NSHTTPCookie] = NSHTTPCookie.cookiesWithResponseHeaderFields(httpResponse.allHeaderFields, forURL: response.URL!) as! [NSHTTPCookie]
                 NSHTTPCookieStorage.sharedHTTPCookieStorage().setCookies(cookies, forURL: response.URL!, mainDocumentURL: nil)
-                //                var cookieCount: Int = 0
                 for cookie in cookies {
                     var cookieProperties = [String: AnyObject]()
-                    cookieProperties[NSHTTPCookieName] = cookie.name //"\(ConstantsUdacity.COOKIE_NAME)\(cookieCount++)" cookie.name
+                    cookieProperties[NSHTTPCookieName] = cookie.name
                     cookieProperties[NSHTTPCookieValue] = cookie.value
                     cookieProperties[NSHTTPCookieDomain] = cookie.domain
                     cookieProperties[NSHTTPCookiePath] = cookie.path
@@ -161,9 +237,7 @@ class OTMClient: NSObject {
     func deleteCookies() {
         let cookieStorage: NSHTTPCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
         let cookies = cookieStorage.cookies as [NSHTTPCookie]?
-//        print("Cookies.count: \(cookies!.count)")
         for cookie in cookies! {
-//            print("name: \(cookie.name) value: \(cookie.value)")
             NSHTTPCookieStorage.sharedHTTPCookieStorage().deleteCookie(cookie)
         }
     }
