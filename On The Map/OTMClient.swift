@@ -157,7 +157,9 @@ class OTMClient: NSObject {
     */
     func parseGETStudentLocations(limit limit: String?, skip: String?, order: OTMServicesNameEnum?, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         
-        let request = NSMutableURLRequest(URL: NSURL(string: OTMClient.ConstantsParse.PARSE_STUDENT_LOCATION_URL)!)
+        let tempUrl: String = getUrlForParameters(limitP: limit, skipP: skip, orderP: order)
+        let urlSelected: NSURL = NSURL(string: tempUrl)!
+        let request = NSMutableURLRequest(URL: urlSelected)
         request.addValue(OTMClient.ConstantsParse.APPLICATION_ID_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.APPLICATION_ID_STR)
         request.addValue(OTMClient.ConstantsParse.API_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.API_KEY_STR)
         let session = NSURLSession.sharedSession()
@@ -264,7 +266,7 @@ class OTMClient: NSObject {
      *
      */
      func updatingPUTStudentLocation(objectId objectId: String, userData: UserData, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
-        let urlString = "https://api.parse.com/1/classes/StudentLocation/8ZExGR5uX8"
+        let urlString = "https://api.parse.com/1/classes/StudentLocation/\(objectId)"
         let url = NSURL(string: urlString)
         let request = NSMutableURLRequest(URL: url!)
         request.HTTPMethod = OTMClient.ConstantsRequest.METHOD_PUT
@@ -290,6 +292,30 @@ class OTMClient: NSObject {
         return task
     }
     
+        
+        
+    
+    /*
+     * Form the URL dependgin on the parameters received.
+     * Returns the standard url if doesn't match any of those conditions
+     * 
+     * limit - String
+     * skip - String
+     * order - OTMServicesNameEnum()
+     */
+    func getUrlForParameters(limitP limitP: String?, skipP: String?, orderP: OTMServicesNameEnum?) -> String {
+        var urlForChange: String = OTMClient.ConstantsParse.PARSE_STUDENT_LOCATION_URL
+        if (limitP != nil && skipP != nil && orderP != nil) {
+            urlForChange += "?limit=\(limitP)&skip=\(skipP)&order=\(orderP)"
+        } else if (limitP != nil && skipP != nil) {
+            urlForChange += "?limit=\(limitP)&skip=\(skipP)"
+        } else if (limitP != nil) {
+            urlForChange += "?limit=\(limitP)"
+        } else if (limitP == nil && skipP == nil && orderP != nil) {
+            urlForChange += "?order=\(orderP)"
+        }
+        return urlForChange
+    }
     
     
     // Utils functions to build the Parse json
