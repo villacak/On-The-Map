@@ -59,6 +59,9 @@
 /* Begin PBXFileReference section */
 		331B55291BC4B2BA000812F5 /* OTMTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMTabBarController.swift; sourceTree = "<group>"; };
 		3320FF061BBB73B0003543BC /* Dialog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dialog.swift; sourceTree = "<group>"; };
+		3326184A1BD3090200927EFD /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
+		3326184B1BD3090900927EFD /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
+		3326184C1BD3091B00927EFD /* Roboto-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Thin.ttf"; sourceTree = "<group>"; };
 		3341919A1BBE1E22003B3A17 /* UtilsRequests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilsRequests.swift; sourceTree = "<group>"; };
 		33918F811BC0816F007A43A5 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		33918F831BC0825D007A43A5 /* UdacitySignupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacitySignupViewController.swift; sourceTree = "<group>"; };
@@ -132,6 +135,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3307FEB21BD30899006352EA /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				3326184C1BD3091B00927EFD /* Roboto-Thin.ttf */,
+				3326184B1BD3090900927EFD /* Roboto-Regular.ttf */,
+				3326184A1BD3090200927EFD /* Roboto-Medium.ttf */,
+			);
+			name = Fonts;
+			sourceTree = "<group>";
+		};
 		33DA66621BB0EC9000F7978B = {
 			isa = PBXGroup;
 			children = (
@@ -156,6 +169,7 @@
 		33DA666D1BB0EC9000F7978B /* On The Map */ = {
 			isa = PBXGroup;
 			children = (
+				3307FEB21BD30899006352EA /* Fonts */,
 				33F98A351BBA2E9800536720 /* Utils */,
 				33F98A321BB8DA9400536720 /* Domain */,
 				33DA66BD1BB2453600F7978B /* Enums */,
@@ -463,6 +477,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -507,6 +522,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
