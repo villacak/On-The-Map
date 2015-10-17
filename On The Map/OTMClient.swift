@@ -25,7 +25,15 @@ class OTMClient: NSObject {
     /*
     * Udacity - Login
     *
-    * "{\"udacity\": {\"username\": \"\(userName)\", \"password\": \"\(password)\"}}"
+    * https://www.udacity.com/api/session
+    *
+    * Method : POST
+    *
+    * Parameters:
+    * udacity - Dictionary
+    * username - String, may be user name or email
+    * password - String
+    *
     */
     func udacityPOSTLogin(userName userName: String?, password: String?, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         let request = NSMutableURLRequest(URL: NSURL(string: ConstantsUdacity.UDACITY_LOG_IN_OUT)!)
@@ -57,9 +65,13 @@ class OTMClient: NSObject {
     
     
     /*
-     * Udacity - Logout
-     *
-     */
+    * Udacity - Logout
+    *
+    *  https://www.udacity.com/api/session
+    *
+    *  Method : DELETE
+    *
+    */
     func udacityPOSTLogout(completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         let request = NSMutableURLRequest(URL: NSURL(string: ConstantsUdacity.UDACITY_LOG_IN_OUT)!)
         request.HTTPMethod = ConstantsRequest.METHOD_DELETE
@@ -94,11 +106,55 @@ class OTMClient: NSObject {
     }
     
     
+    /*
+    * Get User Data
+    *
+    * https://www.udacity.com/api/users/<user_id>
+    *
+    * Method : GET
+    *
+    * parameter
+    * userId - String, userId that is retrieved once the user has logged in with success
+    *
+    */
+    func udacityPOSTGetUserData(userId: String, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+        let request = NSMutableURLRequest(URL: NSURL(string: ConstantsUdacity.UDACITY_GET_PUBLIC_DATA + userId)!)
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithRequest(request) { data, response, error in
+            if error != nil {
+                completionHandler(result: nil, error: error)
+            } else {
+                let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5)) /* subset response data! */
+                do {
+                    let jsonResult: NSDictionary? = try NSJSONSerialization.JSONObjectWithData(newData, options:NSJSONReadingOptions.MutableContainers) as? NSDictionary
+                    completionHandler(result: jsonResult, error: nil)
+                } catch let errorCatch as NSError {
+                    completionHandler(result: nil, error: errorCatch)
+                }
+                print(NSString(data: newData, encoding: NSUTF8StringEncoding))
+            }
+        }
+        task.resume()
+        return task
+    }
+    
+    
+    
     
     /*
-     * Get Students Locations
-     *
-     */
+    * Get Students Locations
+    *
+    * https://api.parse.com/1/classes/StudentLocation
+    *
+    * Method : GET
+    *
+    * parameters
+    * limit - Number, specifies the maximum number of StudentLocation objects to return in the JSON response
+    * skip - Number, use this parameter with limit to paginate through results
+    * order - String, a comma-separate list of key names that specify the sorted order of the results
+    *                 Prefixing a key name with a negative sign reverses the order (default order is descending)
+    *
+    */
     func parseGETStudentLocations(limit limit: String?, skip: String?, order: OTMServicesNameEnum?, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         
         let request = NSMutableURLRequest(URL: NSURL(string: OTMClient.ConstantsParse.PARSE_STUDENT_LOCATION_URL)!)
@@ -115,9 +171,8 @@ class OTMClient: NSObject {
                 } catch let errorCatch as NSError {
                     completionHandler(result: nil, error: errorCatch)
                 }
-
+                print(NSString(data: data!, encoding: NSUTF8StringEncoding))
             }
-            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
         }
         task.resume()
         return task
@@ -127,6 +182,11 @@ class OTMClient: NSObject {
     /*
      * putPOSTStudentLocation
      *
+     * https://api.parse.com/1/classes/StudentLocation
+     * Method: POST
+     *
+     * Parameters
+     * Refer fields from Domain -> UserData
      */
     func putPOSTStudentLocation(userData userData: UserData, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         let request = NSMutableURLRequest(URL: NSURL(string: OTMClient.ConstantsParse.PARSE_STUDENT_LOCATION_URL)!)
@@ -141,30 +201,95 @@ class OTMClient: NSObject {
             if error != nil {
                 completionHandler(result: nil, error: error)
             } else {
-                
+                do {
+                    let jsonResult: NSDictionary? = try NSJSONSerialization.JSONObjectWithData(data!, options:NSJSONReadingOptions.MutableContainers) as? NSDictionary
+                    completionHandler(result: jsonResult, error: nil)
+                } catch let errorCatch as NSError {
+                    completionHandler(result: nil, error: errorCatch)
+                }
+                print(NSString(data: data!, encoding: NSUTF8StringEncoding))
             }
-            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
         }
         task.resume()
         return task
     }
     
-    //
     
-    // Udacity - Get user data
-//    func udacityPOSTGetUserData(userId: String, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
-//        let request = NSMutableURLRequest(URL: NSURL(string: ConstantsUdacity.UDACITY_GET_PUBLIC_DATA + userId)!)
-//        let session = NSURLSession.sharedSession()
-//        let task = session.dataTaskWithRequest(request) { data, response, error in
-//            if error != nil { // Handle error...
-//                return
-//            }
-//            let newData = data!.subdataWithRange(NSMakeRange(5, data!.length - 5)) /* subset response data! */
-//            print(NSString(data: newData, encoding: NSUTF8StringEncoding))
-//        }
-//        task.resume()
-//        return task
-//    }
+    /*
+     * Query Student Location
+     *
+     * https://api.parse.com/1/classes/StudentLocation
+     *
+     * Method : GET
+     *
+     * Parameters
+     * where - Parse Query a SQL-like query allowing you to check if an object value matches some target value
+     *
+     * https://www.parse.com/docs/rest/guide/#queries-arrays
+     */
+    func queryGETStudentLocation(whereStr whereStr: String, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+        let urlString: String = "https://api.parse.com/1/classes/StudentLocation?where=\(whereStr)"
+        let url = NSURL(string: urlString)
+        let request = NSMutableURLRequest(URL: url!)
+        request.addValue(OTMClient.ConstantsParse.APPLICATION_ID_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.APPLICATION_ID_STR)
+        request.addValue(OTMClient.ConstantsParse.API_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.API_KEY_STR)
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithRequest(request) { data, response, error in
+            if error != nil {
+                completionHandler(result: nil, error: error)
+            } else {
+                do {
+                    let jsonResult: NSDictionary? = try NSJSONSerialization.JSONObjectWithData(data!, options:NSJSONReadingOptions.MutableContainers) as? NSDictionary
+                    completionHandler(result: jsonResult, error: nil)
+                } catch let errorCatch as NSError {
+                    completionHandler(result: nil, error: errorCatch)
+                }
+                print(NSString(data: data!, encoding: NSUTF8StringEncoding))
+            }
+        }
+        task.resume()
+        return task
+    }
+    
+    
+    /*
+     * updatingPUTStudentLocation
+     *
+     * https://api.parse.com/1/classes/StudentLocation/<objectId>
+     *
+     * Method : PUT
+     *
+     * Parameters
+     * objectId - String, the object ID of the StudentLocation to update; specify the object ID right after StudentLocation
+     *
+     */
+     func updatingPUTStudentLocation(objectId objectId: String, userData: UserData, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+        let urlString = "https://api.parse.com/1/classes/StudentLocation/8ZExGR5uX8"
+        let url = NSURL(string: urlString)
+        let request = NSMutableURLRequest(URL: url!)
+        request.HTTPMethod = OTMClient.ConstantsRequest.METHOD_PUT
+        request.addValue(OTMClient.ConstantsParse.APPLICATION_ID_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.APPLICATION_ID_STR)
+        request.addValue(OTMClient.ConstantsParse.API_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.API_KEY_STR)
+        request.addValue(OTMClient.ConstantsRequest.MIME_TYPE_POST, forHTTPHeaderField: OTMClient.ConstantsRequest.CONTENT_TYPE)
+        request.HTTPBody = buildParseBodyRequest(userData: userData)
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithRequest(request) { data, response, error in
+            if error != nil {
+                completionHandler(result: nil, error: error)
+            } else {
+                do {
+                    let jsonResult: NSDictionary? = try NSJSONSerialization.JSONObjectWithData(data!, options:NSJSONReadingOptions.MutableContainers) as? NSDictionary
+                    completionHandler(result: jsonResult, error: nil)
+                } catch let errorCatch as NSError {
+                    completionHandler(result: nil, error: errorCatch)
+                }
+                print(NSString(data: data!, encoding: NSUTF8StringEncoding))
+            }
+        }
+        task.resume()
+        return task
+    }
+    
     
     
     // Utils functions to build the Parse json
@@ -185,7 +310,7 @@ class OTMClient: NSObject {
         } catch let errorCatch as NSError {
             bodyJson = buildErrorMessage(errorCatch)
         }
-
+        
         
         return bodyJson
     }

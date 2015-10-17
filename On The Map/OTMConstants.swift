@@ -53,6 +53,7 @@ extension OTMClient {
         static let METHOD_POST: String = "POST"
         static let METHOD_GET: String = "GET"
         static let METHOD_DELETE: String = "DELETE"
+        static let METHOD_PUT: String = "PUT"
         
         static let MIME_TYPE_POST: String = "application/json"
         static let CONTENT_TYPE: String = "Content-Type"

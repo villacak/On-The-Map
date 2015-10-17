@@ -35,8 +35,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         //            print("Object has been saved.")
         //        }
        
-        email.text = "klausvillaca@gmail.com"
-        password.text = "Feedback999"
     }
     
     
