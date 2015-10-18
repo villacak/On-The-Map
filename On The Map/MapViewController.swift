@@ -16,12 +16,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     
     let locationManager = CLLocationManager()
+    let paginationSize: String = "100"
+    let initialCache: String = "400"
+    
     var locationList: [MKPointAnnotation]!
     var otmTabBarController: OTMTabBarController!
     var spinner: ActivityIndicatorView!
+    var mapPoints: [MKAnnotation]!
     
-    let paginationSize: String = "100"
-    let initialCache: String = "400"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -169,6 +171,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     
     @IBAction func refreshAction(sender: AnyObject) {
+        
     }
     
 }

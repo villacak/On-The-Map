@@ -26,8 +26,6 @@ struct UserData {
     var longitude: Double?
     var createdAt: NSDate?
     var updatedAt: NSDate?
-    var ACL: PFACL!
-    
     
     
     
@@ -43,10 +41,6 @@ struct UserData {
         createdAt = NSDate()
         updatedAt = NSDate()
         
-        let acl = PFACL()
-        acl.setPublicReadAccess(true)
-        acl.setPublicWriteAccess(true)
-        ACL = acl
     }
     
     init(objectId: String!, uniqueKey: String!, firstName: String!, lastName: String!,  mapString: String!, mediaUrl: String!, latitude: Double!, longitude: Double!, createdAt: NSDate!, updatedAt: NSDate!) {
