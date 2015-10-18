@@ -13,11 +13,14 @@ extension OTMClient {
     
     struct ConstantsParse {
         // MARK: Parse API Key
-        static let API_KEY_STR: String = "X-Parse-REST-API-Key"
-        static let API_KEY: String = "8giE02DqBln6EvyGCirPg6FBYpG8zNFZusGFamhq"
+        static let CLIENT_KEY_STR: String = "X-Parse-REST-API-Key"
+        static let CLIENT_API_KEY: String = "aiBuGRmnE489l7VeXBLCzBoFzAObn0SDgYRZ1OBk"
+        
+        static let REST_API_KEY_STR: String = "X-Parse-REST-API-Key"
+        static let REST_API_KEY: String = "yENQUrV58F0e3ImCAGJEICDp6UcmAatBdahluzMp"
         
         static let APPLICATION_ID_STR: String = "X-Parse-Application-Id"
-        static let APPLICATION_ID_KEY: String = "aiBuGRmnE489l7VeXBLCzBoFzAObn0SDgYRZ1OBk"
+        static let APPLICATION_ID_KEY: String = "8giE02DqBln6EvyGCirPg6FBYpG8zNFZusGFamhq"
         
         static let PARSE_STUDENT_LOCATION_URL = "https://api.parse.com/1/classes/StudentLocation"
 
@@ -75,6 +78,8 @@ extension OTMClient {
         static let INVALID_DATA: String = "Invalid data"
         static let LOGIN_PROCESSING: String = "Login..."
         static let LOGOUT_PROCESSING: String = "Logout..."
+        static let LOADING_DATA: String = "Loading data..."
+        static let LOADING_DATA_FAILED: String = "Loading data has failed"
     }
     
     struct ConstantsData {

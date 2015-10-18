@@ -155,13 +155,17 @@ class OTMClient: NSObject {
     *                 Prefixing a key name with a negative sign reverses the order (default order is descending)
     *
     */
+    
+    //        Parse.setApplicationId("8giE02DqBln6EvyGCirPg6FBYpG8zNFZusGFamhq",
+    //            clientKey: "aiBuGRmnE489l7VeXBLCzBoFzAObn0SDgYRZ1OBk")
+
     func parseGETStudentLocations(limit limit: String?, skip: String?, order: OTMServicesNameEnum?, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         
         let tempUrl: String = getUrlForParameters(limitP: limit, skipP: skip, orderP: order)
         let urlSelected: NSURL = NSURL(string: tempUrl)!
         let request = NSMutableURLRequest(URL: urlSelected)
         request.addValue(OTMClient.ConstantsParse.APPLICATION_ID_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.APPLICATION_ID_STR)
-        request.addValue(OTMClient.ConstantsParse.API_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.API_KEY_STR)
+        request.addValue(OTMClient.ConstantsParse.REST_API_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.REST_API_KEY_STR)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
@@ -194,7 +198,7 @@ class OTMClient: NSObject {
         let request = NSMutableURLRequest(URL: NSURL(string: OTMClient.ConstantsParse.PARSE_STUDENT_LOCATION_URL)!)
         request.HTTPMethod = OTMClient.ConstantsRequest.METHOD_POST
         request.addValue(OTMClient.ConstantsParse.APPLICATION_ID_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.APPLICATION_ID_STR)
-        request.addValue(OTMClient.ConstantsParse.API_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.API_KEY_STR)
+        request.addValue(OTMClient.ConstantsParse.REST_API_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.REST_API_KEY_STR)
         request.addValue(OTMClient.ConstantsRequest.MIME_TYPE_POST, forHTTPHeaderField: OTMClient.ConstantsRequest.CONTENT_TYPE)
         request.HTTPBody = buildParseBodyRequest(userData: userData)
         
@@ -234,7 +238,7 @@ class OTMClient: NSObject {
         let url = NSURL(string: urlString)
         let request = NSMutableURLRequest(URL: url!)
         request.addValue(OTMClient.ConstantsParse.APPLICATION_ID_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.APPLICATION_ID_STR)
-        request.addValue(OTMClient.ConstantsParse.API_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.API_KEY_STR)
+        request.addValue(OTMClient.ConstantsParse.REST_API_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.REST_API_KEY_STR)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
@@ -271,7 +275,7 @@ class OTMClient: NSObject {
         let request = NSMutableURLRequest(URL: url!)
         request.HTTPMethod = OTMClient.ConstantsRequest.METHOD_PUT
         request.addValue(OTMClient.ConstantsParse.APPLICATION_ID_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.APPLICATION_ID_STR)
-        request.addValue(OTMClient.ConstantsParse.API_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.API_KEY_STR)
+        request.addValue(OTMClient.ConstantsParse.REST_API_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.REST_API_KEY_STR)
         request.addValue(OTMClient.ConstantsRequest.MIME_TYPE_POST, forHTTPHeaderField: OTMClient.ConstantsRequest.CONTENT_TYPE)
         request.HTTPBody = buildParseBodyRequest(userData: userData)
         let session = NSURLSession.sharedSession()
@@ -306,13 +310,13 @@ class OTMClient: NSObject {
     func getUrlForParameters(limitP limitP: String?, skipP: String?, orderP: OTMServicesNameEnum?) -> String {
         var urlForChange: String = OTMClient.ConstantsParse.PARSE_STUDENT_LOCATION_URL
         if (limitP != nil && skipP != nil && orderP != nil) {
-            urlForChange += "?limit=\(limitP)&skip=\(skipP)&order=\(orderP)"
+            urlForChange += "?limit=\(limitP!)&skip=\(skipP!)&order=\(orderP!)"
         } else if (limitP != nil && skipP != nil) {
-            urlForChange += "?limit=\(limitP)&skip=\(skipP)"
+            urlForChange += "?limit=\(limitP!)&skip=\(skipP!)"
         } else if (limitP != nil) {
-            urlForChange += "?limit=\(limitP)"
+            urlForChange += "?limit=\(limitP!)"
         } else if (limitP == nil && skipP == nil && orderP != nil) {
-            urlForChange += "?order=\(orderP)"
+            urlForChange += "?order=\(orderP!)"
         }
         return urlForChange
     }

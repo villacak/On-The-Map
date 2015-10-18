@@ -9,24 +9,37 @@
 import UIKit
 import MapKit
 
-class MapViewController: UIViewController, MKMapViewDelegate {
+class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     
+    let locationManager = CLLocationManager()
+    var locationList: [MKPointAnnotation]!
     var otmTabBarController: OTMTabBarController!
     var spinner: ActivityIndicatorView!
+    
+    let paginationSize: String = "100"
+    let initialCache: String = "400"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         otmTabBarController = tabBarController as! OTMTabBarController
+        
+        mapView.mapType = MKMapType.Standard
+//        mapView.removeAnnotation(mapView.annotations)
+        
+        locationManager.delegate = self
+//        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+//        locationManager.requestAlwaysAuthorization()
+//        locationManager.startUpdatingLocation()
+
     }
     
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
-//        otmTabBarController?.navigationController!.navigationBarHidden = false
         otmTabBarController.tabBar.hidden = false
         checkIfLogged()
     }
@@ -37,7 +50,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             otmTabBarController.tabBar.hidden = true
             performSegueWithIdentifier("LoginSegue", sender: self)
             self.storyboard!.instantiateViewControllerWithIdentifier("OTMFBAuthViewController")
-        } 
+        } else {
+            loadData(numberToLoad: paginationSize, cacheToPaginate: initialCache, orderListBy: OTMServicesNameEnum.updateAt)
+        }
     }
 
     
@@ -53,9 +68,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     @IBAction func logoutAction(sender: AnyObject) {
-        
-        spinner = ActivityIndicatorView(text: OTMClient.ConstantsMessages.LOGOUT_PROCESSING)
-        view.addSubview(spinner)
+        startSpin(spinText: OTMClient.ConstantsMessages.LOGOUT_PROCESSING)
         
         OTMClient.sharedInstance().udacityPOSTLogout() {
             (success, errorString)  in
@@ -101,7 +114,53 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         alert.addAction(okDismiss)
         controller.presentViewController(alert, animated: true, completion: {})
     }
-
+    
+    
+    func loadData(numberToLoad numberToLoad: String, cacheToPaginate: String, orderListBy: OTMServicesNameEnum) {
+        startSpin(spinText: OTMClient.ConstantsMessages.LOADING_DATA)
+        
+        OTMClient.sharedInstance().parseGETStudentLocations(limit: numberToLoad, skip: cacheToPaginate, order: orderListBy){
+            (success, errorString)  in
+            var isSuccess: Bool = false
+            if (success != nil) {
+                let responseAsNSDictinory: Dictionary<String, AnyObject> = (success as! NSDictionary) as! Dictionary<String, AnyObject>
+                
+                // Check if the response contains any error or not
+                if ((responseAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
+                    let message: String = OTMClient.sharedInstance().parseErrorReturned(responseAsNSDictinory)
+                    Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: message, controller: self)
+                } else {
+                    isSuccess = true
+                    print(responseAsNSDictinory)
+                }
+            } else {
+                // If success returns nil then it's necessary display an alert to the user
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: (errorString?.description)!, controller: self)
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                // Dismiss modal
+                self.spinner.hide()
+                
+                // If success extracting data then call the TabBarController Map view
+                if (isSuccess) {
+                   self.populateLocationList()
+                }
+            })
+        }
+    }
+    
+    
+    
+    func startSpin(spinText spinText: String) {
+        spinner = ActivityIndicatorView(text: spinText)
+        view.addSubview(spinner)
+    }
+    
+    
+    func populateLocationList() {
+        
+    }
     
     
     @IBAction func pinAction(sender: AnyObject) {
