@@ -23,6 +23,8 @@ extension OTMClient {
         static let APPLICATION_ID_KEY: String = "8giE02DqBln6EvyGCirPg6FBYpG8zNFZusGFamhq"
         
         static let PARSE_STUDENT_LOCATION_URL = "https://api.parse.com/1/classes/StudentLocation"
+        
+        static let RESULTS: String = "results"
 
     }
     

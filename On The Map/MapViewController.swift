@@ -23,6 +23,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var otmTabBarController: OTMTabBarController!
     var spinner: ActivityIndicatorView!
     var mapPoints: [MKAnnotation]!
+    var responseAsNSDictinory: Dictionary<String, AnyObject>!
+    
     
     
     override func viewDidLoad() {
@@ -77,11 +79,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             
             var isSuccess: Bool = false
             if (success != nil) {
-                let responseAsNSDictinory: Dictionary<String, AnyObject> = (success as! NSDictionary) as! Dictionary<String, AnyObject>
+                self.responseAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
                 
                 // Check if the response contains any error or not
-                if ((responseAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
-                    let message: String = OTMClient.sharedInstance().parseErrorReturned(responseAsNSDictinory)
+                if ((self.responseAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
+                    let message: String = OTMClient.sharedInstance().parseErrorReturned(self.responseAsNSDictinory)
                      Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: message, controller: self)
                 } else {
                     isSuccess = true
@@ -125,15 +127,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             (success, errorString)  in
             var isSuccess: Bool = false
             if (success != nil) {
-                let responseAsNSDictinory: Dictionary<String, AnyObject> = (success as! NSDictionary) as! Dictionary<String, AnyObject>
+                self.responseAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
                 
                 // Check if the response contains any error or not
-                if ((responseAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
-                    let message: String = OTMClient.sharedInstance().parseErrorReturned(responseAsNSDictinory)
+                if ((self.responseAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
+                    let message: String = OTMClient.sharedInstance().parseErrorReturned(self.responseAsNSDictinory)
                     Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: message, controller: self)
                 } else {
                     isSuccess = true
-                    print(responseAsNSDictinory)
                 }
             } else {
                 // If success returns nil then it's necessary display an alert to the user
@@ -146,7 +147,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                   self.populateLocationList()
+                    self.populateLocationList()
                 }
             })
         }
@@ -161,17 +162,23 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     
     func populateLocationList() {
-        
+        let results: [AnyObject] = responseAsNSDictinory[OTMClient.ConstantsParse.RESULTS] as! [AnyObject]
+        print("results : \(results)")
+        print(responseAsNSDictinory!)
     }
     
     
     @IBAction func pinAction(sender: AnyObject) {
+        navigationController?.navigationBarHidden = false
+        otmTabBarController.tabBar.hidden = true
+        performSegueWithIdentifier("PostingViewSegue", sender: self)
+        storyboard!.instantiateViewControllerWithIdentifier("PostingView")
     }
     
     
     
     @IBAction func refreshAction(sender: AnyObject) {
-        
+        checkIfLogged()
     }
     
 }

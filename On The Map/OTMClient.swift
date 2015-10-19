@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Parse
 
 
 class OTMClient: NSObject {
@@ -177,7 +178,7 @@ class OTMClient: NSObject {
                 } catch let errorCatch as NSError {
                     completionHandler(result: nil, error: errorCatch)
                 }
-                print(NSString(data: data!, encoding: NSUTF8StringEncoding))
+//                print(NSString(data: data!, encoding: NSUTF8StringEncoding))
             }
         }
         task.resume()

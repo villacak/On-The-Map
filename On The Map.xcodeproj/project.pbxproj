@@ -36,6 +36,7 @@
 		33DA66BB1BB23E4100F7978B /* OTMConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66BA1BB23E4100F7978B /* OTMConstants.swift */; settings = {ASSET_TAGS = (); }; };
 		33DA66BF1BB245AD00F7978B /* OTMServicesNameEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66BE1BB245AD00F7978B /* OTMServicesNameEnum.swift */; settings = {ASSET_TAGS = (); }; };
 		33DA66C11BB37ED900F7978B /* OTMDialogs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66C01BB37ED900F7978B /* OTMDialogs.swift */; settings = {ASSET_TAGS = (); }; };
+		33EB6EEA1BD48D3900CCFA71 /* PostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33EB6EE91BD48D3900CCFA71 /* PostingViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		33F98A341BB8DAED00536720 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33F98A331BB8DAED00536720 /* UserData.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
@@ -95,6 +96,8 @@
 		33DA66BA1BB23E4100F7978B /* OTMConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMConstants.swift; sourceTree = "<group>"; };
 		33DA66BE1BB245AD00F7978B /* OTMServicesNameEnum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMServicesNameEnum.swift; sourceTree = "<group>"; };
 		33DA66C01BB37ED900F7978B /* OTMDialogs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMDialogs.swift; sourceTree = "<group>"; };
+		33EB6EE61BD4783A00CCFA71 /* On The Map-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "On The Map-Bridging-Header.h"; sourceTree = "<group>"; };
+		33EB6EE91BD48D3900CCFA71 /* PostingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostingViewController.swift; sourceTree = "<group>"; };
 		33F98A331BB8DAED00536720 /* UserData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -182,6 +185,8 @@
 				33DA667A1BB0EC9000F7978B /* Info.plist */,
 				33918F811BC0816F007A43A5 /* MapViewController.swift */,
 				33918F831BC0825D007A43A5 /* UdacitySignupViewController.swift */,
+				33EB6EE61BD4783A00CCFA71 /* On The Map-Bridging-Header.h */,
+				33EB6EE91BD48D3900CCFA71 /* PostingViewController.swift */,
 			);
 			path = "On The Map";
 			sourceTree = "<group>";
@@ -338,6 +343,7 @@
 		33DA66631BB0EC9000F7978B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Klaus Villaca";
 				TargetAttributes = {
@@ -407,6 +413,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				33DA66C11BB37ED900F7978B /* OTMDialogs.swift in Sources */,
+				33EB6EEA1BD48D3900CCFA71 /* PostingViewController.swift in Sources */,
 				331B552A1BC4B2BA000812F5 /* OTMTabBarController.swift in Sources */,
 				3341919B1BBE1E22003B3A17 /* UtilsRequests.swift in Sources */,
 				33DA66711BB0EC9000F7978B /* ViewController.swift in Sources */,
@@ -560,6 +567,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -568,6 +576,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.nanodegree.udacity.On-The-Map";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "On The Map/On The Map-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -575,6 +585,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -583,6 +594,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.nanodegree.udacity.On-The-Map";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "On The Map/On The Map-Bridging-Header.h";
 			};
 			name = Release;
 		};
