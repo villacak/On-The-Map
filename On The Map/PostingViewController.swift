@@ -14,6 +14,9 @@ class PostingViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var textWithData: UITextView!
     
     var otmTabBarController: OTMTabBarController!
+    var spinner: ActivityIndicatorView!
+    
+    var userData: UserData!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -98,12 +101,57 @@ class PostingViewController: UIViewController, UITextFieldDelegate {
 
     
     @IBAction func findOnTheMapAction(sender: AnyObject) {
+        spinner = ActivityIndicatorView(text: "Saving...")
+        view.addSubview(spinner)
+
+        assembleUserData();
+        var responseAsNSDictinory: Dictionary<String, AnyObject>!
         
+        OTMClient.sharedInstance().putPOSTStudentLocation(userData: userData){
+            (success, errorString)  in
+            var isSuccess: Bool = false
+            if (success != nil) {
+                responseAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
+                
+                // Check if the response contains any error or not
+                if ((responseAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
+                    let message: String = OTMClient.sharedInstance().parseErrorReturned(responseAsNSDictinory)
+                    Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: message, controller: self)
+                } else {
+                    isSuccess = true
+                }
+            } else {
+                // If success returns nil then it's necessary display an alert to the user
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: (errorString?.description)!, controller: self)
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                // Dismiss modal
+                self.spinner.hide()
+                
+                // If success extracting data then call the TabBarController Map view
+                if (isSuccess) {
+                    self.otmTabBarController.userDataArray.append(self.userData);
+                    self.dismissView()
+                }
+            })
+        }
+    }
+    
+    
+    func assembleUserData() {
+        userData = UserData()
+        
+    }
+    
+    
+    func dismissView() {
+        self.navigationController?.navigationBarHidden = false
+        self.navigationController?.popViewControllerAnimated(true)
     }
 
     @IBAction func cancelAction(sender: AnyObject) {
-        self.navigationController?.navigationBarHidden = false
-        self.navigationController?.popViewControllerAnimated(true)
+        dismissView()
     }
     
 }

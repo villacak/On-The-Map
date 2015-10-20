@@ -24,6 +24,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var spinner: ActivityIndicatorView!
     var mapPoints: [MKAnnotation]!
     var responseAsNSDictinory: Dictionary<String, AnyObject>!
+    var userLocation: CLLocationCoordinate2D!
     
     
     
@@ -34,10 +35,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         mapView.mapType = MKMapType.Standard
 //        mapView.removeAnnotation(mapView.annotations)
         
+        // Acquire user geo position
         locationManager.delegate = self
-//        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-//        locationManager.requestAlwaysAuthorization()
-//        locationManager.startUpdatingLocation()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestAlwaysAuthorization()
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
 
     }
     
@@ -69,6 +72,29 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     func mapViewWillStartLoadingMap(mapView: MKMapView) {
         activityIndicator.hidden = false
         activityIndicator.startAnimating()
+    }
+    
+    
+    
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        userLocation = manager.location?.coordinate
+        
+        let center: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: userLocation.latitude, longitude: userLocation.longitude)
+        let region: MKCoordinateRegion = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+        
+        mapView.setRegion(region, animated: true)
+        let currentLocation: CLLocation = CLLocation()
+        
+        let locationLat = currentLocation.coordinate.latitude
+        let locationLon = currentLocation.coordinate.longitude
+        
+        print("Locations: Latitude = \(locationLat), Longitude = \(locationLon), Current Location Lat/Lon= \(currentLocation.coordinate.latitude) \\ \(currentLocation.coordinate.longitude)")
+    }
+    
+    
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+        let message: String = OTMClient.ConstantsMessages.ERROR_UPDATING_LOCATION + error.localizedDescription
+        Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: message, controller: self)
     }
     
     @IBAction func logoutAction(sender: AnyObject) {

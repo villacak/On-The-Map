@@ -80,8 +80,9 @@ extension OTMClient {
         static let INVALID_DATA: String = "Invalid data"
         static let LOGIN_PROCESSING: String = "Login..."
         static let LOGOUT_PROCESSING: String = "Logout..."
-        static let LOADING_DATA: String = "Loading data..."
+        static let LOADING_DATA: String = "Loading..."
         static let LOADING_DATA_FAILED: String = "Loading data has failed"
+        static let ERROR_UPDATING_LOCATION: String = "Error while updating location, "
     }
     
     struct ConstantsData {
