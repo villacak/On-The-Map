@@ -27,7 +27,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var userLocation: CLLocationCoordinate2D!
     
     
-    
+    // View Did Load - Runs this function
     override func viewDidLoad() {
         super.viewDidLoad()
         otmTabBarController = tabBarController as! OTMTabBarController
@@ -45,6 +45,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
+    // Calles just before view will appear
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
         otmTabBarController.tabBar.hidden = false
@@ -52,6 +53,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
+    // Check if the user have already logged or not, if logged load data, if not redirect to the login page
     func checkIfLogged() {
         if otmTabBarController.udacityKey == OTMClient.ConstantsGeneral.EMPTY_STR {
             otmTabBarController.tabBar.hidden = true
@@ -63,19 +65,21 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
 
     
+    // Called whe nmap view has finished to load
     func mapViewDidFinishLoadingMap(mapView: MKMapView) {
         activityIndicator.stopAnimating()
         activityIndicator.hidden = true
     }
     
     
+    // Called when mapview will start to load
     func mapViewWillStartLoadingMap(mapView: MKMapView) {
         activityIndicator.hidden = false
         activityIndicator.startAnimating()
     }
     
     
-    
+    // Location Manager called when locations have been updated
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         userLocation = manager.location?.coordinate
         
@@ -92,11 +96,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
+    // Location Manager called when error occur when loading locations
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
         let message: String = OTMClient.ConstantsMessages.ERROR_UPDATING_LOCATION + error.localizedDescription
         Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: message, controller: self)
     }
     
+    
+    // Logout button action
     @IBAction func logoutAction(sender: AnyObject) {
         startSpin(spinText: OTMClient.ConstantsMessages.LOGOUT_PROCESSING)
         
@@ -136,6 +143,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
+    // Dismiss the Allert and form the segue
     func okDismissAlertAndPerformSegue(titleStr titleStr: String, messageStr: String, controller: UIViewController) {
         let alert: UIAlertController = UIAlertController(title: titleStr, message: messageStr, preferredStyle: UIAlertControllerStyle.Alert)
         let okDismiss: UIAlertAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Cancel, handler: {
@@ -146,6 +154,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
+    // Load data from Parse
     func loadData(numberToLoad numberToLoad: String, cacheToPaginate: String, orderListBy: OTMServicesNameEnum) {
         startSpin(spinText: OTMClient.ConstantsMessages.LOADING_DATA)
         
@@ -181,12 +190,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     
     
+    // Add view to show the spin
     func startSpin(spinText spinText: String) {
         spinner = ActivityIndicatorView(text: spinText)
         view.addSubview(spinner)
     }
     
     
+    // Function that will populate the MKAnnotations and Locations to display in the map
     func populateLocationList() {
         let results: [AnyObject] = responseAsNSDictinory[OTMClient.ConstantsParse.RESULTS] as! [AnyObject]
         print("results : \(results)")
@@ -194,15 +205,17 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
+    // Select Posting View
     @IBAction func pinAction(sender: AnyObject) {
         navigationController?.navigationBarHidden = false
         otmTabBarController.tabBar.hidden = true
         performSegueWithIdentifier("PostingViewSegue", sender: self)
-        storyboard!.instantiateViewControllerWithIdentifier("PostingView")
+        let postingView: PostingViewController = storyboard!.instantiateViewControllerWithIdentifier("PostingView") as! PostingViewController
+        postingView.userLocation = self.userLocation
     }
     
     
-    
+    // Refresh data and map
     @IBAction func refreshAction(sender: AnyObject) {
         checkIfLogged()
     }

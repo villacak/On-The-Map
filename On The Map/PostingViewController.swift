@@ -12,11 +12,13 @@ class PostingViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var findOnTheMapButton: UIButton!
     @IBOutlet weak var textWithData: UITextView!
+    @IBOutlet weak var personalUrl: UITextField!
     
     var otmTabBarController: OTMTabBarController!
     var spinner: ActivityIndicatorView!
     
-    var userData: UserData!
+    var userData: UserData?
+    var userLocation: CLLocationCoordinate2D!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,30 +42,28 @@ class PostingViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    
     // Keyboard notify notification center the keyboard will show
     func keyboardWillShow(notification: NSNotification) {
         if (view.frame.origin.y >= 0 &&
-            textWithData.isFirstResponder()) {
+            personalUrl.isFirstResponder()) {
                 view.frame.origin.y -= getKeyboardHeight(notification)
         }
     }
     
     
-    
     // Keyboard notify notification center the keyboard will hide
     func keyboardWillHide(notification: NSNotification) {
-        if (view.frame.origin.y <= 0 && textWithData.isFirstResponder()) {
+        if (view.frame.origin.y <= 0 && personalUrl.isFirstResponder()) {
             view.frame.origin.y += getKeyboardHeight(notification)
         }
     }
+    
     
     // Delegate when user hit the soft key Done from keyboard, we collapse the keyboard
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
-    
     
     
     // Get the keyboard hieght to move the to be hidden UITextView
@@ -93,6 +93,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate {
             UIKeyboardWillHideNotification, object: nil)
     }
     
+    
     //Calls this function when the tap is recognized.
     func DismissKeyboard(){
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
@@ -100,6 +101,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate {
     }
 
     
+    // Add the new text and URL to the location
     @IBAction func findOnTheMapAction(sender: AnyObject) {
         spinner = ActivityIndicatorView(text: "Saving...")
         view.addSubview(spinner)
@@ -107,7 +109,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate {
         assembleUserData();
         var responseAsNSDictinory: Dictionary<String, AnyObject>!
         
-        OTMClient.sharedInstance().putPOSTStudentLocation(userData: userData){
+        OTMClient.sharedInstance().putPOSTStudentLocation(userData: userData!){
             (success, errorString)  in
             var isSuccess: Bool = false
             if (success != nil) {
@@ -131,7 +133,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate {
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    self.otmTabBarController.userDataArray.append(self.userData);
+                    self.otmTabBarController.userDataDic[self.otmTabBarController.udacityKey] = self.userData;
                     self.dismissView()
                 }
             })
@@ -139,17 +141,31 @@ class PostingViewController: UIViewController, UITextFieldDelegate {
     }
     
     
+    // Here we set all values to the UserData struct
     func assembleUserData() {
-        userData = UserData()
+        if let userDataTemp = otmTabBarController.userDataDic[otmTabBarController.udacityKey] {
+            userData = userDataTemp
+        } else {
+            userData = UserData()
+            userData.uniqueKey = otmTabBarController.udacityKey
+        }
+        userData.mapString = textWithData.text
+        userData.mediaUrl = personalUrl.text
+        userData.latitude = userLocation.latitude
+        userData.longitude = userLocation.longitude
+        
         
     }
     
     
+    // Dismiss view returning
     func dismissView() {
         self.navigationController?.navigationBarHidden = false
         self.navigationController?.popViewControllerAnimated(true)
     }
 
+    
+    // Cancel Button action
     @IBAction func cancelAction(sender: AnyObject) {
         dismissView()
     }
