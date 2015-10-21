@@ -60,7 +60,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             performSegueWithIdentifier("LoginSegue", sender: self)
             self.storyboard!.instantiateViewControllerWithIdentifier("OTMFBAuthViewController")
         } else {
+            let checkUserDataTemp: UserData? = otmTabBarController.userDataDic[otmTabBarController.udacityKey]
+            if (checkUserDataTemp == nil) {
+                loadUserData()
+            }
             loadData(numberToLoad: paginationSize, cacheToPaginate: initialCache, orderListBy: OTMServicesNameEnum.updateAt)
+            
         }
     }
 
@@ -151,6 +156,49 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             })
         alert.addAction(okDismiss)
         controller.presentViewController(alert, animated: true, completion: {})
+    }
+    
+    
+    // Get the user data and extract the data
+    func extractDataAndCreateUserDataStruct() {
+        
+    }
+    
+    
+    // Load the Udacity User Data
+    func loadUserData() {
+        startSpin(spinText: OTMClient.ConstantsMessages.LOADING_DATA)
+        
+        OTMClient.sharedInstance().udacityPOSTGetUserData(otmTabBarController.udacityUserId){
+            (success, errorString)  in
+            var isSuccess: Bool = false
+            if (success != nil) {
+                self.responseAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
+                
+                // Check if the response contains any error or not
+                if ((self.responseAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
+                    let message: String = OTMClient.sharedInstance().parseErrorReturned(self.responseAsNSDictinory)
+                    Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: message, controller: self)
+                } else {
+                    isSuccess = true
+                }
+            } else {
+                // If success returns nil then it's necessary display an alert to the user
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: (errorString?.description)!, controller: self)
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                // Dismiss modal
+                self.spinner.hide()
+                
+                // If success extracting data then call the TabBarController Map view
+                if (isSuccess) {
+                    self.extractDataAndCreateUserDataStruct()
+                    self.populateLocationList()
+                }
+            })
+        }
+
     }
     
     

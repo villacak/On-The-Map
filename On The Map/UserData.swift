@@ -30,16 +30,16 @@ struct UserData {
     
     
     init() {
-        objectId = OTMClient.ConstantsGeneral.EMPTY_STR
-        uniqueKey = OTMClient.ConstantsGeneral.EMPTY_STR
-        firstName = OTMClient.ConstantsGeneral.EMPTY_STR
-        lastName = OTMClient.ConstantsGeneral.EMPTY_STR
-        mapString = OTMClient.ConstantsGeneral.EMPTY_STR
-        mediaUrl = OTMClient.ConstantsGeneral.EMPTY_STR
-        latitude = 0.00
-        longitude = 0.00
-        createdAt = NSDate()
-        updatedAt = NSDate()
+//        objectId = OTMClient.ConstantsGeneral.EMPTY_STR
+//        uniqueKey = OTMClient.ConstantsGeneral.EMPTY_STR
+//        firstName = OTMClient.ConstantsGeneral.EMPTY_STR
+//        lastName = OTMClient.ConstantsGeneral.EMPTY_STR
+//        mapString = OTMClient.ConstantsGeneral.EMPTY_STR
+//        mediaUrl = OTMClient.ConstantsGeneral.EMPTY_STR
+//        latitude = 0.00
+//        longitude = 0.00
+//        createdAt = NSDate()
+//        updatedAt = NSDate()
         
     }
     

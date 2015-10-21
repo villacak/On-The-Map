@@ -19,6 +19,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate {
     
     var userData: UserData?
     var userLocation: CLLocationCoordinate2D!
+    var udacityKey: String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +34,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
+        udacityKey = otmTabBarController.udacityKey
     }
     
     
@@ -133,7 +135,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate {
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    self.otmTabBarController.userDataDic[self.otmTabBarController.udacityKey] = self.userData;
+                    self.otmTabBarController.userDataDic[self.udacityKey] = self.userData;
                     self.dismissView()
                 }
             })
@@ -144,17 +146,8 @@ class PostingViewController: UIViewController, UITextFieldDelegate {
     // Here we set all values to the UserData struct
     func assembleUserData() {
         if let userDataTemp = otmTabBarController.userDataDic[otmTabBarController.udacityKey] {
-            userData = userDataTemp
-        } else {
-            userData = UserData()
-            userData.uniqueKey = otmTabBarController.udacityKey
+            userData = UserData(objectId: userDataTemp.objectId, uniqueKey: userDataTemp.uniqueKey, firstName: userDataTemp.firstName, lastName: userDataTemp.lastName, mapString: textWithData.text, mediaUrl: personalUrl.text, latitude: userLocation.latitude, longitude: userLocation.longitude, createdAt: userDataTemp.createdAt, updatedAt: NSDate())
         }
-        userData.mapString = textWithData.text
-        userData.mediaUrl = personalUrl.text
-        userData.latitude = userLocation.latitude
-        userData.longitude = userLocation.longitude
-        
-        
     }
     
     

@@ -34,8 +34,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         //        testObject.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
         //            print("Object has been saved.")
         //        }
-
-                  
     }
     
     
@@ -151,6 +149,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
+                    self.otmTabBarController.udacityUserId = self.email.text!
                     self.navigationController?.navigationBarHidden = false
                     self.navigationController?.popViewControllerAnimated(true)
                 }

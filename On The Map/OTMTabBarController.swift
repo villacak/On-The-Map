@@ -14,6 +14,7 @@ class OTMTabBarController: UITabBarController {
     var userDataDic: Dictionary<String, UserData>! //[UserData?] = [UserData?]()
     var udacityKey: String = OTMClient.ConstantsGeneral.EMPTY_STR
     var udacitySessionId: String = OTMClient.ConstantsGeneral.EMPTY_STR
+    var udacityUserId: String = OTMClient.ConstantsGeneral.EMPTY_STR
     
-//    var locationManager: CLLocationManager?
+
 }
