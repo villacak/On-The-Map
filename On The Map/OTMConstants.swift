@@ -45,6 +45,7 @@ extension OTMClient {
         static let SESSION_ID: String = "id"
         static let STATUS: String = "status"
         static let ERROR: String = "error"
+        static let USER: String = "user"
         
         static let UDACITY_LOGIN_JSON: [String : AnyObject] = [UDACITY : [
                                                                     USERNAME : "",
@@ -89,7 +90,9 @@ extension OTMClient {
         static let objectId: String = "objectId"
         static let uniqueKey: String = "uniqueKey"
         static let firstName: String = "firstName"
+        static let firstNameUD: String = "first_name"
         static let lastName: String = "lastName"
+        static let lastNameUD: String = "last_name"
         static let mapString: String = "mapString"
         static let mediaUrl: String = "mediaUrl"
         static let latitude: String = "latitude"

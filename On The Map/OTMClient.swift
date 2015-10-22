@@ -57,6 +57,8 @@ class OTMClient: NSObject {
                 } catch let errorCatch as NSError {
                     completionHandler(result: nil, error: errorCatch)
                 }
+//                print("Login Data")
+//                print(NSString(data: newData, encoding: NSUTF8StringEncoding)!)
             }
         }
         task.resume()
@@ -132,7 +134,8 @@ class OTMClient: NSObject {
                 } catch let errorCatch as NSError {
                     completionHandler(result: nil, error: errorCatch)
                 }
-                print(NSString(data: newData, encoding: NSUTF8StringEncoding))
+//                print("User Data")
+//                print(NSString(data: newData, encoding: NSUTF8StringEncoding)!)
             }
         }
         task.resume()
@@ -214,7 +217,7 @@ class OTMClient: NSObject {
                 } catch let errorCatch as NSError {
                     completionHandler(result: nil, error: errorCatch)
                 }
-                print(NSString(data: data!, encoding: NSUTF8StringEncoding))
+                print(NSString(data: data!, encoding: NSUTF8StringEncoding)!)
             }
         }
         task.resume()
@@ -251,7 +254,7 @@ class OTMClient: NSObject {
                 } catch let errorCatch as NSError {
                     completionHandler(result: nil, error: errorCatch)
                 }
-                print(NSString(data: data!, encoding: NSUTF8StringEncoding))
+                print(NSString(data: data!, encoding: NSUTF8StringEncoding)!)
             }
         }
         task.resume()

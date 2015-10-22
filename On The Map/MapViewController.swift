@@ -25,7 +25,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var mapPoints: [MKAnnotation]!
     var responseAsNSDictinory: Dictionary<String, AnyObject>!
     var userLocation: CLLocationCoordinate2D!
-    
+    var userData: UserData?
     
     // View Did Load - Runs this function
     override func viewDidLoad() {
@@ -63,9 +63,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             let checkUserDataTemp: UserData? = otmTabBarController.userDataDic[otmTabBarController.udacityKey]
             if (checkUserDataTemp == nil) {
                 loadUserData()
+            } else {
+                loadData(numberToLoad: paginationSize, cacheToPaginate: initialCache, orderListBy: OTMServicesNameEnum.updateAt)
             }
-            loadData(numberToLoad: paginationSize, cacheToPaginate: initialCache, orderListBy: OTMServicesNameEnum.updateAt)
-            
         }
     }
 
@@ -159,11 +159,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
-    // Get the user data and extract the data
-    func extractDataAndCreateUserDataStruct() {
-        
-    }
-    
     
     // Load the Udacity User Data
     func loadUserData() {
@@ -193,8 +188,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    self.extractDataAndCreateUserDataStruct()
+                    print("Load UserData")
+                    print(self.responseAsNSDictinory!)
                     self.populateLocationList()
+                    self.loadData(numberToLoad: self.paginationSize, cacheToPaginate: self.initialCache, orderListBy: OTMServicesNameEnum.updateAt)
                 }
             })
         }
@@ -247,9 +244,26 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     // Function that will populate the MKAnnotations and Locations to display in the map
     func populateLocationList() {
-        let results: [AnyObject] = responseAsNSDictinory[OTMClient.ConstantsParse.RESULTS] as! [AnyObject]
-        print("results : \(results)")
-        print(responseAsNSDictinory!)
+        //let results: [AnyObject] = responseAsNSDictinory[OTMClient.ConstantsParse.RESULTS] as! [AnyObject]
+//        print("results : \(results)")
+        
+        // TODO separate all dictionaries from responses
+        let fullUserData: Dictionary<String, AnyObject> = responseAsNSDictinory[OTMClient.ConstantsUdacity.USER] as! Dictionary<String, AnyObject>
+        
+        let firstName: String = fullUserData[OTMClient.ConstantsData.firstNameUD] as! String
+        let lastName:String = fullUserData[OTMClient.ConstantsData.lastNameUD] as! String
+        var latDouble: Double = 0
+        var lonDouble: Double = 0
+        if (userLocation != nil) {
+            latDouble = userLocation.latitude as Double
+            lonDouble = userLocation.longitude as Double
+        }
+        
+        
+        let userData: UserData = UserData(objectId: OTMClient.ConstantsGeneral.EMPTY_STR, uniqueKey: otmTabBarController.udacityKey, firstName: firstName, lastName: lastName, mapString: OTMClient.ConstantsGeneral.EMPTY_STR, mediaUrl: OTMClient.ConstantsGeneral.EMPTY_STR, latitude: latDouble, longitude: lonDouble, createdAt: NSDate(), updatedAt: NSDate())
+        otmTabBarController.userDataDic[otmTabBarController.udacityKey] = userData
+        
+        print(userData)
     }
     
     
