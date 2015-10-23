@@ -16,31 +16,30 @@ import Parse
  */
 struct UserData {
     
-    var objectId: String?
-    var uniqueKey: String?
-    var firstName: String?
-    var lastName: String?
-    var mapString: String?
-    var mediaUrl: String?
-    var latitude: Double?
-    var longitude: Double?
-    var createdAt: NSDate?
-    var updatedAt: NSDate?
+    var objectId: String!
+    var uniqueKey: String!
+    var firstName: String!
+    var lastName: String!
+    var mapString: String!
+    var mediaUrl: String!
+    var latitude: Double!
+    var longitude: Double!
+    var createdAt: NSDate!
+    var updatedAt: NSDate!
     
     
     
     init() {
-//        objectId = OTMClient.ConstantsGeneral.EMPTY_STR
-//        uniqueKey = OTMClient.ConstantsGeneral.EMPTY_STR
-//        firstName = OTMClient.ConstantsGeneral.EMPTY_STR
-//        lastName = OTMClient.ConstantsGeneral.EMPTY_STR
-//        mapString = OTMClient.ConstantsGeneral.EMPTY_STR
-//        mediaUrl = OTMClient.ConstantsGeneral.EMPTY_STR
-//        latitude = 0.00
-//        longitude = 0.00
-//        createdAt = NSDate()
-//        updatedAt = NSDate()
-        
+        objectId = OTMClient.ConstantsGeneral.EMPTY_STR
+        uniqueKey = OTMClient.ConstantsGeneral.EMPTY_STR
+        firstName = OTMClient.ConstantsGeneral.EMPTY_STR
+        lastName = OTMClient.ConstantsGeneral.EMPTY_STR
+        mapString = OTMClient.ConstantsGeneral.EMPTY_STR
+        mediaUrl = OTMClient.ConstantsGeneral.EMPTY_STR
+        latitude = 0.00
+        longitude = 0.00
+        createdAt = NSDate()
+        updatedAt = NSDate()        
     }
     
     init(objectId: String!, uniqueKey: String!, firstName: String!, lastName: String!,  mapString: String!, mediaUrl: String!, latitude: Double!, longitude: Double!, createdAt: NSDate!, updatedAt: NSDate!) {

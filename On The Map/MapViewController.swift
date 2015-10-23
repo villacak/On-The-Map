@@ -20,12 +20,15 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     let initialCache: String = "400"
     
     var locationList: [MKPointAnnotation]!
+    var mapPoints: [MKAnnotation]!
+    var userLocation: CLLocationCoordinate2D!
     var otmTabBarController: OTMTabBarController!
     var spinner: ActivityIndicatorView!
-    var mapPoints: [MKAnnotation]!
-    var responseAsNSDictinory: Dictionary<String, AnyObject>!
-    var userLocation: CLLocationCoordinate2D!
     var userData: UserData?
+    
+    var latDouble: Double = 0
+    var lonDouble: Double = 0
+    
     
     // View Did Load - Runs this function
     override func viewDidLoad() {
@@ -37,7 +40,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         // Acquire user geo position
         locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
         locationManager.requestAlwaysAuthorization()
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
@@ -94,10 +97,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         mapView.setRegion(region, animated: true)
         let currentLocation: CLLocation = CLLocation()
         
-        let locationLat = currentLocation.coordinate.latitude
-        let locationLon = currentLocation.coordinate.longitude
+        latDouble = currentLocation.coordinate.latitude
+        lonDouble = currentLocation.coordinate.longitude
         
-        print("Locations: Latitude = \(locationLat), Longitude = \(locationLon), Current Location Lat/Lon= \(currentLocation.coordinate.latitude) \\ \(currentLocation.coordinate.longitude)")
+//        print("Locations: Latitude = \(latDouble), Longitude = \(lonDouble), Current Location Lat/Lon= \(currentLocation.coordinate.latitude) \\ \(currentLocation.coordinate.longitude)")
     }
     
     
@@ -116,12 +119,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             (success, errorString)  in
             
             var isSuccess: Bool = false
+            var responseLogoutAsNSDictinory: Dictionary<String, AnyObject>!
             if (success != nil) {
-                self.responseAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
+                responseLogoutAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
                 
                 // Check if the response contains any error or not
-                if ((self.responseAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
-                    let message: String = OTMClient.sharedInstance().parseErrorReturned(self.responseAsNSDictinory)
+                if ((responseLogoutAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
+                    let message: String = OTMClient.sharedInstance().parseErrorReturned(responseLogoutAsNSDictinory)
                      Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: message, controller: self)
                 } else {
                     isSuccess = true
@@ -167,12 +171,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         OTMClient.sharedInstance().udacityPOSTGetUserData(otmTabBarController.udacityUserId){
             (success, errorString)  in
             var isSuccess: Bool = false
+            var responseLoadUserDataAsNSDictinory: Dictionary<String, AnyObject>!
             if (success != nil) {
-                self.responseAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
+                responseLoadUserDataAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
                 
                 // Check if the response contains any error or not
-                if ((self.responseAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
-                    let message: String = OTMClient.sharedInstance().parseErrorReturned(self.responseAsNSDictinory)
+                if ((responseLoadUserDataAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
+                    let message: String = OTMClient.sharedInstance().parseErrorReturned(responseLoadUserDataAsNSDictinory)
                     Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: message, controller: self)
                 } else {
                     isSuccess = true
@@ -188,9 +193,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    print("Load UserData")
-                    print(self.responseAsNSDictinory!)
-                    self.populateLocationList()
+//                    print("Load UserData")
+//                    print(responseLoadUserDataAsNSDictinory!)
+                    self.populateUserData(allUserData: responseLoadUserDataAsNSDictinory)
                     self.loadData(numberToLoad: self.paginationSize, cacheToPaginate: self.initialCache, orderListBy: OTMServicesNameEnum.updateAt)
                 }
             })
@@ -206,12 +211,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         OTMClient.sharedInstance().parseGETStudentLocations(limit: numberToLoad, skip: cacheToPaginate, order: orderListBy){
             (success, errorString)  in
             var isSuccess: Bool = false
+            var responseLoadMapDataAsNSDictinory: Dictionary<String, AnyObject>!
             if (success != nil) {
-                self.responseAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
+                responseLoadMapDataAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
                 
                 // Check if the response contains any error or not
-                if ((self.responseAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
-                    let message: String = OTMClient.sharedInstance().parseErrorReturned(self.responseAsNSDictinory)
+                if ((responseLoadMapDataAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
+                    let message: String = OTMClient.sharedInstance().parseErrorReturned(responseLoadMapDataAsNSDictinory)
                     Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: message, controller: self)
                 } else {
                     isSuccess = true
@@ -227,7 +233,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    self.populateLocationList()
+                    self.populateLocationList(mapData: responseLoadMapDataAsNSDictinory)
                 }
             })
         }
@@ -243,17 +249,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     
     // Function that will populate the MKAnnotations and Locations to display in the map
-    func populateLocationList() {
-        //let results: [AnyObject] = responseAsNSDictinory[OTMClient.ConstantsParse.RESULTS] as! [AnyObject]
-//        print("results : \(results)")
-        
-        // TODO separate all dictionaries from responses
-        let fullUserData: Dictionary<String, AnyObject> = responseAsNSDictinory[OTMClient.ConstantsUdacity.USER] as! Dictionary<String, AnyObject>
+    func populateUserData(allUserData allUserData: Dictionary<String, AnyObject>) {
+        let fullUserData: Dictionary<String, AnyObject> = allUserData[OTMClient.ConstantsUdacity.USER] as! Dictionary<String, AnyObject>
         
         let firstName: String = fullUserData[OTMClient.ConstantsData.firstNameUD] as! String
         let lastName:String = fullUserData[OTMClient.ConstantsData.lastNameUD] as! String
-        var latDouble: Double = 0
-        var lonDouble: Double = 0
         if (userLocation != nil) {
             latDouble = userLocation.latitude as Double
             lonDouble = userLocation.longitude as Double
@@ -264,6 +264,23 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         otmTabBarController.userDataDic[otmTabBarController.udacityKey] = userData
         
         print(userData)
+    }
+    
+    
+    func populateLocationList(mapData mapData: Dictionary<String, AnyObject>) {
+        let results: [AnyObject] = mapData[OTMClient.ConstantsParse.RESULTS] as! [AnyObject]
+        print(results)
+        
+//        for (key, value) in results {
+//            print("item key: \(key), value: \(value)")
+//            if (key == otmTabBarController.udacityKey) {
+//                print("Key found -->")
+//                print(value)
+////                userLocation = CLLocationCoordinate2D(latitude: <#T##CLLocationDegrees#>, longitude: <#T##CLLocationDegrees#>)
+//            }
+//        }
+        
+
     }
     
     
