@@ -47,7 +47,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
         
         mapView.mapType = MKMapType.Standard
-//        mapView.removeAnnotation(mapView.annotations)
         
         // Acquire user geo position
         if (CLLocationManager.locationServicesEnabled()) {
@@ -250,39 +249,45 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             lonDouble = userLocation.longitude as Double
         }
         
-        let userData: UserData = UserData(objectId: OTMClient.ConstantsGeneral.EMPTY_STR, uniqueKey: otmTabBarController.udacityKey, firstName: firstName, lastName: lastName, mapString: OTMClient.ConstantsGeneral.EMPTY_STR, mediaUrl: OTMClient.ConstantsGeneral.EMPTY_STR, latitude: latDouble, longitude: lonDouble, createdAt: NSDate(), updatedAt: NSDate(), userLocation: nil)
-//        createMkPointAnnotation(userData)
+        let fullName: String = "\(firstName) \(lastName)"
+        let tempMKPointAnnotation: MKPointAnnotation = createMkPointAnnotation(fullName: fullName, urlStr: OTMClient.ConstantsGeneral.EMPTY_STR, latitude: latDouble, longitude: lonDouble)
+        
+        let userData: UserData = UserData(objectId: OTMClient.ConstantsGeneral.EMPTY_STR, uniqueKey: otmTabBarController.udacityKey, firstName: firstName, lastName: lastName, mapString: OTMClient.ConstantsGeneral.EMPTY_STR, mediaUrl: OTMClient.ConstantsGeneral.EMPTY_STR, latitude: latDouble, longitude: lonDouble, createdAt: NSDate(), updatedAt: NSDate(), userLocation: tempMKPointAnnotation)
         otmTabBarController.userDataDic[otmTabBarController.udacityKey] = userData
         
         print(userData)
     }
     
     
-    
+    // Populate the pins from the list into the map
     func populateLocationList(mapData mapData: Dictionary<String, AnyObject>) {
         let results: [AnyObject] = mapData[OTMClient.ConstantsParse.RESULTS] as! [AnyObject]
-        print(results)
-        
-//        for (key, value) in results {
-//            print("item key: \(key), value: \(value)")
-//            if (key == otmTabBarController.udacityKey) {
-//                print("Key found -->")
-//                print(value)
-////                userLocation = CLLocationCoordinate2D(latitude: <#T##CLLocationDegrees#>, longitude: <#T##CLLocationDegrees#>)
-//            }
-//        }
-        
-
+        // If count is zero, we try to get a pre-populated data from the userDataPic
+        if results.count == 0 {
+            let tempUserData: UserData = otmTabBarController.userDataDic[otmTabBarController.udacityKey]!
+            if let tempMKPointAnnotation = tempUserData.userLocation {
+                mapView.addAnnotation(tempMKPointAnnotation)
+            }
+        } else {
+            // Populate the map with the list
+            for userDataJson in results {
+                print("item value: \(userDataJson)")
+//                if (key == otmTabBarController.udacityKey) {
+//                    print("Key found -->")
+//                    print(value)
+//                }
+            }
+        }
     }
     
     
     // Create the Point Annotation and return it
-    func createMkPointAnnotation(userDataForPointAnnotation userDataForPointAnnotation: UserData!) -> MKPointAnnotation {
-        let pinLocation : CLLocationCoordinate2D = CLLocationCoordinate2DMake(userDataForPointAnnotation.latitude, userDataForPointAnnotation.longitude)
+    func createMkPointAnnotation(fullName fullName: String, urlStr: String, latitude: Double, longitude: Double) -> MKPointAnnotation {
+        let pinLocation : CLLocationCoordinate2D = CLLocationCoordinate2DMake(latitude, longitude)
         let objectAnnotation: MKPointAnnotation = MKPointAnnotation()
         objectAnnotation.coordinate = pinLocation
-        objectAnnotation.title = "\(userDataForPointAnnotation.firstName!) \(userDataForPointAnnotation.lastName!)"
-        objectAnnotation.subtitle = userDataForPointAnnotation.mediaUrl!
+        objectAnnotation.title = fullName
+        objectAnnotation.subtitle = urlStr
 //        self.mapView.addAnnotation(objectAnnotation)
         return objectAnnotation
     }
@@ -341,6 +346,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     // Refresh data and map
     @IBAction func refreshAction(sender: AnyObject) {
+        mapView.removeAnnotations(mapView.annotations)
         checkIfLogged()
     }
     
