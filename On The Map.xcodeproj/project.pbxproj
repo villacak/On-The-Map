@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		331B552A1BC4B2BA000812F5 /* OTMTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331B55291BC4B2BA000812F5 /* OTMTabBarController.swift */; settings = {ASSET_TAGS = (); }; };
-		3320FF071BBB73B0003543BC /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3320FF061BBB73B0003543BC /* Dialog.swift */; settings = {ASSET_TAGS = (); }; };
-		3341919B1BBE1E22003B3A17 /* UtilsRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3341919A1BBE1E22003B3A17 /* UtilsRequests.swift */; settings = {ASSET_TAGS = (); }; };
-		33918F821BC0816F007A43A5 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33918F811BC0816F007A43A5 /* MapViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		33918F841BC0825D007A43A5 /* UdacitySignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33918F831BC0825D007A43A5 /* UdacitySignupViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		33D74EB11BC34A2A009DB02D /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33D74EB01BC34A2A009DB02D /* ActivityIndicatorView.swift */; settings = {ASSET_TAGS = (); }; };
+		331B552A1BC4B2BA000812F5 /* OTMTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331B55291BC4B2BA000812F5 /* OTMTabBarController.swift */; };
+		3320FF071BBB73B0003543BC /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3320FF061BBB73B0003543BC /* Dialog.swift */; };
+		3341919B1BBE1E22003B3A17 /* UtilsRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3341919A1BBE1E22003B3A17 /* UtilsRequests.swift */; };
+		33918F821BC0816F007A43A5 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33918F811BC0816F007A43A5 /* MapViewController.swift */; };
+		33918F841BC0825D007A43A5 /* UdacitySignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33918F831BC0825D007A43A5 /* UdacitySignupViewController.swift */; };
+		33D74EB11BC34A2A009DB02D /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33D74EB01BC34A2A009DB02D /* ActivityIndicatorView.swift */; };
 		33DA666F1BB0EC9000F7978B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA666E1BB0EC9000F7978B /* AppDelegate.swift */; };
 		33DA66711BB0EC9000F7978B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66701BB0EC9000F7978B /* ViewController.swift */; };
 		33DA66741BB0EC9000F7978B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 33DA66721BB0EC9000F7978B /* Main.storyboard */; };
@@ -20,8 +20,8 @@
 		33DA66791BB0EC9000F7978B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 33DA66771BB0EC9000F7978B /* LaunchScreen.storyboard */; };
 		33DA66841BB0EC9000F7978B /* On_The_MapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66831BB0EC9000F7978B /* On_The_MapTests.swift */; };
 		33DA668F1BB0EC9000F7978B /* On_The_MapUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA668E1BB0EC9000F7978B /* On_The_MapUITests.swift */; };
-		33DA66A01BB0EE5700F7978B /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33DA669E1BB0EE5700F7978B /* Bolts.framework */; settings = {ASSET_TAGS = (); }; };
-		33DA66A11BB0EE5700F7978B /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33DA669F1BB0EE5700F7978B /* Parse.framework */; settings = {ASSET_TAGS = (); }; };
+		33DA66A01BB0EE5700F7978B /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33DA669E1BB0EE5700F7978B /* Bolts.framework */; };
+		33DA66A11BB0EE5700F7978B /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33DA669F1BB0EE5700F7978B /* Parse.framework */; };
 		33DA66A31BB0EEC900F7978B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33DA66A21BB0EEC900F7978B /* AudioToolbox.framework */; };
 		33DA66A61BB0EEE600F7978B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33DA66A41BB0EEE600F7978B /* CFNetwork.framework */; };
 		33DA66A71BB0EEE600F7978B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33DA66A51BB0EEE600F7978B /* CoreGraphics.framework */; };
@@ -32,12 +32,12 @@
 		33DA66B11BB0EF5400F7978B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33DA66B01BB0EF5400F7978B /* SystemConfiguration.framework */; };
 		33DA66B31BB0EFB400F7978B /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 33DA66B21BB0EFB400F7978B /* libz.tbd */; };
 		33DA66B51BB0F01D00F7978B /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 33DA66B41BB0F01D00F7978B /* libsqlite3.tbd */; };
-		33DA66B91BB23D6000F7978B /* OTMClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66B81BB23D6000F7978B /* OTMClient.swift */; settings = {ASSET_TAGS = (); }; };
-		33DA66BB1BB23E4100F7978B /* OTMConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66BA1BB23E4100F7978B /* OTMConstants.swift */; settings = {ASSET_TAGS = (); }; };
-		33DA66BF1BB245AD00F7978B /* OTMServicesNameEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66BE1BB245AD00F7978B /* OTMServicesNameEnum.swift */; settings = {ASSET_TAGS = (); }; };
-		33DA66C11BB37ED900F7978B /* OTMDialogs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66C01BB37ED900F7978B /* OTMDialogs.swift */; settings = {ASSET_TAGS = (); }; };
-		33EB6EEA1BD48D3900CCFA71 /* PostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33EB6EE91BD48D3900CCFA71 /* PostingViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		33F98A341BB8DAED00536720 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33F98A331BB8DAED00536720 /* UserData.swift */; settings = {ASSET_TAGS = (); }; };
+		33DA66B91BB23D6000F7978B /* OTMClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66B81BB23D6000F7978B /* OTMClient.swift */; };
+		33DA66BB1BB23E4100F7978B /* OTMConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66BA1BB23E4100F7978B /* OTMConstants.swift */; };
+		33DA66BF1BB245AD00F7978B /* OTMServicesNameEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66BE1BB245AD00F7978B /* OTMServicesNameEnum.swift */; };
+		33DA66C11BB37ED900F7978B /* OTMDialogs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66C01BB37ED900F7978B /* OTMDialogs.swift */; };
+		33EB6EEA1BD48D3900CCFA71 /* PostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33EB6EE91BD48D3900CCFA71 /* PostingViewController.swift */; };
+		33F98A341BB8DAED00536720 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33F98A331BB8DAED00536720 /* UserData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */

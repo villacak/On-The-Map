@@ -15,16 +15,18 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     
-    let locationManager = CLLocationManager()
+    var locationManager: CLLocationManager!
     let paginationSize: String = "100"
     let initialCache: String = "400"
     
     var locationList: [MKPointAnnotation]!
     var mapPoints: [MKAnnotation]!
     var userLocation: CLLocationCoordinate2D!
+    
     var otmTabBarController: OTMTabBarController!
     var spinner: ActivityIndicatorView!
     var userData: UserData?
+    var appDelegate: AppDelegate!
     
     var latDouble: Double = 0
     var lonDouble: Double = 0
@@ -34,16 +36,23 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     override func viewDidLoad() {
         super.viewDidLoad()
         otmTabBarController = tabBarController as! OTMTabBarController
+        appDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        
+        // Set the locationManager, if by some problem we create a new object
+        if let tempLocation = appDelegate.locationManager {
+            locationManager = tempLocation
+        } else {
+            locationManager = CLLocationManager()
+            appDelegate.locationManager = locationManager
+        }
         
         mapView.mapType = MKMapType.Standard
 //        mapView.removeAnnotation(mapView.annotations)
         
         // Acquire user geo position
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
-        locationManager.requestAlwaysAuthorization()
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.startUpdatingLocation()
+        if (CLLocationManager.locationServicesEnabled()) {
+            locationManager.delegate = self
+        }
 
     }
     
@@ -52,7 +61,36 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
         otmTabBarController.tabBar.hidden = false
+
+        // Add the observer
+        NSNotificationCenter.defaultCenter().addObserver(
+            self,
+            selector: "willEnterForegound",
+            name: UIApplicationWillEnterForegroundNotification,
+            object: nil)
+
+        if (CLLocationManager.locationServicesEnabled()) {
+            locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+//            locationManager.requestAlwaysAuthorization()
+//            locationManager.requestWhenInUseAuthorization()
+            locationManager.startUpdatingLocation()
+        }
         checkIfLogged()
+    }
+    
+    
+    // Remove the observer
+    override func viewWillDisappear(animated: Bool) {
+        NSNotificationCenter.defaultCenter().removeObserver(
+            self,
+            name: UIApplicationWillEnterForegroundNotification,
+            object: nil)
+    }
+    
+    
+    
+    func willEnterForegound() {
+        locationManager.startUpdatingLocation()
     }
     
     
@@ -71,7 +109,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             }
         }
     }
-
+    
     
     // Called whe nmap view has finished to load
     func mapViewDidFinishLoadingMap(mapView: MKMapView) {
@@ -91,16 +129,19 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         userLocation = manager.location?.coordinate
         
-        let center: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: userLocation.latitude, longitude: userLocation.longitude)
-        let region: MKCoordinateRegion = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+//        let center: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: userLocation.latitude, longitude: userLocation.longitude)
+//        let region: MKCoordinateRegion = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+//        
+//        mapView.setRegion(region, animated: true)
         
-        mapView.setRegion(region, animated: true)
-        let currentLocation: CLLocation = CLLocation()
-        
-        latDouble = currentLocation.coordinate.latitude
-        lonDouble = currentLocation.coordinate.longitude
-        
-//        print("Locations: Latitude = \(latDouble), Longitude = \(lonDouble), Current Location Lat/Lon= \(currentLocation.coordinate.latitude) \\ \(currentLocation.coordinate.longitude)")
+        print("Current Location Lat/Lon= \(userLocation.latitude) \\ \(userLocation.longitude)")
+    }
+    
+    
+    // Add view to show the spin
+    func startSpin(spinText spinText: String) {
+        spinner = ActivityIndicatorView(text: spinText)
+        view.addSubview(spinner)
     }
     
     
@@ -108,47 +149,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
         let message: String = OTMClient.ConstantsMessages.ERROR_UPDATING_LOCATION + error.localizedDescription
         Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: message, controller: self)
-    }
-    
-    
-    // Logout button action
-    @IBAction func logoutAction(sender: AnyObject) {
-        startSpin(spinText: OTMClient.ConstantsMessages.LOGOUT_PROCESSING)
-        
-        OTMClient.sharedInstance().udacityPOSTLogout() {
-            (success, errorString)  in
-            
-            var isSuccess: Bool = false
-            var responseLogoutAsNSDictinory: Dictionary<String, AnyObject>!
-            if (success != nil) {
-                responseLogoutAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
-                
-                // Check if the response contains any error or not
-                if ((responseLogoutAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
-                    let message: String = OTMClient.sharedInstance().parseErrorReturned(responseLogoutAsNSDictinory)
-                     Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: message, controller: self)
-                } else {
-                    isSuccess = true
-                }
-            } else {
-                // If success returns nil then it's necessary display an alert to the user
-                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: (errorString?.description)!, controller: self)
-            }
-            
-            dispatch_async(dispatch_get_main_queue(), {
-                // Dismiss modal
-                self.spinner.hide()
-
-                // If success extracting data then call the TabBarController Map view
-                if (isSuccess) {
-                    self.otmTabBarController.udacitySessionId = OTMClient.ConstantsGeneral.EMPTY_STR
-                    self.otmTabBarController.udacityKey = OTMClient.ConstantsGeneral.EMPTY_STR
-                    self.otmTabBarController.loggedOnUdacity = false
-                    self.navigationController?.navigationBarHidden = true
-                    self.okDismissAlertAndPerformSegue(titleStr: OTMClient.ConstantsMessages.LOGOUT_SUCCESS, messageStr: OTMClient.ConstantsMessages.LOGOUT_SUCCESS_MESSAGE, controller: self)
-                }
-            })
-        }
     }
     
     
@@ -161,7 +161,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         alert.addAction(okDismiss)
         controller.presentViewController(alert, animated: true, completion: {})
     }
-    
     
     
     // Load the Udacity User Data
@@ -238,15 +237,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             })
         }
     }
-    
-    
-    
-    // Add view to show the spin
-    func startSpin(spinText spinText: String) {
-        spinner = ActivityIndicatorView(text: spinText)
-        view.addSubview(spinner)
-    }
-    
+ 
     
     // Function that will populate the MKAnnotations and Locations to display in the map
     func populateUserData(allUserData allUserData: Dictionary<String, AnyObject>) {
@@ -259,12 +250,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             lonDouble = userLocation.longitude as Double
         }
         
-        
-        let userData: UserData = UserData(objectId: OTMClient.ConstantsGeneral.EMPTY_STR, uniqueKey: otmTabBarController.udacityKey, firstName: firstName, lastName: lastName, mapString: OTMClient.ConstantsGeneral.EMPTY_STR, mediaUrl: OTMClient.ConstantsGeneral.EMPTY_STR, latitude: latDouble, longitude: lonDouble, createdAt: NSDate(), updatedAt: NSDate())
+        let userData: UserData = UserData(objectId: OTMClient.ConstantsGeneral.EMPTY_STR, uniqueKey: otmTabBarController.udacityKey, firstName: firstName, lastName: lastName, mapString: OTMClient.ConstantsGeneral.EMPTY_STR, mediaUrl: OTMClient.ConstantsGeneral.EMPTY_STR, latitude: latDouble, longitude: lonDouble, createdAt: NSDate(), updatedAt: NSDate(), userLocation: nil)
+//        createMkPointAnnotation(userData)
         otmTabBarController.userDataDic[otmTabBarController.udacityKey] = userData
         
         print(userData)
     }
+    
     
     
     func populateLocationList(mapData mapData: Dictionary<String, AnyObject>) {
@@ -283,6 +275,59 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 
     }
     
+    
+    // Create the Point Annotation and return it
+    func createMkPointAnnotation(userDataForPointAnnotation userDataForPointAnnotation: UserData!) -> MKPointAnnotation {
+        let pinLocation : CLLocationCoordinate2D = CLLocationCoordinate2DMake(userDataForPointAnnotation.latitude, userDataForPointAnnotation.longitude)
+        let objectAnnotation: MKPointAnnotation = MKPointAnnotation()
+        objectAnnotation.coordinate = pinLocation
+        objectAnnotation.title = "\(userDataForPointAnnotation.firstName!) \(userDataForPointAnnotation.lastName!)"
+        objectAnnotation.subtitle = userDataForPointAnnotation.mediaUrl!
+//        self.mapView.addAnnotation(objectAnnotation)
+        return objectAnnotation
+    }
+    
+    
+    // Logout button action
+    @IBAction func logoutAction(sender: AnyObject) {
+        startSpin(spinText: OTMClient.ConstantsMessages.LOGOUT_PROCESSING)
+        
+        OTMClient.sharedInstance().udacityPOSTLogout() {
+            (success, errorString)  in
+            
+            var isSuccess: Bool = false
+            var responseLogoutAsNSDictinory: Dictionary<String, AnyObject>!
+            if (success != nil) {
+                responseLogoutAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
+                
+                // Check if the response contains any error or not
+                if ((responseLogoutAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
+                    let message: String = OTMClient.sharedInstance().parseErrorReturned(responseLogoutAsNSDictinory)
+                    Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: message, controller: self)
+                } else {
+                    isSuccess = true
+                }
+            } else {
+                // If success returns nil then it's necessary display an alert to the user
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: (errorString?.description)!, controller: self)
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                // Dismiss modal
+                self.spinner.hide()
+                
+                // If success extracting data then call the TabBarController Map view
+                if (isSuccess) {
+                    self.otmTabBarController.udacitySessionId = OTMClient.ConstantsGeneral.EMPTY_STR
+                    self.otmTabBarController.udacityKey = OTMClient.ConstantsGeneral.EMPTY_STR
+                    self.otmTabBarController.loggedOnUdacity = false
+                    self.navigationController?.navigationBarHidden = true
+                    self.okDismissAlertAndPerformSegue(titleStr: OTMClient.ConstantsMessages.LOGOUT_SUCCESS, messageStr: OTMClient.ConstantsMessages.LOGOUT_SUCCESS_MESSAGE, controller: self)
+                }
+            })
+        }
+    }
+
     
     // Select Posting View
     @IBAction func pinAction(sender: AnyObject) {

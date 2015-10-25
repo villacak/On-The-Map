@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import Parse
+import MapKit
 
 /*
  * "uniqueKey\": \"1234\", \"firstName\": \"John\", \"lastName\": \"Doe\",\"mapString\": \"Mountain View, CA\", \"mediaURL\": \"https://udacity.com\",\"latitude\": 37.386052, \"longitude\"
@@ -26,6 +26,7 @@ struct UserData {
     var longitude: Double!
     var createdAt: NSDate!
     var updatedAt: NSDate!
+    var userLocation: MKPointAnnotation!
     
     
     
@@ -39,10 +40,11 @@ struct UserData {
         latitude = 0.00
         longitude = 0.00
         createdAt = NSDate()
-        updatedAt = NSDate()        
+        updatedAt = NSDate()
+        userLocation = MKPointAnnotation()
     }
     
-    init(objectId: String!, uniqueKey: String!, firstName: String!, lastName: String!,  mapString: String!, mediaUrl: String!, latitude: Double!, longitude: Double!, createdAt: NSDate!, updatedAt: NSDate!) {
+    init(objectId: String!, uniqueKey: String!, firstName: String!, lastName: String!,  mapString: String!, mediaUrl: String!, latitude: Double!, longitude: Double!, createdAt: NSDate!, updatedAt: NSDate!, userLocation: MKPointAnnotation!) {
         self.objectId = objectId
         self.uniqueKey = uniqueKey
         self.firstName = firstName
@@ -53,6 +55,11 @@ struct UserData {
         self.longitude = longitude
         self.createdAt = updatedAt
         self.updatedAt = updatedAt
+        if let tempUserLocation = userLocation {
+            self.userLocation = tempUserLocation
+        } else {
+            self.userLocation = MKPointAnnotation()
+        }
     }
     
 }

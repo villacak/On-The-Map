@@ -146,7 +146,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate {
     // Here we set all values to the UserData struct
     func assembleUserData() {
         if let userDataTemp = otmTabBarController.userDataDic[otmTabBarController.udacityKey] {
-            userData = UserData(objectId: userDataTemp.objectId, uniqueKey: userDataTemp.uniqueKey, firstName: userDataTemp.firstName, lastName: userDataTemp.lastName, mapString: textWithData.text, mediaUrl: personalUrl.text, latitude: userLocation.latitude, longitude: userLocation.longitude, createdAt: userDataTemp.createdAt, updatedAt: NSDate())
+            userData = UserData(objectId: userDataTemp.objectId, uniqueKey: userDataTemp.uniqueKey, firstName: userDataTemp.firstName, lastName: userDataTemp.lastName, mapString: textWithData.text, mediaUrl: personalUrl.text, latitude: userLocation.latitude, longitude: userLocation.longitude, createdAt: userDataTemp.createdAt, updatedAt: NSDate(), userLocation: userDataTemp.userLocation)
         }
     }
     

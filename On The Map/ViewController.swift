@@ -19,11 +19,14 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
     var otmTabBarController: OTMTabBarController!
     var spinner: ActivityIndicatorView!
+    var appDelegate: AppDelegate!
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
         otmTabBarController = tabBarController as! OTMTabBarController
+        
+        appDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
         view.addGestureRecognizer(tap)
@@ -34,8 +37,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         //        testObject.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
         //            print("Object has been saved.")
         //        }
-
-        
     }
     
     
