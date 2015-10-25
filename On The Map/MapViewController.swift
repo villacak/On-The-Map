@@ -14,11 +14,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
-    
-    var locationManager: CLLocationManager!
     let paginationSize: String = "100"
     let initialCache: String = "400"
+    let reusableId: String = "usersInfo"
     
+    var locationManager: CLLocationManager!
     var locationList: [MKPointAnnotation]!
     var mapPoints: [MKAnnotation]!
     var userLocation: CLLocationCoordinate2D!
@@ -70,8 +70,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 
         if (CLLocationManager.locationServicesEnabled()) {
             locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
-//            locationManager.requestAlwaysAuthorization()
-//            locationManager.requestWhenInUseAuthorization()
             locationManager.startUpdatingLocation()
         }
         checkIfLogged()
@@ -127,12 +125,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     // Location Manager called when locations have been updated
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         userLocation = manager.location?.coordinate
-        
-//        let center: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: userLocation.latitude, longitude: userLocation.longitude)
-//        let region: MKCoordinateRegion = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
-//        
-//        mapView.setRegion(region, animated: true)
-        
         print("Current Location Lat/Lon= \(userLocation.latitude) \\ \(userLocation.longitude)")
     }
     
@@ -142,6 +134,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         spinner = ActivityIndicatorView(text: spinText)
         view.addSubview(spinner)
     }
+    
     
     
     // Location Manager called when error occur when loading locations
@@ -281,6 +274,27 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
+    //
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+        if !(annotation is MKPointAnnotation) {
+            return nil
+        }
+        
+        var view: MKPinAnnotationView
+        if let dequeuedView = mapView.dequeueReusableAnnotationViewWithIdentifier(reusableId) as? MKPinAnnotationView {
+            dequeuedView.annotation = annotation
+            view = dequeuedView
+        } else {
+            view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reusableId)
+            view.canShowCallout = true
+            view.calloutOffset = CGPoint(x: -5, y: 5)
+            view.rightCalloutAccessoryView = UIButton(type: UIButtonType.DetailDisclosure) as UIView
+        }
+        return view
+    }
+    
+    
+    
     // Create the Point Annotation and return it
     func createMkPointAnnotation(fullName fullName: String, urlStr: String, latitude: Double, longitude: Double) -> MKPointAnnotation {
         let pinLocation : CLLocationCoordinate2D = CLLocationCoordinate2DMake(latitude, longitude)
@@ -288,7 +302,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         objectAnnotation.coordinate = pinLocation
         objectAnnotation.title = fullName
         objectAnnotation.subtitle = urlStr
-//        self.mapView.addAnnotation(objectAnnotation)
+//        let rightMapLabelButton: UIButton = UIButton(type: UIButtonTypeDetailDisclosure)
+    
+//        objectAnnotation.rightCalloutAccessoryView = rightButton;
+
         return objectAnnotation
     }
     

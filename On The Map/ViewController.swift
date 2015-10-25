@@ -37,6 +37,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         //        testObject.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
         //            print("Object has been saved.")
         //        }
+   
     }
     
     
@@ -114,11 +115,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     
     @IBAction func loginAction(sender: UIButton) {
-        DismissKeyboard()
-        //        otmTabBarController.udacityKey = "test"
-        //        self.navigationController?.navigationBarHidden = false
-        //        navigationController?.popViewControllerAnimated(true)
-        
+        DismissKeyboard()        
         spinner = ActivityIndicatorView(text: OTMClient.ConstantsMessages.LOGIN_PROCESSING)
         view.addSubview(spinner)
         loginButton.enabled = false
