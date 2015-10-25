@@ -274,7 +274,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
-    //
+    // Check for annotations for display
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         if !(annotation is MKPointAnnotation) {
             return nil
@@ -293,6 +293,24 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         return view
     }
     
+    
+//    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+//        view.
+//    }
+
+    
+    
+    // Call the url into Safari if it exist.
+    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        if control == view.rightCalloutAccessoryView {
+            let app = UIApplication.sharedApplication()
+            if view.annotation!.subtitle! != OTMClient.ConstantsGeneral.EMPTY_STR {
+                app.openURL((NSURL(string: view.annotation!.subtitle!!)!))
+            } else {
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.ERROR_TITLE, messageStr: OTMClient.ConstantsMessages.NO_URL_DEFINED, controller: self)
+            }
+        }
+    }
     
     
     // Create the Point Annotation and return it
