@@ -8,6 +8,11 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <mutableArray key="Roboto-Regular.ttf">
+            <string>Roboto-Regular</string>
+        </mutableArray>
+    </customFonts>
     <scenes>
         <!--Main Login-->
         <scene sceneID="tne-QT-ifu">
@@ -145,55 +150,105 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="hHy-RI-Ctm">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="hHy-RI-Ctm">
                                 <rect key="frame" x="0.0" y="64" width="600" height="487"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="BasicCell" textLabel="Kzn-xg-LLo" imageView="9Nt-jC-PXS" style="IBUITableViewCellStyleDefault" id="LMl-89-Js0">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="RestorationBasicCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="BasicCell" id="LMl-89-Js0" customClass="ListUserData" customModule="On_The_Map" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="92" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LMl-89-Js0" id="SHQ-bQ-PEG">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="No name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Kzn-xg-LLo">
-                                                    <rect key="frame" x="52" y="0.0" width="533" height="43.5"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="navBarPin" translatesAutoresizingMaskIntoConstraints="NO" id="oDS-uq-3fG">
+                                                    <rect key="frame" x="23" y="-2" width="40" height="38"/>
                                                     <animations/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="40" id="j7d-60-eFy"/>
+                                                        <constraint firstAttribute="height" constant="38" id="sGe-Zf-pl4"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ql8-Pl-CIC">
+                                                    <rect key="frame" x="71" y="8" width="42" height="21"/>
+                                                    <animations/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="42" id="rav-Tb-w5F"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="navBarPin" id="9Nt-jC-PXS">
-                                                    <rect key="frame" x="15" y="10" width="22" height="22"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No full name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mow-hV-4eS">
+                                                    <rect key="frame" x="86" y="8" width="479" height="21"/>
                                                     <animations/>
-                                                </imageView>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="479" id="kPj-e0-rkj"/>
+                                                        <constraint firstAttribute="height" constant="21" id="v8K-Pd-6U8"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <animations/>
+                                            <constraints>
+                                                <constraint firstItem="oDS-uq-3fG" firstAttribute="bottom" secondItem="SHQ-bQ-PEG" secondAttribute="bottomMargin" id="0RP-vo-VMd"/>
+                                                <constraint firstItem="Mow-hV-4eS" firstAttribute="top" secondItem="SHQ-bQ-PEG" secondAttribute="topMargin" id="1rA-23-VUB"/>
+                                                <constraint firstItem="ql8-Pl-CIC" firstAttribute="baseline" secondItem="Mow-hV-4eS" secondAttribute="baseline" id="6mA-53-xH3"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="Mow-hV-4eS" secondAttribute="trailing" constant="27" id="GeC-qu-v72"/>
+                                                <constraint firstItem="oDS-uq-3fG" firstAttribute="top" secondItem="SHQ-bQ-PEG" secondAttribute="topMargin" constant="-10" id="KaZ-Xf-HGJ"/>
+                                                <constraint firstItem="oDS-uq-3fG" firstAttribute="leading" secondItem="SHQ-bQ-PEG" secondAttribute="leadingMargin" constant="15" id="ZXw-mF-Y7K"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="Mow-hV-4eS" secondAttribute="bottom" constant="7" id="afv-ao-t4y"/>
+                                                <constraint firstItem="Mow-hV-4eS" firstAttribute="leading" secondItem="oDS-uq-3fG" secondAttribute="trailing" constant="23" id="bXD-3O-nyP"/>
+                                                <constraint firstItem="ql8-Pl-CIC" firstAttribute="leading" secondItem="oDS-uq-3fG" secondAttribute="trailing" constant="8" symbolic="YES" id="mFj-qO-5Ga"/>
+                                                <constraint firstItem="ql8-Pl-CIC" firstAttribute="firstBaseline" secondItem="Mow-hV-4eS" secondAttribute="baseline" id="pUv-7N-3sS"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="oDS-uq-3fG" secondAttribute="trailing" constant="529" id="zeZ-CW-csG"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <animations/>
+                                        <connections>
+                                            <outlet property="fullName" destination="Mow-hV-4eS" id="nrm-Th-dk7"/>
+                                            <outlet property="keyValue" destination="ql8-Pl-CIC" id="8uK-LM-Szy"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="hHy-RI-Ctm" secondAttribute="trailing" id="IAw-vt-Bm6"/>
+                            <constraint firstItem="hHy-RI-Ctm" firstAttribute="leading" secondItem="pHc-c0-kfs" secondAttribute="leading" id="Jtk-nk-3YH"/>
+                            <constraint firstItem="hHy-RI-Ctm" firstAttribute="top" secondItem="ijK-Br-JS8" secondAttribute="bottom" id="Uq0-Ik-Uh6"/>
+                            <constraint firstItem="hHy-RI-Ctm" firstAttribute="bottom" secondItem="ZVr-3f-vQ4" secondAttribute="top" id="YDC-Al-lg1"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Title" id="uWc-oJ-Dsa">
-                        <barButtonItem key="leftBarButtonItem" title="Logout" id="C4Y-Gb-u5d"/>
+                        <barButtonItem key="leftBarButtonItem" title="Logout" id="C4Y-Gb-u5d">
+                            <connections>
+                                <action selector="logoutAction:" destination="681-XT-J4K" id="xYa-vi-34j"/>
+                            </connections>
+                        </barButtonItem>
                         <rightBarButtonItems>
-                            <barButtonItem systemItem="refresh" id="q9r-Ip-EDW"/>
-                            <barButtonItem image="navBarPin" id="7W4-DB-tfQ"/>
+                            <barButtonItem systemItem="refresh" id="q9r-Ip-EDW">
+                                <connections>
+                                    <action selector="refreshAction:" destination="681-XT-J4K" id="5Y1-I7-Bxf"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem image="navBarPin" id="7W4-DB-tfQ">
+                                <connections>
+                                    <action selector="postingAction:" destination="681-XT-J4K" id="iBs-4c-HGH"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="logoutButton" destination="C4Y-Gb-u5d" id="G9z-ed-QCY"/>
                         <outlet property="postingButton" destination="7W4-DB-tfQ" id="ypu-gd-nVI"/>
-                        <outlet property="refreshButton" destination="q9r-Ip-EDW" id="OA9-NI-6yi"/>
-                        <outlet property="tableCell" destination="hHy-RI-Ctm" id="deZ-UQ-DNj"/>
-                        <outlet property="tableView" destination="hHy-RI-Ctm" id="MZp-YK-CXt"/>
+                        <outlet property="refreshButton" destination="q9r-Ip-EDW" id="Zbu-K6-wN8"/>
+                        <outlet property="tableView" destination="hHy-RI-Ctm" id="1rl-yZ-NCw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kIo-39-F59" userLabel="First Responder" sceneMemberID="firstResponder"/>

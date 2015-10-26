@@ -2,6 +2,8 @@
 //  OTMClient.swift
 //  On The Map
 //
+//  Class with all Requests using asyncronous calls and completion hanlders
+//
 //  Created by Klaus Villaca on 9/22/15.
 //  Copyright © 2015 Klaus Villaca. All rights reserved.
 //
@@ -14,7 +16,9 @@ import Parse
 class OTMClient: NSObject {
     
     
-    // Encode the Dictionary Strings
+    //
+    // Encode the Dictionary Strings - Just let it here just in case we need further use it
+    //
     func encodeParameters(params params: [String: String]) -> String {
         let queryItems = params.map() { NSURLQueryItem(name:$0, value:$1)}
         let components = NSURLComponents()
@@ -344,8 +348,6 @@ class OTMClient: NSObject {
         } catch let errorCatch as NSError {
             bodyJson = buildErrorMessage(errorCatch)
         }
-        
-        
         return bodyJson
     }
     
@@ -393,6 +395,9 @@ class OTMClient: NSObject {
     }
     
     
+    //
+    // Delete those Udacity cookies, received when logged in
+    //
     func deleteCookies() {
         let cookieStorage: NSHTTPCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
         let cookies = cookieStorage.cookies as [NSHTTPCookie]?
@@ -402,17 +407,19 @@ class OTMClient: NSObject {
     }
     
     
-    
+    //
     // Build error message
+    //
     func buildErrorMessage(error: NSError)->NSData {
         let dataReadyToReturn: NSData = ("{\"errorMessage\": \"" + error.description + "\"}").dataUsingEncoding(NSUTF8StringEncoding)!
         return dataReadyToReturn
     }
     
     
-    
+    //
     // Success login helper,
     // Stores key and id in AppDelegate to use for sub-sequent requests
+    //
     func successResponse(responseDictionary: Dictionary<String, AnyObject>, otmTabBarController: OTMTabBarController)-> Bool {
         var isSuccess:Bool = false
         otmTabBarController.loggedOnUdacity = true
@@ -431,7 +438,9 @@ class OTMClient: NSObject {
     }
     
     
+    //
     // Parse error returned
+    //
     func parseErrorReturned(responseDictionary: Dictionary<String, AnyObject>)-> String {
         
         var statusCode: String!
@@ -451,10 +460,9 @@ class OTMClient: NSObject {
     }
     
     
-    
-    
-    // MARK: Shared Instance
-    
+    //
+    // To have the same instance been shared.
+    //
     class func sharedInstance() -> OTMClient {
         struct Singleton {
             static var sharedInstance = OTMClient()

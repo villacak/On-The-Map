@@ -10,10 +10,9 @@ import Foundation
 import UIKit
 import MapKit
 
-/*
- * "uniqueKey\": \"1234\", \"firstName\": \"John\", \"lastName\": \"Doe\",\"mapString\": \"Mountain View, CA\", \"mediaURL\": \"https://udacity.com\",\"latitude\": 37.386052, \"longitude\"
- *
- */
+//
+// Struct for the data across the app
+//
 struct UserData {
     
     var objectId: String!
@@ -29,7 +28,9 @@ struct UserData {
     var userLocation: MKPointAnnotation!
     
     
-    
+    //
+    // Default init with all values empty, zero or acutal date
+    //
     init() {
         objectId = OTMClient.ConstantsGeneral.EMPTY_STR
         uniqueKey = OTMClient.ConstantsGeneral.EMPTY_STR
@@ -44,6 +45,10 @@ struct UserData {
         userLocation = MKPointAnnotation()
     }
     
+    
+    //
+    // Init with values
+    //
     init(objectId: String!, uniqueKey: String!, firstName: String!, lastName: String!,  mapString: String!, mediaUrl: String!, latitude: Double!, longitude: Double!, createdAt: NSDate!, updatedAt: NSDate!, userLocation: MKPointAnnotation!) {
         self.objectId = objectId
         self.uniqueKey = uniqueKey

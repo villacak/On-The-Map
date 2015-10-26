@@ -14,16 +14,23 @@ import UIKit
 // The idea is have a processing modal showing to the user while the request is processed.
 class ActivityIndicatorView: UIVisualEffectView {
     
+    // Check if the text has been define to set it, may be already set or null
     var text: String? {
         didSet {
             label.text = text
         }
     }
+    
+    
     let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.White)
     let label: UILabel = UILabel()
     let blurEffect = UIBlurEffect(style: .Dark)
     let vibrancyView: UIVisualEffectView
     
+    
+    //
+    // Init receiving the message to be displayed
+    //
     init(text: String) {
         self.text = text
         self.vibrancyView = UIVisualEffectView(effect: UIVibrancyEffect(forBlurEffect: blurEffect))
@@ -31,6 +38,10 @@ class ActivityIndicatorView: UIVisualEffectView {
         self.setup()
     }
     
+    
+    //
+    // Required init
+    //
     required init(coder aDecoder: NSCoder) {
         self.text = ""
         self.vibrancyView = UIVisualEffectView(effect: UIVibrancyEffect(forBlurEffect: blurEffect))
@@ -38,6 +49,9 @@ class ActivityIndicatorView: UIVisualEffectView {
         self.setup()
     }
     
+    //
+    // Setup where it set the view with sub view
+    //
     func setup() {
         contentView.addSubview(vibrancyView)
         vibrancyView.contentView.addSubview(activityIndicator)
@@ -45,6 +59,10 @@ class ActivityIndicatorView: UIVisualEffectView {
         activityIndicator.startAnimating()
     }
     
+    
+    //
+    // Function called when the view been displayed is returned to the superview, main view thread
+    //
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
         
@@ -75,10 +93,18 @@ class ActivityIndicatorView: UIVisualEffectView {
         }
     }
     
+    
+    //
+    // Show the view - Dialog
+    //
     func show() {
         self.hidden = false
     }
     
+    
+    //
+    // Hide the view - Dialog
+    //
     func hide() {
         self.hidden = true
     }

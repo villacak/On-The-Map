@@ -6,6 +6,19 @@
 //  Copyright © 2015 Klaus Villaca. All rights reserved.
 //
 
+
+// Comments regarding calling the request service with completion handler.
+// Due the completion handler and we need to run certain tasks in the main
+// trhead. The code becomes very coupled too quickly.
+// My plan was to have logout refresh and PostingView actions in one class
+// however it simple doesn't work as in the end I need run my calls from 
+// the main thread and due the result take some time to return and make calls
+// within main thread when the result has returned, there is quite few we can do
+// to decouple those functions calls that trigger those request calls.
+// If I did have a way to get the response and then return to thos class to then
+// make those calls within the main thread it woud work. I hope I made myself undertood.
+// Due that the code doesn't look really nice and we duplicate very similar functions
+//
 import UIKit
 import MapKit
 
@@ -32,7 +45,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var lonDouble: Double = 0
     
     
+    //
     // View Did Load - Runs this function
+    //
     override func viewDidLoad() {
         super.viewDidLoad()
         otmTabBarController = tabBarController as! OTMTabBarController
@@ -52,11 +67,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         if (CLLocationManager.locationServicesEnabled()) {
             locationManager.delegate = self
         }
-
     }
     
     
+    //
     // Calles just before view will appear
+    //
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
         otmTabBarController.tabBar.hidden = false
@@ -76,7 +92,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
-    // Remove the observer
+    //
+    // Remove the observer just before the view disapear
+    //
     override func viewWillDisappear(animated: Bool) {
         NSNotificationCenter.defaultCenter().removeObserver(
             self,
@@ -85,13 +103,17 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
-    
+    //
+    // Function called when adding the observer
+    //
     func willEnterForegound() {
         locationManager.startUpdatingLocation()
     }
     
     
+    //
     // Check if the user have already logged or not, if logged load data, if not redirect to the login page
+    //
     func checkIfLogged() {
         if otmTabBarController.udacityKey == OTMClient.ConstantsGeneral.EMPTY_STR {
             otmTabBarController.tabBar.hidden = true
@@ -108,43 +130,54 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
+    //
     // Called whe nmap view has finished to load
+    //
     func mapViewDidFinishLoadingMap(mapView: MKMapView) {
         activityIndicator.stopAnimating()
         activityIndicator.hidden = true
     }
     
     
+    //
     // Called when mapview will start to load
+    //
     func mapViewWillStartLoadingMap(mapView: MKMapView) {
         activityIndicator.hidden = false
         activityIndicator.startAnimating()
     }
     
     
+    //
     // Location Manager called when locations have been updated
+    //
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         userLocation = manager.location?.coordinate
         print("Current Location Lat/Lon= \(userLocation.latitude) \\ \(userLocation.longitude)")
     }
     
     
+    //
     // Add view to show the spin
+    //
     func startSpin(spinText spinText: String) {
         spinner = ActivityIndicatorView(text: spinText)
         view.addSubview(spinner)
     }
     
     
-    
+    //
     // Location Manager called when error occur when loading locations
+    //
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
         let message: String = OTMClient.ConstantsMessages.ERROR_UPDATING_LOCATION + error.localizedDescription
         Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: message, controller: self)
     }
     
     
+    //
     // Dismiss the Allert and form the segue
+    //
     func okDismissAlertAndPerformSegue(titleStr titleStr: String, messageStr: String, controller: UIViewController) {
         let alert: UIAlertController = UIAlertController(title: titleStr, message: messageStr, preferredStyle: UIAlertControllerStyle.Alert)
         let okDismiss: UIAlertAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Cancel, handler: {
@@ -155,7 +188,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
+    //
     // Load the Udacity User Data
+    //
     func loadUserData() {
         startSpin(spinText: OTMClient.ConstantsMessages.LOADING_DATA)
         
@@ -195,7 +230,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
+    //
     // Load data from Parse
+    //
     func loadData(numberToLoad numberToLoad: String, cacheToPaginate: String, orderListBy: OTMServicesNameEnum) {
         startSpin(spinText: OTMClient.ConstantsMessages.LOADING_DATA)
         
@@ -231,7 +268,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
  
     
+    //
     // Function that will populate the MKAnnotations and Locations to display in the map
+    //
     func populateUserData(allUserData allUserData: Dictionary<String, AnyObject>) {
         let fullUserData: Dictionary<String, AnyObject> = allUserData[OTMClient.ConstantsUdacity.USER] as! Dictionary<String, AnyObject>
         
@@ -252,7 +291,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
+    //
     // Populate the pins from the list into the map
+    //
     func populateLocationList(mapData mapData: Dictionary<String, AnyObject>) {
         let results: [AnyObject] = mapData[OTMClient.ConstantsParse.RESULTS] as! [AnyObject]
         // If count is zero, we try to get a pre-populated data from the userDataPic
@@ -294,13 +335,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
-//    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-//        view.
-//    }
-
-    
-    
+    //
     // Call the url into Safari if it exist.
+    //
     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if control == view.rightCalloutAccessoryView {
             let app = UIApplication.sharedApplication()
@@ -312,23 +349,22 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
     }
     
-    
+    //
     // Create the Point Annotation and return it
+    //
     func createMkPointAnnotation(fullName fullName: String, urlStr: String, latitude: Double, longitude: Double) -> MKPointAnnotation {
         let pinLocation : CLLocationCoordinate2D = CLLocationCoordinate2DMake(latitude, longitude)
         let objectAnnotation: MKPointAnnotation = MKPointAnnotation()
         objectAnnotation.coordinate = pinLocation
         objectAnnotation.title = fullName
         objectAnnotation.subtitle = urlStr
-//        let rightMapLabelButton: UIButton = UIButton(type: UIButtonTypeDetailDisclosure)
-    
-//        objectAnnotation.rightCalloutAccessoryView = rightButton;
-
         return objectAnnotation
     }
     
     
+    //
     // Logout button action
+    //
     @IBAction func logoutAction(sender: AnyObject) {
         startSpin(spinText: OTMClient.ConstantsMessages.LOGOUT_PROCESSING)
         
@@ -369,7 +405,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
 
     
+    //
     // Select Posting View
+    //
     @IBAction func pinAction(sender: AnyObject) {
         navigationController?.navigationBarHidden = false
         otmTabBarController.tabBar.hidden = true
@@ -379,7 +417,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
+    //
     // Refresh data and map
+    //
     @IBAction func refreshAction(sender: AnyObject) {
         mapView.removeAnnotations(mapView.annotations)
         checkIfLogged()

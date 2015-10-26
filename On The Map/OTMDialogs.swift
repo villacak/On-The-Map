@@ -12,7 +12,9 @@ import UIKit
 class OTMDialogs: NSObject {
     
     
+    //
     // UIAlertDisplay with one ok buttom to dismiss
+    //
     func okDismissAlert(titleStr titleStr: String, messageStr: String, controller: UIViewController) {
         let alert: UIAlertController = UIAlertController(title: titleStr, message: messageStr, preferredStyle: UIAlertControllerStyle.Alert)
         let okDismiss: UIAlertAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Cancel, handler: nil)

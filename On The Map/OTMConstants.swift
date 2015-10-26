@@ -2,6 +2,8 @@
 //  OTMConstants.swift
 //  On The Map
 //
+//  Constants file, extending OTMCLient that use most of them
+//
 //  Created by Klaus Villaca on 9/22/15.
 //  Copyright © 2015 Klaus Villaca. All rights reserved.
 //
