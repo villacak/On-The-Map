@@ -88,6 +88,7 @@ extension OTMClient {
         static let ERROR_UPDATING_LOCATION: String = "Error while updating location, "
         static let ERROR_TITLE: String = "Error Redirectiong"
         static let NO_URL_DEFINED: String = "No URL defined."
+        static let FAIL_FIND_ADDRESS: String = "Fail to find the address location."
     }
     
     struct ConstantsData {

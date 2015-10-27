@@ -7,11 +7,12 @@
 //
 
 import UIKit
+import MapKit
 
-class PostingViewController: UIViewController, UITextFieldDelegate {
+class PostingViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate {
 
     @IBOutlet weak var findOnTheMapButton: UIButton!
-    @IBOutlet weak var textWithData: UITextView!
+    @IBOutlet weak var textWithData: UITextField!
     @IBOutlet weak var personalUrl: UITextField!
     
     var otmTabBarController: OTMTabBarController!
@@ -20,6 +21,8 @@ class PostingViewController: UIViewController, UITextFieldDelegate {
     var userData: UserData?
     var userLocation: CLLocationCoordinate2D!
     var udacityKey: String!
+    var latFromAddress: Double = 0
+    var lonFromAddress: Double = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,18 +52,18 @@ class PostingViewController: UIViewController, UITextFieldDelegate {
     
     // Keyboard notify notification center the keyboard will show
     func keyboardWillShow(notification: NSNotification) {
-        if (view.frame.origin.y >= 0 &&
-            personalUrl.isFirstResponder()) {
-                view.frame.origin.y -= getKeyboardHeight(notification)
-        }
+//        if (view.frame.origin.y >= 0 &&
+//            personalUrl.isFirstResponder() ) {
+//                view.frame.origin.y -= getKeyboardHeight(notification)
+//        }
     }
     
     
     // Keyboard notify notification center the keyboard will hide
     func keyboardWillHide(notification: NSNotification) {
-        if (view.frame.origin.y <= 0 && personalUrl.isFirstResponder()) {
-            view.frame.origin.y += getKeyboardHeight(notification)
-        }
+//        if (view.frame.origin.y <= 0 && personalUrl.isFirstResponder()) {
+//            view.frame.origin.y += getKeyboardHeight(notification)
+//        }
     }
     
     
@@ -110,6 +113,8 @@ class PostingViewController: UIViewController, UITextFieldDelegate {
     @IBAction func findOnTheMapAction(sender: AnyObject) {
         spinner = ActivityIndicatorView(text: "Saving...")
         view.addSubview(spinner)
+        
+        getLatAndLongFromAddress(address: textWithData.text!)
 
         assembleUserData();
         var responseAsNSDictinory: Dictionary<String, AnyObject>!
@@ -143,6 +148,24 @@ class PostingViewController: UIViewController, UITextFieldDelegate {
                 }
             })
         }
+    }
+    
+    
+    
+    func getLatAndLongFromAddress(address address:String) {
+        let geocoder = CLGeocoder()
+       
+        geocoder.geocodeAddressString(address, completionHandler: {(placemarks, error) -> Void in
+            if((error) != nil){
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.ERROR_TITLE, messageStr: (error?.description)!, controller: self)
+            }
+            if let placemark = placemarks?.first {
+                let coordinates: CLLocationCoordinate2D = placemark.location!.coordinate
+                self.latFromAddress = coordinates.latitude
+                self.lonFromAddress = coordinates.longitude
+            }
+            
+        })
     }
     
     
