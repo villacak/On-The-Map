@@ -11,6 +11,7 @@
 //
 
 import UIKit
+import MapKit
 
 class OTMTabBarController: UITabBarController {
     
@@ -19,6 +20,8 @@ class OTMTabBarController: UITabBarController {
     var udacityKey: String = OTMClient.ConstantsGeneral.EMPTY_STR
     var udacitySessionId: String = OTMClient.ConstantsGeneral.EMPTY_STR
     var udacityUserId: String = OTMClient.ConstantsGeneral.EMPTY_STR
-    
+    var localUserData: UserData!
+    var mapPoints: [MKPointAnnotation] = [MKPointAnnotation]()
+    var appDelegate: AppDelegate!
 
 }

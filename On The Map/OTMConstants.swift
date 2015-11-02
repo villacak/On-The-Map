@@ -15,7 +15,7 @@ extension OTMClient {
     
     struct ConstantsParse {
         // MARK: Parse API Key
-        static let CLIENT_KEY_STR: String = "X-Parse-REST-API-Key"
+        static let CLIENT_KEY_STR: String = "X-Parse-CLIENT-API-Key"
         static let CLIENT_API_KEY: String = "aiBuGRmnE489l7VeXBLCzBoFzAObn0SDgYRZ1OBk"
         
         static let REST_API_KEY_STR: String = "X-Parse-REST-API-Key"

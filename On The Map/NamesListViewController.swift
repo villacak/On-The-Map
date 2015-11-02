@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MapKit
 
 class NamesListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
@@ -32,7 +33,7 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
-        keys = Array(otmTabBarController.userDataDic.keys)
+//        keys = Array(otmTabBarController.userDataDic.keys)
     }
     
     
@@ -58,7 +59,7 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
 
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return otmTabBarController.userDataDic.count
+        return otmTabBarController.mapPoints.count
     }
     
     

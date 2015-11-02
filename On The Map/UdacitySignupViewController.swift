@@ -19,7 +19,9 @@ class UdacitySignupViewController: UIViewController, UIWebViewDelegate {
     var otmTabBarController: OTMTabBarController!
     
     
-    // MARK: - Lifecycle
+    //
+    // Called when view has been loaded
+    //
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -34,6 +36,9 @@ class UdacitySignupViewController: UIViewController, UIWebViewDelegate {
     }
     
     
+    //
+    // Called when view will apper
+    //
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBarHidden = false
@@ -44,19 +49,27 @@ class UdacitySignupViewController: UIViewController, UIWebViewDelegate {
     }
     
     
+    //
+    // Called when view has started to load
+    //
     func webViewDidStartLoad(webView: UIWebView) {
         activityIndicator.hidden = false
         activityIndicator.startAnimating()
     }
     
     
-    // MARK: - UIWebViewDelegate
+    //
+    // Called when view has finished to load
+    //
     func webViewDidFinishLoad(webView: UIWebView) {
         activityIndicator.stopAnimating()
         activityIndicator.hidden = true
     }
     
     
+    //
+    // Refresh button
+    //
     @IBAction func refreshAction(sender: AnyObject) {
         myWebView.reload()
     }

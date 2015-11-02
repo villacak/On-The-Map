@@ -277,8 +277,8 @@ class OTMClient: NSObject {
      * objectId - String, the object ID of the StudentLocation to update; specify the object ID right after StudentLocation
      *
      */
-     func updatingPUTStudentLocation(objectId objectId: String, userData: UserData, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
-        let urlString = "https://api.parse.com/1/classes/StudentLocation/\(objectId)"
+     func updatingPUTStudentLocation(userData userData: UserData, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+        let urlString = "https://api.parse.com/1/classes/StudentLocation/\(userData.objectId)"
         let url = NSURL(string: urlString)
         let request = NSMutableURLRequest(URL: url!)
         request.HTTPMethod = OTMClient.ConstantsRequest.METHOD_PUT
@@ -420,7 +420,7 @@ class OTMClient: NSObject {
     // Success login helper,
     // Stores key and id in AppDelegate to use for sub-sequent requests
     //
-    func successResponse(responseDictionary: Dictionary<String, AnyObject>, otmTabBarController: OTMTabBarController)-> Bool {
+    func successLoginResponse(responseDictionary: Dictionary<String, AnyObject>, otmTabBarController: OTMTabBarController)-> (isSuccess:Bool, otmTabBarController: OTMTabBarController) {
         var isSuccess:Bool = false
         otmTabBarController.loggedOnUdacity = true
         let account: Dictionary<String, AnyObject> = responseDictionary[OTMClient.ConstantsUdacity.ACCOUNT] as! Dictionary<String, AnyObject>
@@ -434,7 +434,7 @@ class OTMClient: NSObject {
         if (otmTabBarController.udacityKey != OTMClient.ConstantsGeneral.EMPTY_STR && otmTabBarController.udacitySessionId != OTMClient.ConstantsGeneral.EMPTY_STR) {
             isSuccess = true
         }
-        return isSuccess
+        return (isSuccess, otmTabBarController)
     }
     
     

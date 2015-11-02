@@ -23,8 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         PFUser.enableAutomaticUser()
         
         // Initialize Parse.
-        Parse.setApplicationId("8giE02DqBln6EvyGCirPg6FBYpG8zNFZusGFamhq",
-            clientKey: "aiBuGRmnE489l7VeXBLCzBoFzAObn0SDgYRZ1OBk")
+        Parse.setApplicationId(OTMClient.ConstantsParse.APPLICATION_ID_KEY,
+            clientKey: OTMClient.ConstantsParse.CLIENT_API_KEY)
         
         // [Optional] Track statistics around application opens.
         PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)

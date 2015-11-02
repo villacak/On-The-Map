@@ -9,7 +9,8 @@
 import UIKit
 import MapKit
 
-class PostingViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate {
+
+class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationManagerDelegate {
 
     @IBOutlet weak var findOnTheMapButton: UIButton!
     @IBOutlet weak var textWithData: UITextField!
@@ -17,13 +18,15 @@ class PostingViewController: UIViewController, UITextFieldDelegate, UITextViewDe
     
     var otmTabBarController: OTMTabBarController!
     var spinner: ActivityIndicatorView!
-    
-    var userData: UserData?
+    var locationManager: CLLocationManager!
     var userLocation: CLLocationCoordinate2D!
-    var udacityKey: String!
     var latFromAddress: Double = 0
     var lonFromAddress: Double = 0
     
+    
+    //
+    // Called just after view did load
+    //
     override func viewDidLoad() {
         super.viewDidLoad()
         otmTabBarController = tabBarController as! OTMTabBarController
@@ -35,46 +38,53 @@ class PostingViewController: UIViewController, UITextFieldDelegate, UITextViewDe
         let backButton = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.Plain, target: navigationController, action: nil)
         navigationItem.leftBarButtonItem = backButton
         
+        otmTabBarController.appDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        
+        // Set the locationManager, if by some problem we create a new object
+        if let tempLocation = otmTabBarController.appDelegate.locationManager {
+            locationManager = tempLocation
+        } else {
+            locationManager = CLLocationManager()
+            otmTabBarController.appDelegate.locationManager = locationManager
+        }
+
+        // Acquire user geo position
+        if (CLLocationManager.locationServicesEnabled()) {
+            locationManager.delegate = self
+        }
+        
     }
     
     
+    //
+    // Called when the view will appear
+    //
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
-        udacityKey = otmTabBarController.udacityKey
     }
     
     
-    
+    //
+    // Called just before the view disappear
+    //
     override func viewWillDisappear(animated: Bool) {
         unsubscribeFromKeyboardNotifications()
     }
     
     
-    // Keyboard notify notification center the keyboard will show
-    func keyboardWillShow(notification: NSNotification) {
-//        if (view.frame.origin.y >= 0 &&
-//            personalUrl.isFirstResponder() ) {
-//                view.frame.origin.y -= getKeyboardHeight(notification)
-//        }
-    }
     
-    
-    // Keyboard notify notification center the keyboard will hide
-    func keyboardWillHide(notification: NSNotification) {
-//        if (view.frame.origin.y <= 0 && personalUrl.isFirstResponder()) {
-//            view.frame.origin.y += getKeyboardHeight(notification)
-//        }
-    }
-    
-    
+    //
     // Delegate when user hit the soft key Done from keyboard, we collapse the keyboard
+    //
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
     
     
+    //
     // Get the keyboard hieght to move the to be hidden UITextView
+    //
     func getKeyboardHeight(notification: NSNotification) -> CGFloat {
         let userInfo = notification.userInfo
         let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue // of CGRect
@@ -82,18 +92,18 @@ class PostingViewController: UIViewController, UITextFieldDelegate, UITextViewDe
     }
     
     
-    /*
-    * Subscribe methods keyboardWillShow and keyboardWillHide to the notification center
-    */
+    //
+    // Subscribe methods keyboardWillShow and keyboardWillHide to the notification center
+    //
     func subscribeToKeyboardNotifications() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:" , name:UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:" , name:UIKeyboardWillHideNotification, object: nil)
     }
     
     
-    /*
-    * Unsubscribe methods keyboardWillShow and keyboardWillHide from the notification center
-    */
+    //
+    // Unsubscribe methods keyboardWillShow and keyboardWillHide from the notification center
+    //
     func unsubscribeFromKeyboardNotifications() {
         NSNotificationCenter.defaultCenter().removeObserver(self, name:
             UIKeyboardWillShowNotification, object: nil)
@@ -102,24 +112,21 @@ class PostingViewController: UIViewController, UITextFieldDelegate, UITextViewDe
     }
     
     
+    //
     //Calls this function when the tap is recognized.
+    //
     func DismissKeyboard(){
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
     }
 
     
-    // Add the new text and URL to the location
-    @IBAction func findOnTheMapAction(sender: AnyObject) {
-        spinner = ActivityIndicatorView(text: "Saving...")
-        view.addSubview(spinner)
-        
-        getLatAndLongFromAddress(address: textWithData.text!)
-
-        assembleUserData();
+    //
+    // Post user location for the very first time, then once we have the objectId we just use updateData()
+    //
+    func putData() {
         var responseAsNSDictinory: Dictionary<String, AnyObject>!
-        
-        OTMClient.sharedInstance().putPOSTStudentLocation(userData: userData!){
+        OTMClient.sharedInstance().putPOSTStudentLocation(userData: otmTabBarController.localUserData!){
             (success, errorString)  in
             var isSuccess: Bool = false
             if (success != nil) {
@@ -143,8 +150,101 @@ class PostingViewController: UIViewController, UITextFieldDelegate, UITextViewDe
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    self.otmTabBarController.userDataDic[self.udacityKey] = self.userData;
+                    print("putdata \(responseAsNSDictinory!)")
+                    self.addPUTResponseToUserData(response: responseAsNSDictinory)
                     self.dismissView()
+                }
+            })
+        }
+    }
+  
+    
+    //
+    // Function called always that the local user already has a objectId form parse
+    //
+    //
+    // Post user location for the very first time, then once we have the objectId we just use updateData()
+    //
+    func updateData() {
+        var responseAsNSDictinory: Dictionary<String, AnyObject>!
+        OTMClient.sharedInstance().updatingPUTStudentLocation(userData: otmTabBarController.localUserData){
+            (success, errorString)  in
+            var isSuccess: Bool = false
+            if (success != nil) {
+                responseAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
+                
+                // Check if the response contains any error or not
+                if ((responseAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
+                    let message: String = OTMClient.sharedInstance().parseErrorReturned(responseAsNSDictinory)
+                    Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: message, controller: self)
+                } else {
+                    isSuccess = true
+                }
+            } else {
+                // If success returns nil then it's necessary display an alert to the user
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: (errorString?.description)!, controller: self)
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                // Dismiss modal
+                self.spinner.hide()
+                
+                // If success extracting data then call the TabBarController Map view
+                if (isSuccess) {
+                    print("updateDdata \(responseAsNSDictinory!)")
+//                    self.addPUTResponseToUserData(response: responseAsNSDictinory)
+                    self.dismissView()
+                }
+            })
+        }
+    }
+
+    
+    
+    //
+    // Function to help make the code cleaner, it assembly a new UserData struct and set it to the 
+    // parent class OTMTabBarController
+    //
+    func addPUTResponseToUserData(response response: Dictionary<String, AnyObject>) {
+        let utils: Utils = Utils()
+        let putUserResponse = utils.extractDataFromPUTUserResponse(putDataResponse: response)
+        let tempUD: UserData = self.otmTabBarController.localUserData
+        let tempFullName: String = "\(tempUD.firstName) \(tempUD.lastName)"
+        let tempAnnotation: MKPointAnnotation = utils.createMkPointAnnotation(fullName: tempFullName, urlStr: self.personalUrl.text!, latitude: self.latFromAddress, longitude: self.lonFromAddress)
+        
+        self.otmTabBarController.localUserData = UserData(objectId: putUserResponse.tempObjectId, uniqueKey: tempUD.uniqueKey!, firstName: tempUD.firstName!, lastName: tempUD.lastName, mapString: self.textWithData.text!, mediaUrl: self.personalUrl.text!, latitude: self.latFromAddress, longitude: self.lonFromAddress, createdAt: putUserResponse.tempCreatedAt, updatedAt: putUserResponse.tempCreatedAt, userLocation: tempAnnotation)
+    }
+    
+    
+    //
+    // Function that do the Address to Latitude and Longitude
+    //
+    func getLatAndLongFromAddress(address address:String) {
+        let geocoder = CLGeocoder()
+        var isSuccess = false
+        
+        geocoder.geocodeAddressString(address) {(placemarks, error) -> Void in
+            if((error) != nil){
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.ERROR_TITLE, messageStr: (error?.description)!, controller: self)
+            }
+            if let placemark = placemarks?.first {
+                let coordinates: CLLocationCoordinate2D = placemark.location!.coordinate
+                self.latFromAddress = coordinates.latitude
+                self.lonFromAddress = coordinates.latitude
+                isSuccess = true
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                // Dismiss modal
+                self.spinner.hide()
+               
+                // If success extracting data then call the TabBarController Map view
+                if (isSuccess) {
+                    if (self.otmTabBarController.localUserData.objectId == OTMClient.ConstantsGeneral.EMPTY_STR) {
+                        self.putData()
+                    } else {
+                        
+                    }
                 }
             })
         }
@@ -152,39 +252,32 @@ class PostingViewController: UIViewController, UITextFieldDelegate, UITextViewDe
     
     
     
-    func getLatAndLongFromAddress(address address:String) {
-        let geocoder = CLGeocoder()
-       
-        geocoder.geocodeAddressString(address, completionHandler: {(placemarks, error) -> Void in
-            if((error) != nil){
-                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.ERROR_TITLE, messageStr: (error?.description)!, controller: self)
-            }
-            if let placemark = placemarks?.first {
-                let coordinates: CLLocationCoordinate2D = placemark.location!.coordinate
-                self.latFromAddress = coordinates.latitude
-                self.lonFromAddress = coordinates.longitude
-            }
-            
-        })
-    }
-    
-    
-    // Here we set all values to the UserData struct
-    func assembleUserData() {
-        if let userDataTemp = otmTabBarController.userDataDic[otmTabBarController.udacityKey] {
-            userData = UserData(objectId: userDataTemp.objectId, uniqueKey: userDataTemp.uniqueKey, firstName: userDataTemp.firstName, lastName: userDataTemp.lastName, mapString: textWithData.text, mediaUrl: personalUrl.text, latitude: userLocation.latitude, longitude: userLocation.longitude, createdAt: userDataTemp.createdAt, updatedAt: NSDate(), userLocation: userDataTemp.userLocation)
-        }
-    }
-    
-    
+    //
     // Dismiss view returning
+    //
     func dismissView() {
-        self.navigationController?.navigationBarHidden = false
-        self.navigationController?.popViewControllerAnimated(true)
+        dispatch_async(dispatch_get_main_queue(), {
+            // Dismiss modal
+            self.navigationController?.popViewControllerAnimated(true)
+            self.navigationController?.navigationBarHidden = false
+        })
     }
 
     
+    //
+    // Add the new text and URL to the location
+    //
+    @IBAction func findOnTheMapAction(sender: AnyObject) {
+        spinner = ActivityIndicatorView(text: "Saving...")
+        view.addSubview(spinner)
+        
+        getLatAndLongFromAddress(address: textWithData.text!)
+    }
+    
+    
+    //
     // Cancel Button action
+    //
     @IBAction func cancelAction(sender: AnyObject) {
         dismissView()
     }

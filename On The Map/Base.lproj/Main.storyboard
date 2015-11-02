@@ -314,7 +314,7 @@
                                 <color key="textColor" red="0.41021543560000001" green="0.41021543560000001" blue="0.41021543560000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Your Location" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="eUS-DM-V6u">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Your Location" textAlignment="center" minimumFontSize="10" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="eUS-DM-V6u">
                                 <rect key="frame" x="0.0" y="277" width="600" height="30"/>
                                 <animations/>
                                 <color key="backgroundColor" red="0.44054759589999998" green="0.50879694220000005" blue="0.90127840910000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -328,7 +328,7 @@
                                     <outlet property="delegate" destination="efL-RN-e0c" id="V6f-Is-zTX"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Your URL" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="0le-Fg-tuh">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Your URL" textAlignment="center" minimumFontSize="10" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="0le-Fg-tuh">
                                 <rect key="frame" x="0.0" y="307" width="600" height="30"/>
                                 <animations/>
                                 <color key="backgroundColor" red="0.44054759589999998" green="0.50879694220000005" blue="0.90127840910000001" alpha="1" colorSpace="calibratedRGB"/>

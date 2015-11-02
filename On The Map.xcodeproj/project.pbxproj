@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		331B552A1BC4B2BA000812F5 /* OTMTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331B55291BC4B2BA000812F5 /* OTMTabBarController.swift */; };
 		3320FF071BBB73B0003543BC /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3320FF061BBB73B0003543BC /* Dialog.swift */; };
+		337F6A681BE1AFE80014F9AC /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337F6A671BE1AFE80014F9AC /* Utils.swift */; };
 		3388FFA31BDD78A0004579FD /* NamesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3388FFA21BDD78A0004579FD /* NamesListViewController.swift */; };
 		3388FFA51BDDABE8004579FD /* ListUserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3388FFA41BDDABE8004579FD /* ListUserData.swift */; };
 		33918F821BC0816F007A43A5 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33918F811BC0816F007A43A5 /* MapViewController.swift */; };
@@ -64,6 +65,7 @@
 		3326184A1BD3090200927EFD /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		3326184B1BD3090900927EFD /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		3326184C1BD3091B00927EFD /* Roboto-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Thin.ttf"; sourceTree = "<group>"; };
+		337F6A671BE1AFE80014F9AC /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		3388FFA21BDD78A0004579FD /* NamesListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NamesListViewController.swift; sourceTree = "<group>"; };
 		3388FFA41BDDABE8004579FD /* ListUserData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListUserData.swift; sourceTree = "<group>"; };
 		33918F811BC0816F007A43A5 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -280,6 +282,7 @@
 				3320FF061BBB73B0003543BC /* Dialog.swift */,
 				33D74EB01BC34A2A009DB02D /* ActivityIndicatorView.swift */,
 				331B55291BC4B2BA000812F5 /* OTMTabBarController.swift */,
+				337F6A671BE1AFE80014F9AC /* Utils.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -422,6 +425,7 @@
 				33DA66711BB0EC9000F7978B /* ViewController.swift in Sources */,
 				33918F841BC0825D007A43A5 /* UdacitySignupViewController.swift in Sources */,
 				3388FFA31BDD78A0004579FD /* NamesListViewController.swift in Sources */,
+				337F6A681BE1AFE80014F9AC /* Utils.swift in Sources */,
 				33F98A341BB8DAED00536720 /* UserData.swift in Sources */,
 				3320FF071BBB73B0003543BC /* Dialog.swift in Sources */,
 				33DA66BF1BB245AD00F7978B /* OTMServicesNameEnum.swift in Sources */,

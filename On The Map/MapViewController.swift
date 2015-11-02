@@ -32,14 +32,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     let reusableId: String = "usersInfo"
     
     var locationManager: CLLocationManager!
-    var locationList: [MKPointAnnotation]!
-    var mapPoints: [MKAnnotation]!
     var userLocation: CLLocationCoordinate2D!
     
     var otmTabBarController: OTMTabBarController!
     var spinner: ActivityIndicatorView!
-    var userData: UserData?
-    var appDelegate: AppDelegate!
+
     
     var latDouble: Double = 0
     var lonDouble: Double = 0
@@ -51,14 +48,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     override func viewDidLoad() {
         super.viewDidLoad()
         otmTabBarController = tabBarController as! OTMTabBarController
-        appDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        otmTabBarController.appDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
         
         // Set the locationManager, if by some problem we create a new object
-        if let tempLocation = appDelegate.locationManager {
+        if let tempLocation = otmTabBarController.appDelegate.locationManager {
             locationManager = tempLocation
         } else {
             locationManager = CLLocationManager()
-            appDelegate.locationManager = locationManager
+            otmTabBarController.appDelegate.locationManager = locationManager
         }
         
         mapView.mapType = MKMapType.Standard
@@ -120,12 +117,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             performSegueWithIdentifier("LoginSegue", sender: self)
             self.storyboard!.instantiateViewControllerWithIdentifier("OTMFBAuthViewController")
         } else {
-            let checkUserDataTemp: UserData? = otmTabBarController.userDataDic[otmTabBarController.udacityKey]
-            if (checkUserDataTemp == nil) {
-                loadUserData()
-            } else {
-                loadData(numberToLoad: paginationSize, cacheToPaginate: initialCache, orderListBy: OTMServicesNameEnum.updateAt)
-            }
+            // We will always repopulate the map points to have always 'fresh' data
+            removeAnnotations()
+            loadData(numberToLoad: paginationSize, cacheToPaginate: initialCache, orderListBy: OTMServicesNameEnum.updateAt)
         }
     }
     
@@ -189,48 +183,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     
     //
-    // Load the Udacity User Data
-    //
-    func loadUserData() {
-        startSpin(spinText: OTMClient.ConstantsMessages.LOADING_DATA)
-        
-        OTMClient.sharedInstance().udacityPOSTGetUserData(otmTabBarController.udacityUserId){
-            (success, errorString)  in
-            var isSuccess: Bool = false
-            var responseLoadUserDataAsNSDictinory: Dictionary<String, AnyObject>!
-            if (success != nil) {
-                responseLoadUserDataAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
-                
-                // Check if the response contains any error or not
-                if ((responseLoadUserDataAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
-                    let message: String = OTMClient.sharedInstance().parseErrorReturned(responseLoadUserDataAsNSDictinory)
-                    Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: message, controller: self)
-                } else {
-                    isSuccess = true
-                }
-            } else {
-                // If success returns nil then it's necessary display an alert to the user
-                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: (errorString?.description)!, controller: self)
-            }
-            
-            dispatch_async(dispatch_get_main_queue(), {
-                // Dismiss modal
-                self.spinner.hide()
-                
-                // If success extracting data then call the TabBarController Map view
-                if (isSuccess) {
-//                    print("Load UserData")
-//                    print(responseLoadUserDataAsNSDictinory!)
-                    self.populateUserData(allUserData: responseLoadUserDataAsNSDictinory)
-                    self.loadData(numberToLoad: self.paginationSize, cacheToPaginate: self.initialCache, orderListBy: OTMServicesNameEnum.updateAt)
-                }
-            })
-        }
-
-    }
-    
-    
-    //
     // Load data from Parse
     //
     func loadData(numberToLoad numberToLoad: String, cacheToPaginate: String, orderListBy: OTMServicesNameEnum) {
@@ -261,61 +213,30 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    self.populateLocationList(mapData: responseLoadMapDataAsNSDictinory)
+                    let utils: Utils = Utils()
+                    self.otmTabBarController.mapPoints = utils.populateLocationList(mapData: responseLoadMapDataAsNSDictinory)
+                    self.addMapPointsToTheMap()
                 }
             })
+        }
+    }
+    
+    
+    //
+    // Function to add those mkpoints annotations to the map
+    //
+    func addMapPointsToTheMap() {
+        if otmTabBarController.mapPoints.count > 0 {
+            for mapPoints in otmTabBarController.mapPoints {
+                mapView.addAnnotation(mapPoints)
+            }
         }
     }
  
     
     //
-    // Function that will populate the MKAnnotations and Locations to display in the map
-    //
-    func populateUserData(allUserData allUserData: Dictionary<String, AnyObject>) {
-        let fullUserData: Dictionary<String, AnyObject> = allUserData[OTMClient.ConstantsUdacity.USER] as! Dictionary<String, AnyObject>
-        
-        let firstName: String = fullUserData[OTMClient.ConstantsData.firstNameUD] as! String
-        let lastName:String = fullUserData[OTMClient.ConstantsData.lastNameUD] as! String
-        if (userLocation != nil) {
-            latDouble = userLocation.latitude as Double
-            lonDouble = userLocation.longitude as Double
-        }
-        
-        let fullName: String = "\(firstName) \(lastName)"
-        let tempMKPointAnnotation: MKPointAnnotation = createMkPointAnnotation(fullName: fullName, urlStr: OTMClient.ConstantsGeneral.EMPTY_STR, latitude: latDouble, longitude: lonDouble)
-        
-        let userData: UserData = UserData(objectId: OTMClient.ConstantsGeneral.EMPTY_STR, uniqueKey: otmTabBarController.udacityKey, firstName: firstName, lastName: lastName, mapString: OTMClient.ConstantsGeneral.EMPTY_STR, mediaUrl: OTMClient.ConstantsGeneral.EMPTY_STR, latitude: latDouble, longitude: lonDouble, createdAt: NSDate(), updatedAt: NSDate(), userLocation: tempMKPointAnnotation)
-        otmTabBarController.userDataDic[otmTabBarController.udacityKey] = userData
-        
-        print(userData)
-    }
-    
-    
-    //
-    // Populate the pins from the list into the map
-    //
-    func populateLocationList(mapData mapData: Dictionary<String, AnyObject>) {
-        let results: [AnyObject] = mapData[OTMClient.ConstantsParse.RESULTS] as! [AnyObject]
-        // If count is zero, we try to get a pre-populated data from the userDataPic
-        if results.count == 0 {
-            let tempUserData: UserData = otmTabBarController.userDataDic[otmTabBarController.udacityKey]!
-            if let tempMKPointAnnotation = tempUserData.userLocation {
-                mapView.addAnnotation(tempMKPointAnnotation)
-            }
-        } else {
-            // Populate the map with the list
-            for userDataJson in results {
-                print("item value: \(userDataJson)")
-//                if (key == otmTabBarController.udacityKey) {
-//                    print("Key found -->")
-//                    print(value)
-//                }
-            }
-        }
-    }
-    
-    
     // Check for annotations for display
+    //
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         if !(annotation is MKPointAnnotation) {
             return nil
@@ -349,17 +270,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
     }
     
-    //
-    // Create the Point Annotation and return it
-    //
-    func createMkPointAnnotation(fullName fullName: String, urlStr: String, latitude: Double, longitude: Double) -> MKPointAnnotation {
-        let pinLocation : CLLocationCoordinate2D = CLLocationCoordinate2DMake(latitude, longitude)
-        let objectAnnotation: MKPointAnnotation = MKPointAnnotation()
-        objectAnnotation.coordinate = pinLocation
-        objectAnnotation.title = fullName
-        objectAnnotation.subtitle = urlStr
-        return objectAnnotation
-    }
     
     
     //
@@ -406,6 +316,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 
     
     //
+    // Remove all annotations from mapview
+    //
+    func removeAnnotations() {
+        if let tempLocations: [MKAnnotation] = mapView.annotations {
+            mapView.removeAnnotations(tempLocations)
+        }
+    }
+    
+    
+    //
     // Select Posting View
     //
     @IBAction func pinAction(sender: AnyObject) {
@@ -421,7 +341,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     // Refresh data and map
     //
     @IBAction func refreshAction(sender: AnyObject) {
-        mapView.removeAnnotations(mapView.annotations)
+        otmTabBarController.mapPoints.removeAll()
+        removeAnnotations()
         checkIfLogged()
     }
     
