@@ -61,8 +61,6 @@ class OTMClient: NSObject {
                 } catch let errorCatch as NSError {
                     completionHandler(result: nil, error: errorCatch)
                 }
-//                print("Login Data")
-//                print(NSString(data: newData, encoding: NSUTF8StringEncoding)!)
             }
         }
         task.resume()
@@ -138,8 +136,6 @@ class OTMClient: NSObject {
                 } catch let errorCatch as NSError {
                     completionHandler(result: nil, error: errorCatch)
                 }
-//                print("User Data")
-//                print(NSString(data: newData, encoding: NSUTF8StringEncoding)!)
             }
         }
         task.resume()
@@ -170,9 +166,6 @@ class OTMClient: NSObject {
     func parseGETStudentLocations(limit limit: String?, skip: String?, order: OTMServicesNameEnum?, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         
         let tempUrl: String = getUrlForParameters(limitP: limit, skipP: skip, orderP: order)
-        
-        print(tempUrl)
-        
         let urlSelected: NSURL = NSURL(string: tempUrl)!
         let request = NSMutableURLRequest(URL: urlSelected)
         request.addValue(OTMClient.ConstantsParse.APPLICATION_ID_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.APPLICATION_ID_STR)
@@ -188,7 +181,6 @@ class OTMClient: NSObject {
                 } catch let errorCatch as NSError {
                     completionHandler(result: nil, error: errorCatch)
                 }
-//                print(NSString(data: data!, encoding: NSUTF8StringEncoding))
             }
         }
         task.resume()
@@ -224,7 +216,6 @@ class OTMClient: NSObject {
                 } catch let errorCatch as NSError {
                     completionHandler(result: nil, error: errorCatch)
                 }
-                print(NSString(data: data!, encoding: NSUTF8StringEncoding)!)
             }
         }
         task.resume()
@@ -261,7 +252,6 @@ class OTMClient: NSObject {
                 } catch let errorCatch as NSError {
                     completionHandler(result: nil, error: errorCatch)
                 }
-                print(NSString(data: data!, encoding: NSUTF8StringEncoding)!)
             }
         }
         task.resume()
@@ -300,7 +290,6 @@ class OTMClient: NSObject {
                 } catch let errorCatch as NSError {
                     completionHandler(result: nil, error: errorCatch)
                 }
-                print(NSString(data: data!, encoding: NSUTF8StringEncoding))
             }
         }
         task.resume()

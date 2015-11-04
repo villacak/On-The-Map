@@ -16,7 +16,6 @@ import MapKit
 class OTMTabBarController: UITabBarController {
     
     var loggedOnUdacity: Bool!
-    var userDataDic: Dictionary<String, UserData> =  Dictionary<String, UserData>()
     var udacityKey: String = OTMClient.ConstantsGeneral.EMPTY_STR
     var udacitySessionId: String = OTMClient.ConstantsGeneral.EMPTY_STR
     var udacityUserId: String = OTMClient.ConstantsGeneral.EMPTY_STR

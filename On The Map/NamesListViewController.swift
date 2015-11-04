@@ -33,7 +33,6 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
-//        keys = Array(otmTabBarController.userDataDic.keys)
     }
     
     
@@ -64,24 +63,23 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let keyForGetFromDictionary: String = keys[indexPath.row]
-        let userDataTemp: UserData = otmTabBarController.userDataDic[keyForGetFromDictionary]!
+//        let userDataTemp: UserData = otmTabBarController.userDataDic[keyForGetFromDictionary]!
+        let pointObject: MKPointAnnotation = otmTabBarController.mapPoints[indexPath.row]
         let cell: ListUserData = (tableView.dequeueReusableCellWithIdentifier(reusableCell, forIndexPath: indexPath)) as! ListUserData
-        cell.keyValue.text = keyForGetFromDictionary
-        cell.fullName.text = "\(userDataTemp.firstName) \(userDataTemp.lastName)"
+        
+        cell.keyValue.text = String(indexPath.row)
+        cell.fullName.text = pointObject.title
         return cell
     }
     
     
     func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-        let keyForGetFromDictionary: String = keys[indexPath.row]
-        let userDataTemp: UserData = otmTabBarController.userDataDic[keyForGetFromDictionary]!
-        
-        if userDataTemp.mediaUrl == OTMClient.ConstantsGeneral.EMPTY_STR {
+        let pointObject: MKPointAnnotation = otmTabBarController.mapPoints[indexPath.row]
+        if pointObject.subtitle! == OTMClient.ConstantsGeneral.EMPTY_STR {
             Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.ERROR_TITLE, messageStr: OTMClient.ConstantsMessages.NO_URL_DEFINED, controller: self)
         } else {
             let app = UIApplication.sharedApplication()
-            app.openURL(NSURL(string: userDataTemp.mediaUrl)!)
+            app.openURL(NSURL(string: pointObject.subtitle!)!)
         }
     }
   

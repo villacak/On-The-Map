@@ -60,10 +60,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         mapView.mapType = MKMapType.Standard
         
-        // Acquire user geo position
-        if (CLLocationManager.locationServicesEnabled()) {
-            locationManager.delegate = self
-        }
     }
     
     
@@ -73,6 +69,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
         otmTabBarController.tabBar.hidden = false
+
+        // Acquire user geo position
+        if (CLLocationManager.locationServicesEnabled()) {
+            locationManager.delegate = self
+        }
 
         // Add the observer
         NSNotificationCenter.defaultCenter().addObserver(
