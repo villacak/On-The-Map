@@ -170,6 +170,9 @@ class OTMClient: NSObject {
     func parseGETStudentLocations(limit limit: String?, skip: String?, order: OTMServicesNameEnum?, completionHandler: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         
         let tempUrl: String = getUrlForParameters(limitP: limit, skipP: skip, orderP: order)
+        
+        print(tempUrl)
+        
         let urlSelected: NSURL = NSURL(string: tempUrl)!
         let request = NSMutableURLRequest(URL: urlSelected)
         request.addValue(OTMClient.ConstantsParse.APPLICATION_ID_KEY, forHTTPHeaderField: OTMClient.ConstantsParse.APPLICATION_ID_STR)
@@ -216,7 +219,7 @@ class OTMClient: NSObject {
                 completionHandler(result: nil, error: error)
             } else {
                 do {
-                    let jsonResult: NSDictionary? = try NSJSONSerialization.JSONObjectWithData(data!, options:NSJSONReadingOptions.MutableContainers) as? NSDictionary
+                    let jsonResult: NSDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options:NSJSONReadingOptions.MutableContainers) as! NSDictionary
                     completionHandler(result: jsonResult, error: nil)
                 } catch let errorCatch as NSError {
                     completionHandler(result: nil, error: errorCatch)
@@ -316,14 +319,15 @@ class OTMClient: NSObject {
      * order - OTMServicesNameEnum()
      */
     func getUrlForParameters(limitP limitP: String?, skipP: String?, orderP: OTMServicesNameEnum?) -> String {
+        let empty: String = ""
         var urlForChange: String = OTMClient.ConstantsParse.PARSE_STUDENT_LOCATION_URL
-        if (limitP != nil && skipP != nil && orderP != nil) {
+        if (limitP != empty && skipP != empty && orderP != nil) {
             urlForChange += "?limit=\(limitP!)&skip=\(skipP!)&order=\(orderP!)"
-        } else if (limitP != nil && skipP != nil) {
+        } else if (limitP != empty && skipP != empty) {
             urlForChange += "?limit=\(limitP!)&skip=\(skipP!)"
-        } else if (limitP != nil) {
+        } else if (limitP != empty) {
             urlForChange += "?limit=\(limitP!)"
-        } else if (limitP == nil && skipP == nil && orderP != nil) {
+        } else if (limitP == empty && skipP == empty && orderP != nil) {
             urlForChange += "?order=\(orderP!)"
         }
         return urlForChange

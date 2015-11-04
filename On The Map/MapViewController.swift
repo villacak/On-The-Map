@@ -28,7 +28,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     let paginationSize: String = "100"
-    let initialCache: String = "400"
+    let initialCache: String  = OTMClient.ConstantsGeneral.EMPTY_STR //"400"
     let reusableId: String = "usersInfo"
     
     var locationManager: CLLocationManager!
@@ -147,7 +147,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     //
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         userLocation = manager.location?.coordinate
-        print("Current Location Lat/Lon= \(userLocation.latitude) \\ \(userLocation.longitude)")
+//        print("Current Location Lat/Lon= \(userLocation.latitude) \\ \(userLocation.longitude)")
     }
     
     
@@ -341,8 +341,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     // Refresh data and map
     //
     @IBAction func refreshAction(sender: AnyObject) {
-        otmTabBarController.mapPoints.removeAll()
-        removeAnnotations()
+        if (mapView.annotations.count > 0) {
+            otmTabBarController.mapPoints.removeAll()
+            removeAnnotations()
+        }
         checkIfLogged()
     }
     

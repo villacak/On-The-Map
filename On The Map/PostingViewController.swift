@@ -6,6 +6,7 @@
 //  Copyright © 2015 Klaus Villaca. All rights reserved.
 //
 
+import Foundation
 import UIKit
 import MapKit
 
@@ -52,7 +53,6 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
         if (CLLocationManager.locationServicesEnabled()) {
             locationManager.delegate = self
         }
-        
     }
     
     
@@ -150,7 +150,6 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    print("putdata \(responseAsNSDictinory!)")
                     self.addPUTResponseToUserData(response: responseAsNSDictinory)
                     self.dismissView()
                 }
@@ -191,8 +190,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    print("updateDdata \(responseAsNSDictinory!)")
-//                    self.addPUTResponseToUserData(response: responseAsNSDictinory)
+                    self.addPUTResponseToUserData(response: responseAsNSDictinory)
                     self.dismissView()
                 }
             })
@@ -214,6 +212,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
         
         self.otmTabBarController.localUserData = UserData(objectId: putUserResponse.tempObjectId, uniqueKey: tempUD.uniqueKey!, firstName: tempUD.firstName!, lastName: tempUD.lastName, mapString: self.textWithData.text!, mediaUrl: self.personalUrl.text!, latitude: self.latFromAddress, longitude: self.lonFromAddress, createdAt: putUserResponse.tempCreatedAt, updatedAt: putUserResponse.tempCreatedAt, userLocation: tempAnnotation)
     }
+    
     
     
     //
@@ -240,10 +239,12 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
                
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
+                    let utils: Utils = Utils()
+                    self.otmTabBarController.localUserData = utils.addLocationToLocalUserData(userData: self.otmTabBarController.localUserData, latitude: self.latFromAddress, longitude: self.lonFromAddress)
                     if (self.otmTabBarController.localUserData.objectId == OTMClient.ConstantsGeneral.EMPTY_STR) {
                         self.putData()
                     } else {
-                        
+                        self.updateData()
                     }
                 }
             })
