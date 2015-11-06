@@ -171,7 +171,7 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     // Refresh button
     //
     @IBAction func refreshAction(sender: AnyObject) {
-        let checkUserDataTemp: UserData? = otmTabBarController.userDataDic[otmTabBarController.udacityKey]
+//        let checkUserDataTemp: UserData? = otmTabBarController.userDataDic[otmTabBarController.udacityKey]
 //        if (checkUserDataTemp == nil) {
 //            loadUserData()
 //        } else {
