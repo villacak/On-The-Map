@@ -21,8 +21,11 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     
     var spinner: ActivityIndicatorView!
     var otmTabBarController: OTMTabBarController!
-    var keys: [String]!
+
     
+    //
+    // Call when view just have loaded
+    //
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -32,6 +35,9 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     }
     
     
+    //
+    // Called when view will appear
+    //
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
     }
@@ -46,25 +52,43 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     }
     
     
+    
     //
     // Dismiss the Allert and form the segue
     //
     func okDismissAlertAndPerformSegue(titleStr titleStr: String, messageStr: String, controller: UIViewController) {
         let alert: UIAlertController = UIAlertController(title: titleStr, message: messageStr, preferredStyle: UIAlertControllerStyle.Alert)
-        let okDismiss: UIAlertAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Cancel, handler: nil)
+        let okDismiss: UIAlertAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Cancel, handler: {
+            action in self.checkIfLogged()
+        })
         alert.addAction(okDismiss)
         controller.presentViewController(alert, animated: true, completion: {})
     }
 
 
-    
+    //
+    // Check if the user is logged
+    //
+    func checkIfLogged() {
+        if otmTabBarController.udacityKey == OTMClient.ConstantsGeneral.EMPTY_STR {
+            otmTabBarController.tabBar.hidden = true
+            performSegueWithIdentifier("LoginSegue2", sender: self)
+            self.storyboard!.instantiateViewControllerWithIdentifier("OTMFBAuthViewController")
+        }
+    }
+
+    //
+    // Return the number if rows in to be displayed
+    //
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return otmTabBarController.mapPoints.count
     }
     
     
+    //
+    // Assemble the cell to the row
+    //
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-//        let userDataTemp: UserData = otmTabBarController.userDataDic[keyForGetFromDictionary]!
         let pointObject: MKPointAnnotation = otmTabBarController.mapPoints[indexPath.row]
         let cell: ListUserData = (tableView.dequeueReusableCellWithIdentifier(reusableCell, forIndexPath: indexPath)) as! ListUserData
         
@@ -74,6 +98,9 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     }
     
     
+    //
+    // Called when user did selected a row
+    //
     func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
         let pointObject: MKPointAnnotation = otmTabBarController.mapPoints[indexPath.row]
         if pointObject.subtitle! == OTMClient.ConstantsGeneral.EMPTY_STR {
@@ -85,6 +112,9 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     }
   
     
+    //
+    // Logout
+    //
     @IBAction func logoutAction(sender: AnyObject) {
         startSpin(spinText: OTMClient.ConstantsMessages.LOGOUT_PROCESSING)
         
@@ -108,7 +138,7 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
                 Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: (errorString?.description)!, controller: self)
             }
             
-            dispatch_async(dispatch_get_main_queue(), {
+            dispatch_async(dispatch_get_main_queue()) {
                 // Dismiss modal
                 self.spinner.hide()
                 
@@ -120,16 +150,26 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
                     self.navigationController?.navigationBarHidden = true
                     self.okDismissAlertAndPerformSegue(titleStr: OTMClient.ConstantsMessages.LOGOUT_SUCCESS, messageStr: OTMClient.ConstantsMessages.LOGOUT_SUCCESS_MESSAGE, controller: self)
                 }
-            })
+            }
         }
 
     }
     
     
+    //
+    // Post a new update
+    //
     @IBAction func postingAction(sender: AnyObject) {
+        navigationController?.navigationBarHidden = false
+        otmTabBarController.tabBar.hidden = true
+        performSegueWithIdentifier("PostingViewSegue2", sender: self)
+        storyboard!.instantiateViewControllerWithIdentifier("PostingView") as! PostingViewController
     }
     
     
+    //
+    // Refresh button
+    //
     @IBAction func refreshAction(sender: AnyObject) {
 //        let checkUserDataTemp: UserData? = otmTabBarController.userDataDic[otmTabBarController.udacityKey]
 //        if (checkUserDataTemp == nil) {

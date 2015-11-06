@@ -6,7 +6,7 @@
 //  Copyright © 2015 Klaus Villaca. All rights reserved.
 //
 
-import Foundation
+
 import UIKit
 import MapKit
 
@@ -96,9 +96,8 @@ class Utils: NSObject {
     //
     // Add location to localUserData var
     //
-    func addLocationToLocalUserData(userData userData: UserData, latitude: Double, longitude: Double) -> UserData {
+    func addLocationToLocalUserData(userData userData: UserData, stringPlace: String, mediaUrl: String, latitude: Double, longitude: Double) -> UserData {
         let tempUserData: UserData = UserData(objectId: userData.objectId!, uniqueKey: userData.uniqueKey!, firstName: userData.firstName!, lastName: userData.lastName!, mapString: userData.mapString!, mediaUrl: userData.mediaUrl!, latitude: latitude, longitude: longitude, createdAt: userData.createdAt, updatedAt: userData.updatedAt, userLocation: userData.userLocation)
         return tempUserData
     }
-
 }

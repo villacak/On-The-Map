@@ -91,7 +91,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         if (CLLocationManager.locationServicesEnabled()) {
             locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
-//            locationManager.startUpdatingLocation()
+            //            locationManager.startUpdatingLocation()
         }
         checkIfLogged()
     }
@@ -169,17 +169,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     
     //
-    // Remove subView from spin
-    //
-    func dismissSpin() {
-        spinner.hide()
-        //        if let viewWithTag = self.view.viewWithTag(100) {
-        //            viewWithTag.removeFromSuperview()
-        //        }
-    }
-    
-    
-    //
     // Location Manager called when error occur when loading locations
     //
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
@@ -207,40 +196,38 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     func loadData(numberToLoad numberToLoad: String, cacheToPaginate: String, orderListBy: OTMServicesNameEnum) {
         startSpin(spinText: OTMClient.ConstantsMessages.LOADING_DATA)
         
-//        dispatch_async(dispatch_get_global_queue(priority, 0)) {
-            OTMClient.sharedInstance().parseGETStudentLocations(limit: numberToLoad, skip: cacheToPaginate, order: orderListBy){
-                (success, errorString)  in
-                var isSuccess: Bool = false
-                var responseLoadMapDataAsNSDictinory: Dictionary<String, AnyObject>!
-                if (success != nil) {
-                    responseLoadMapDataAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
-                    
-                    // Check if the response contains any error or not
-                    if ((responseLoadMapDataAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
-                        let message: String = OTMClient.sharedInstance().parseErrorReturned(responseLoadMapDataAsNSDictinory)
-                        Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: message, controller: self)
-                    } else {
-                        isSuccess = true
-                    }
-                } else {
-                    // If success returns nil then it's necessary display an alert to the user
-                    Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: (errorString?.description)!, controller: self)
-                }
+        OTMClient.sharedInstance().parseGETStudentLocations(limit: numberToLoad, skip: cacheToPaginate, order: orderListBy){
+            (success, errorString)  in
+            var isSuccess: Bool = false
+            var responseLoadMapDataAsNSDictinory: Dictionary<String, AnyObject>!
+            if (success != nil) {
+                responseLoadMapDataAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
                 
-                dispatch_async(dispatch_get_main_queue()) {
-                    // Dismiss modal
-                    self.dismissSpin()
-                    
-                    // If success extracting data then call the TabBarController Map view
-                    if (isSuccess) {
-                        let utils: Utils = Utils()
-                        self.otmTabBarController.mapPoints = utils.populateLocationList(mapData: responseLoadMapDataAsNSDictinory)
-                        self.mapView.addAnnotations(self.otmTabBarController.mapPoints)
-                        self.mapView.showAnnotations(self.mapView.annotations, animated: true)
-                    }
+                // Check if the response contains any error or not
+                if ((responseLoadMapDataAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
+                    let message: String = OTMClient.sharedInstance().parseErrorReturned(responseLoadMapDataAsNSDictinory)
+                    Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: message, controller: self)
+                } else {
+                    isSuccess = true
+                }
+            } else {
+                // If success returns nil then it's necessary display an alert to the user
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: (errorString?.description)!, controller: self)
+            }
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                // Dismiss modal
+                self.spinner.hide()
+                
+                // If success extracting data then call the TabBarController Map view
+                if (isSuccess) {
+                    let utils: Utils = Utils()
+                    self.otmTabBarController.mapPoints = utils.populateLocationList(mapData: responseLoadMapDataAsNSDictinory)
+                    self.mapView.addAnnotations(self.otmTabBarController.mapPoints)
+                    self.mapView.showAnnotations(self.mapView.annotations, animated: true)
                 }
             }
-//        }
+        }
     }
     
     
@@ -311,7 +298,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             
             dispatch_async(dispatch_get_main_queue()) {
                 // Dismiss modal
-                self.dismissSpin()
+                self.spinner.hide()
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
@@ -343,8 +330,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         navigationController?.navigationBarHidden = false
         otmTabBarController.tabBar.hidden = true
         performSegueWithIdentifier("PostingViewSegue", sender: self)
-        let postingView: PostingViewController = storyboard!.instantiateViewControllerWithIdentifier("PostingView") as! PostingViewController
-        postingView.userLocation = self.userLocation
+        storyboard!.instantiateViewControllerWithIdentifier("PostingView") as! PostingViewController
     }
     
     

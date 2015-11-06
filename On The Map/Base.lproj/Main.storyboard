@@ -138,7 +138,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4614" y="-831"/>
+            <point key="canvasLocation" x="4892" y="-477"/>
         </scene>
         <!--Title-->
         <scene sceneID="jrK-LB-8OA">
@@ -251,6 +251,8 @@
                         <outlet property="postingButton" destination="7W4-DB-tfQ" id="ypu-gd-nVI"/>
                         <outlet property="refreshButton" destination="q9r-Ip-EDW" id="Zbu-K6-wN8"/>
                         <outlet property="tableView" destination="hHy-RI-Ctm" id="1rl-yZ-NCw"/>
+                        <segue destination="efL-RN-e0c" kind="show" identifier="PostingViewSegue2" id="XAT-pe-zv0"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="LoginSegue2" id="Veq-4h-bT2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kIo-39-F59" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -378,7 +380,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OCr-cw-MbO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4630" y="296"/>
+            <point key="canvasLocation" x="4892" y="315"/>
         </scene>
         <!--On The Map-->
         <scene sceneID="pAA-qf-Dh8">
@@ -535,7 +537,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vsa-2I-5de" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5319" y="-831"/>
+            <point key="canvasLocation" x="5645" y="-477"/>
         </scene>
         <!--Map-->
         <scene sceneID="JqI-hK-pM2">
@@ -603,4 +605,8 @@
         <image name="mapAndPinIcon" width="22" height="22"/>
         <image name="navBarPin" width="22" height="22"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="Veq-4h-bT2"/>
+        <segue reference="XAT-pe-zv0"/>
+    </inferredMetricsTieBreakers>
 </document>

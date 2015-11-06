@@ -37,7 +37,6 @@
 		33DA66B91BB23D6000F7978B /* OTMClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66B81BB23D6000F7978B /* OTMClient.swift */; };
 		33DA66BB1BB23E4100F7978B /* OTMConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66BA1BB23E4100F7978B /* OTMConstants.swift */; };
 		33DA66BF1BB245AD00F7978B /* OTMServicesNameEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66BE1BB245AD00F7978B /* OTMServicesNameEnum.swift */; };
-		33DA66C11BB37ED900F7978B /* OTMDialogs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66C01BB37ED900F7978B /* OTMDialogs.swift */; };
 		33EB6EEA1BD48D3900CCFA71 /* PostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33EB6EE91BD48D3900CCFA71 /* PostingViewController.swift */; };
 		33F98A341BB8DAED00536720 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33F98A331BB8DAED00536720 /* UserData.swift */; };
 /* End PBXBuildFile section */
@@ -99,7 +98,6 @@
 		33DA66B81BB23D6000F7978B /* OTMClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMClient.swift; sourceTree = "<group>"; };
 		33DA66BA1BB23E4100F7978B /* OTMConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMConstants.swift; sourceTree = "<group>"; };
 		33DA66BE1BB245AD00F7978B /* OTMServicesNameEnum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMServicesNameEnum.swift; sourceTree = "<group>"; };
-		33DA66C01BB37ED900F7978B /* OTMDialogs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMDialogs.swift; sourceTree = "<group>"; };
 		33EB6EE61BD4783A00CCFA71 /* On The Map-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "On The Map-Bridging-Header.h"; sourceTree = "<group>"; };
 		33EB6EE91BD48D3900CCFA71 /* PostingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostingViewController.swift; sourceTree = "<group>"; };
 		33F98A331BB8DAED00536720 /* UserData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
@@ -254,7 +252,6 @@
 			children = (
 				33DA66B81BB23D6000F7978B /* OTMClient.swift */,
 				33DA66BA1BB23E4100F7978B /* OTMConstants.swift */,
-				33DA66C01BB37ED900F7978B /* OTMDialogs.swift */,
 			);
 			name = RestUtils;
 			sourceTree = "<group>";
@@ -418,7 +415,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				33DA66C11BB37ED900F7978B /* OTMDialogs.swift in Sources */,
 				33EB6EEA1BD48D3900CCFA71 /* PostingViewController.swift in Sources */,
 				3388FFA51BDDABE8004579FD /* ListUserData.swift in Sources */,
 				331B552A1BC4B2BA000812F5 /* OTMTabBarController.swift in Sources */,
