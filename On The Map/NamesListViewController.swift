@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Parse
 import MapKit
 
 class NamesListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {

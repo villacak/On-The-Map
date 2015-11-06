@@ -6,8 +6,9 @@
 //  Copyright © 2015 Klaus Villaca. All rights reserved.
 //
 
-import Foundation
+//import Foundation
 import UIKit
+import Parse
 import MapKit
 
 

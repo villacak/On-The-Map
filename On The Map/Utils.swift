@@ -51,8 +51,7 @@ class Utils: NSObject {
     //
     func populateUserData(userData userData: UserData) -> MKPointAnnotation {
         let fullName: String = "\(userData.firstName) \(userData.lastName)"
-        let utils: Utils = Utils()
-        let tempMKPointAnnotation: MKPointAnnotation = utils.createMkPointAnnotation(fullName: fullName, urlStr: OTMClient.ConstantsGeneral.EMPTY_STR, latitude: userData.latitude, longitude: userData.longitude)
+        let tempMKPointAnnotation: MKPointAnnotation = createMkPointAnnotation(fullName: fullName, urlStr: OTMClient.ConstantsGeneral.EMPTY_STR, latitude: userData.latitude, longitude: userData.longitude)
         return tempMKPointAnnotation
     }
     

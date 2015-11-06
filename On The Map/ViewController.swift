@@ -35,7 +35,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
         view.addGestureRecognizer(tap)
         subscribeToKeyboardNotifications()
-
+ 
     }
     
     
@@ -156,7 +156,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: (errorString?.description)!, controller: self)
             }
             
-            dispatch_async(dispatch_get_main_queue(), {
+            dispatch_async(dispatch_get_main_queue()) {
                 // Dismiss modal
                 self.spinner.hide()
                 self.loginButton.enabled = true
@@ -167,7 +167,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                     self.otmTabBarController.udacityUserId = self.email.text!
                     self.loadUserData()
                 }
-            })
+            }
         }
     }
     
@@ -197,7 +197,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: (errorString?.description)!, controller: self)
             }
             
-            dispatch_async(dispatch_get_main_queue(), {
+            dispatch_async(dispatch_get_main_queue()) {
                 // Dismiss modal
                 self.spinner.hide()
                 
@@ -210,7 +210,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                     self.navigationController?.navigationBarHidden = false
                     self.navigationController?.popViewControllerAnimated(true)
                 }
-            })
+            }
         }
     }
     
@@ -221,8 +221,20 @@ class ViewController: UIViewController, UITextFieldDelegate {
     //
     func startSpin(spinText spinText: String) {
         spinner = ActivityIndicatorView(text: spinText)
+        view.tag = 100
         view.addSubview(spinner)
     }
+    
+    //
+    // Remove subView from spin
+    //
+    func dismissSpin() {        
+        spinner.hide()
+//        if let viewWithTag = self.view.viewWithTag(100) {
+//            viewWithTag.removeFromSuperview()
+//        }
+    }
+
 
     
     //
