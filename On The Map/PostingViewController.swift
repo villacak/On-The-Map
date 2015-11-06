@@ -230,7 +230,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
             if let placemark = placemarks?.first {
                 let coordinates: CLLocationCoordinate2D = placemark.location!.coordinate
                 self.latFromAddress = coordinates.latitude
-                self.lonFromAddress = coordinates.latitude
+                self.lonFromAddress = coordinates.longitude
                 isSuccess = true
             }
             
