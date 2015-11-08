@@ -31,7 +31,6 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
         tableView.delegate = self
         tableView.dataSource = self
         otmTabBarController = tabBarController as! OTMTabBarController
-        
     }
     
     
@@ -40,6 +39,7 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     //
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
+//        loadData(numberToLoad: OTMClient.ConstantsParse.PAGINATION, cacheToPaginate: OTMClient.ConstantsGeneral.EMPTY_STR, orderListBy: OTMServicesNameEnum.updateAt)
     }
     
     
@@ -118,24 +118,12 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     @IBAction func logoutAction(sender: AnyObject) {
         startSpin(spinText: OTMClient.ConstantsMessages.LOGOUT_PROCESSING)
         
-        OTMClient.sharedInstance().udacityPOSTLogout() {
-            (success, errorString)  in
-            
-            var isSuccess: Bool = false
-            var responseLogoutAsNSDictinory: Dictionary<String, AnyObject>!
-            if (success != nil) {
-                responseLogoutAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
-                
-                // Check if the response contains any error or not
-                if ((responseLogoutAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
-                    let message: String = OTMClient.sharedInstance().parseErrorReturned(responseLogoutAsNSDictinory)
-                    Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: message, controller: self)
-                } else {
-                    isSuccess = true
-                }
+        otmTabBarController.logout() {(result, error) in
+            var isSuccess = false
+            if let tempError = error {
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGOUT_FAILED, messageStr: (tempError.description), controller: self)
             } else {
-                // If success returns nil then it's necessary display an alert to the user
-                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: (errorString?.description)!, controller: self)
+                isSuccess = true
             }
             
             dispatch_async(dispatch_get_main_queue()) {
@@ -152,7 +140,6 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
                 }
             }
         }
-
     }
     
     
@@ -171,12 +158,34 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     // Refresh button
     //
     @IBAction func refreshAction(sender: AnyObject) {
-//        let checkUserDataTemp: UserData? = otmTabBarController.userDataDic[otmTabBarController.udacityKey]
-//        if (checkUserDataTemp == nil) {
-//            loadUserData()
-//        } else {
-//            loadData(numberToLoad: paginationSize, cacheToPaginate: initialCache, orderListBy: OTMServicesNameEnum.updateAt)
-//        }
+        loadData(numberToLoad: OTMClient.ConstantsParse.PAGINATION, cacheToPaginate: OTMClient.ConstantsGeneral.EMPTY_STR, orderListBy: OTMServicesNameEnum.updateAt)
     }
     
+    
+    //
+    // Load data from Parse
+    //
+    func loadData(numberToLoad numberToLoad: String, cacheToPaginate: String, orderListBy: OTMServicesNameEnum) {
+        startSpin(spinText: OTMClient.ConstantsMessages.LOADING_DATA)
+        
+        otmTabBarController.loadData(numberToLoad: numberToLoad, cacheToPaginate: cacheToPaginate, orderListBy: orderListBy) { (result, error) in
+            
+            var isSuccess = false
+            if let tempError = error {
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: (tempError.description), controller: self)
+            } else {
+                isSuccess = true
+            }
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                // Dismiss modal
+                self.spinner.hide()
+                
+                // If success extracting data then call the TabBarController Map view
+                if (isSuccess) {
+                    self.tableView.reloadData()
+                }
+            }
+        }
+    }
 }

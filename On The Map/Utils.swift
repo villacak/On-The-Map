@@ -51,11 +51,11 @@ class Utils: NSObject {
     //
     func populateUserData(userData userData: UserData) -> MKPointAnnotation {
         let fullName: String = "\(userData.firstName) \(userData.lastName)"
-        let tempMKPointAnnotation: MKPointAnnotation = createMkPointAnnotation(fullName: fullName, urlStr: OTMClient.ConstantsGeneral.EMPTY_STR, latitude: userData.latitude, longitude: userData.longitude)
+        let tempMKPointAnnotation: MKPointAnnotation = createMkPointAnnotation(fullName: fullName, urlStr: userData.mediaUrl, latitude: userData.latitude, longitude: userData.longitude)
         return tempMKPointAnnotation
     }
     
-
+    
     //
     // Create the Point Annotation and return it
     //
@@ -72,7 +72,7 @@ class Utils: NSObject {
     //
     // Set local User data when the user still doesn't have added any address
     //
-    func createLocalUserData(userDataDictionary userDataDictionary: Dictionary<String, AnyObject>, objectId: String, udacityKey: String, latDouble: Double, lonDouble: Double, pointInformation: MKPointAnnotation) -> UserData {
+    func createLocalUserData(userDataDictionary userDataDictionary: Dictionary<String, AnyObject>, udacityKey: String, latDouble: Double, lonDouble: Double, pointInformation: MKPointAnnotation) -> UserData {
         let fullUserData: Dictionary<String, AnyObject> = userDataDictionary[OTMClient.ConstantsUdacity.USER] as! Dictionary<String, AnyObject>
         let tempFirstName: String = fullUserData[OTMClient.ConstantsData.firstNameUD] as! String
         let tempLstName:String = fullUserData[OTMClient.ConstantsData.lastNameUD] as! String
@@ -97,7 +97,7 @@ class Utils: NSObject {
     // Add location to localUserData var
     //
     func addLocationToLocalUserData(userData userData: UserData, stringPlace: String, mediaUrl: String, latitude: Double, longitude: Double) -> UserData {
-        let tempUserData: UserData = UserData(objectId: userData.objectId!, uniqueKey: userData.uniqueKey!, firstName: userData.firstName!, lastName: userData.lastName!, mapString: userData.mapString!, mediaUrl: userData.mediaUrl!, latitude: latitude, longitude: longitude, createdAt: userData.createdAt, updatedAt: userData.updatedAt, userLocation: userData.userLocation)
+        let tempUserData: UserData = UserData(objectId: userData.objectId!, uniqueKey: userData.uniqueKey!, firstName: userData.firstName!, lastName: userData.lastName!, mapString: stringPlace, mediaUrl: mediaUrl, latitude: latitude, longitude: longitude, createdAt: userData.createdAt, updatedAt: userData.updatedAt, userLocation: userData.userLocation)
         return tempUserData
     }
 }

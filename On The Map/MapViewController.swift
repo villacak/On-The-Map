@@ -7,18 +7,6 @@
 //
 
 
-// Comments regarding calling the request service with completion handler.
-// Due the completion handler and we need to run certain tasks in the main
-// trhead. The code becomes very coupled too quickly.
-// My plan was to have logout refresh and PostingView actions in one class
-// however it simple doesn't work as in the end I need run my calls from
-// the main thread and due the result take some time to return and make calls
-// within main thread when the result has returned, there is quite few we can do
-// to decouple those functions calls that trigger those request calls.
-// If I did have a way to get the response and then return to thos class to then
-// make those calls within the main thread it woud work. I hope I made myself undertood.
-// Due that the code doesn't look really nice and we duplicate very similar functions
-//
 import UIKit
 import Parse
 import MapKit
@@ -28,10 +16,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var mapView: MKMapView!
     
-    let paginationSize: String = "100"
     let initialCache: String  = OTMClient.ConstantsGeneral.EMPTY_STR
     let reusableId: String = "usersInfo"
-    let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
     
     var locationManager: CLLocationManager!
     var userLocation: CLLocationCoordinate2D!
@@ -52,8 +38,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        otmTabBarController = tabBarController as! OTMTabBarController
-        otmTabBarController.appDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
         
     }
     
@@ -63,6 +47,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     //
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
+        otmTabBarController = tabBarController as! OTMTabBarController
+        otmTabBarController.appDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
         
         // Set the locationManager, if by some problem we create a new object
         if let tempLocation = otmTabBarController.appDelegate.locationManager {
@@ -127,7 +113,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         } else {
             // We will always repopulate the map points to have always 'fresh' data
             removeAnnotations()
-            loadData(numberToLoad: paginationSize, cacheToPaginate: initialCache, orderListBy: OTMServicesNameEnum.updateAt)
+            loadData(numberToLoad: OTMClient.ConstantsParse.PAGINATION, cacheToPaginate: initialCache, orderListBy: OTMServicesNameEnum.updateAt)
         }
     }
     
@@ -196,23 +182,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     func loadData(numberToLoad numberToLoad: String, cacheToPaginate: String, orderListBy: OTMServicesNameEnum) {
         startSpin(spinText: OTMClient.ConstantsMessages.LOADING_DATA)
         
-        OTMClient.sharedInstance().parseGETStudentLocations(limit: numberToLoad, skip: cacheToPaginate, order: orderListBy){
-            (success, errorString)  in
-            var isSuccess: Bool = false
-            var responseLoadMapDataAsNSDictinory: Dictionary<String, AnyObject>!
-            if (success != nil) {
-                responseLoadMapDataAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
-                
-                // Check if the response contains any error or not
-                if ((responseLoadMapDataAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
-                    let message: String = OTMClient.sharedInstance().parseErrorReturned(responseLoadMapDataAsNSDictinory)
-                    Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: message, controller: self)
-                } else {
-                    isSuccess = true
-                }
+        otmTabBarController.loadData(numberToLoad: numberToLoad, cacheToPaginate: cacheToPaginate, orderListBy: orderListBy) { (result, error) in
+            
+            var isSuccess = false
+            if let tempError = error {
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: (tempError.description), controller: self)
             } else {
-                // If success returns nil then it's necessary display an alert to the user
-                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: (errorString?.description)!, controller: self)
+                isSuccess = true
             }
             
             dispatch_async(dispatch_get_main_queue()) {
@@ -221,8 +197,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    let utils: Utils = Utils()
-                    self.otmTabBarController.mapPoints = utils.populateLocationList(mapData: responseLoadMapDataAsNSDictinory)
                     self.mapView.addAnnotations(self.otmTabBarController.mapPoints)
                     self.mapView.showAnnotations(self.mapView.annotations, animated: true)
                 }
@@ -258,16 +232,25 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     //
     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if control == view.rightCalloutAccessoryView {
-            let app = UIApplication.sharedApplication()
-            if view.annotation!.subtitle! != OTMClient.ConstantsGeneral.EMPTY_STR {
-                app.openURL((NSURL(string: view.annotation!.subtitle!!)!))
+            if let urlStr: String = view.annotation!.subtitle! {
+                if (urlStr != OTMClient.ConstantsGeneral.EMPTY_STR) {
+                    UIApplication.sharedApplication().openURL(NSURL(string: urlStr)!)
+                } else {
+                    dialogNoUrlFound()
+                }
             } else {
-                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.ERROR_TITLE, messageStr: OTMClient.ConstantsMessages.NO_URL_DEFINED, controller: self)
+                dialogNoUrlFound()
             }
         }
     }
     
     
+    //
+    // Display dialog message when no url defined
+    //
+    func dialogNoUrlFound() {
+        Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.ERROR_TITLE, messageStr: OTMClient.ConstantsMessages.NO_URL_DEFINED, controller: self)
+    }
     
     //
     // Logout button action
@@ -275,25 +258,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     @IBAction func logoutAction(sender: AnyObject) {
         startSpin(spinText: OTMClient.ConstantsMessages.LOGOUT_PROCESSING)
         
-        
-        OTMClient.sharedInstance().udacityPOSTLogout() {
-            (success, errorString)  in
-            
-            var isSuccess: Bool = false
-            var responseLogoutAsNSDictinory: Dictionary<String, AnyObject>!
-            if (success != nil) {
-                responseLogoutAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
-                
-                // Check if the response contains any error or not
-                if ((responseLogoutAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
-                    let message: String = OTMClient.sharedInstance().parseErrorReturned(responseLogoutAsNSDictinory)
-                    Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: message, controller: self)
-                } else {
-                    isSuccess = true
-                }
+        otmTabBarController.logout() {(result, error) in
+            var isSuccess = false
+            if let tempError = error {
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGOUT_FAILED, messageStr: (tempError.description), controller: self)
             } else {
-                // If success returns nil then it's necessary display an alert to the user
-                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: (errorString?.description)!, controller: self)
+                isSuccess = true
             }
             
             dispatch_async(dispatch_get_main_queue()) {
@@ -310,7 +280,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 }
             }
         }
-    }
+     }
     
     
     //

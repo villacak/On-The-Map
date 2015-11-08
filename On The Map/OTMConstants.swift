@@ -27,6 +27,7 @@ extension OTMClient {
         static let PARSE_STUDENT_LOCATION_URL = "https://api.parse.com/1/classes/StudentLocation"
         
         static let RESULTS: String = "results"
+        static let PAGINATION: String = "100"
 
     }
     
@@ -77,6 +78,7 @@ extension OTMClient {
     struct ConstantsMessages {
         static let INVALID_LOGIN: String = "Username and/or passord is wrong!"
         static let LOGIN_FAILED: String = "Login Failed"
+        static let LOGOUT_FAILED: String = "Logout Failed"
         static let LOGOUT_SUCCESS: String = "Logout Success"
         static let LOGOUT_SUCCESS_MESSAGE: String = "You have been logged out with success"
         static let DOUBLE_CREDENTIALS: String = "Did not specify exactly one credential"

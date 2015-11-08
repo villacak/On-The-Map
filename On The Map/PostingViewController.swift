@@ -24,7 +24,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
     var userLocation: CLLocationCoordinate2D!
     var latFromAddress: Double = 0
     var lonFromAddress: Double = 0
-    
+    var isCreate: Bool = false
     
     //
     // Called just after view did load
@@ -35,7 +35,6 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
         view.addGestureRecognizer(tap)
-        subscribeToKeyboardNotifications()
         
         let backButton = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.Plain, target: navigationController, action: nil)
         navigationItem.leftBarButtonItem = backButton
@@ -54,6 +53,8 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
         if (CLLocationManager.locationServicesEnabled()) {
             locationManager.delegate = self
         }
+
+        
     }
     
     
@@ -65,13 +66,6 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
     }
     
     
-    //
-    // Called just before the view disappear
-    //
-    override func viewWillDisappear(animated: Bool) {
-        unsubscribeFromKeyboardNotifications()
-    }
-    
     
     
     //
@@ -80,36 +74,6 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
-    }
-    
-    
-    //
-    // Get the keyboard hieght to move the to be hidden UITextView
-    //
-    func getKeyboardHeight(notification: NSNotification) -> CGFloat {
-        let userInfo = notification.userInfo
-        let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue // of CGRect
-        return keyboardSize.CGRectValue().height + 10
-    }
-    
-    
-    //
-    // Subscribe methods keyboardWillShow and keyboardWillHide to the notification center
-    //
-    func subscribeToKeyboardNotifications() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:" , name:UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:" , name:UIKeyboardWillHideNotification, object: nil)
-    }
-    
-    
-    //
-    // Unsubscribe methods keyboardWillShow and keyboardWillHide from the notification center
-    //
-    func unsubscribeFromKeyboardNotifications() {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name:
-            UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().removeObserver(self, name:
-            UIKeyboardWillHideNotification, object: nil)
     }
     
     
@@ -240,9 +204,11 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
                
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
+                    print(self.personalUrl.text!)
+                    
                     let utils: Utils = Utils()
                     self.otmTabBarController.localUserData = utils.addLocationToLocalUserData(userData: self.otmTabBarController.localUserData, stringPlace: self.textWithData.text!, mediaUrl: self.personalUrl.text!, latitude: self.latFromAddress, longitude: self.lonFromAddress)
-                    if (self.otmTabBarController.localUserData.objectId == OTMClient.ConstantsGeneral.EMPTY_STR) {
+                    if (self.isCreate) {
                         self.putData()
                     } else {
                         self.updateData()
@@ -272,6 +238,11 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
     @IBAction func findOnTheMapAction(sender: AnyObject) {
         spinner = ActivityIndicatorView(text: "Saving...")
         view.addSubview(spinner)
+        if otmTabBarController.localUserData.objectId != OTMClient.ConstantsGeneral.EMPTY_STR {
+            isCreate = false
+        } else {
+            isCreate = true
+        }
         
         getLatAndLongFromAddress(address: textWithData.text!)
     }
