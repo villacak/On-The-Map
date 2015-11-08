@@ -231,11 +231,17 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     //
     // Call the url into Safari if it exist.
     //
-    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        if control == view.rightCalloutAccessoryView {
-            if let urlStr: String = view.annotation!.subtitle!! {
+    func mapView(mapView: MKMapView, annotationView: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        
+        if control == annotationView.rightCalloutAccessoryView {
+            if let urlStr: String = annotationView.annotation!.subtitle!! {
                 if (urlStr != OTMClient.ConstantsGeneral.EMPTY_STR) {
-                    UIApplication.sharedApplication().openURL(NSURL(string: urlStr)!)
+                    let app = UIApplication.sharedApplication()
+                    if (urlStr.containsString(OTMClient.ConstantsRequest.HTTP_START_WITH)) {
+                        app.openURL(NSURL(string: urlStr)!)
+                    } else {
+                        app.openURL(NSURL(string: "http://\(urlStr)")!)
+                    }
                 } else {
                     dialogNoUrlFound()
                 }

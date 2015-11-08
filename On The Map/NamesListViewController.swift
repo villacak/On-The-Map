@@ -112,7 +112,13 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
             Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.ERROR_TITLE, messageStr: OTMClient.ConstantsMessages.NO_URL_DEFINED, controller: self)
         } else {
             print(pointObject.subtitle!)
+            let urlAsString: String = pointObject.subtitle!
             let app = UIApplication.sharedApplication()
+            if (urlAsString.containsString(OTMClient.ConstantsRequest.HTTP_START_WITH)) {
+                app.openURL(NSURL(string: urlAsString)!)
+            } else {
+                app.openURL(NSURL(string: "http://\(urlAsString)")!)
+            }
             app.openURL(NSURL(string: pointObject.subtitle!)!)
         }
     }

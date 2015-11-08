@@ -67,6 +67,7 @@ extension OTMClient {
         static let MIME_TYPE_POST: String = "application/json"
         static let CONTENT_TYPE: String = "Content-Type"
         static let ACCEPT: String = "Accept"
+        static let HTTP_START_WITH = "http://"
     }
     
     
