@@ -17,32 +17,37 @@ class Utils: NSObject {
     //
     // Populate the pins from the list into the map
     //
-    func populateLocationList(mapData mapData: Dictionary<String, AnyObject>) -> [MKPointAnnotation] {
+    func populateLocationList(mapData mapData: Dictionary<String, AnyObject>, var uiTabBarController: OTMTabBarController) -> (annotationReturn: [MKPointAnnotation], uiTabBarController: OTMTabBarController) {
         var annotationReturn: [MKPointAnnotation] = [MKPointAnnotation]()
         // Populate the map with the list
         if mapData.count > 0 {
             for (_, value) in mapData {
                 let valuesDic: [Dictionary<String, AnyObject>] = value as! [Dictionary<String, AnyObject>]
-                annotationReturn = extractArrayOfDictionary(arrayToExtract: valuesDic)
+                let tempTupplesReturn = extractArrayOfDictionary(arrayToExtract: valuesDic, uiTabBarController: uiTabBarController)
+                annotationReturn = tempTupplesReturn.annotationArrayReturn
+                uiTabBarController = tempTupplesReturn.uiTabBarController
             }
         }
-        return annotationReturn
+        return (annotationReturn, uiTabBarController)
     }
     
     
     //
     // Extract the those dictionaries from the Array
     //
-    func extractArrayOfDictionary(arrayToExtract arrayToExtract: [Dictionary<String, AnyObject>]) -> [MKPointAnnotation] {
+    func extractArrayOfDictionary(arrayToExtract arrayToExtract: [Dictionary<String, AnyObject>], uiTabBarController: OTMTabBarController) -> (annotationArrayReturn: [MKPointAnnotation], uiTabBarController: OTMTabBarController) {
         
         var annotationArrayReturn: [MKPointAnnotation] = [MKPointAnnotation]()
         if (arrayToExtract.count > 0) {
             for tempJsonUD in arrayToExtract {
                 let tempUD: UserData = UserData(objectId: tempJsonUD["objectId"] as! String, uniqueKey: tempJsonUD["uniqueKey"] as! String, firstName: tempJsonUD["firstName"] as! String, lastName: tempJsonUD["lastName"] as! String, mapString: tempJsonUD["mapString"] as! String, mediaUrl: tempJsonUD["mediaUrl"] as! String, latitude: tempJsonUD["latitude"] as! Double, longitude: tempJsonUD["longitude"] as! Double, createdAt: tempJsonUD["createdAt"] as! String, updatedAt: tempJsonUD["updatedAt"] as! String, userLocation: MKPointAnnotation())
+                if (tempUD.uniqueKey == uiTabBarController.udacityKey) {
+                    uiTabBarController.localUserData = tempUD
+                }
                 annotationArrayReturn.append(populateUserData(userData: tempUD))
             }
         }
-        return annotationArrayReturn
+        return (annotationArrayReturn, uiTabBarController)
     }
     
     
@@ -72,7 +77,7 @@ class Utils: NSObject {
     //
     // Set local User data when the user still doesn't have added any address
     //
-    func createLocalUserData(userDataDictionary userDataDictionary: Dictionary<String, AnyObject>, udacityKey: String, latDouble: Double, lonDouble: Double, pointInformation: MKPointAnnotation) -> UserData {
+    func createLocalUserData(userDataDictionary userDataDictionary: Dictionary<String, AnyObject>, objectId: String, udacityKey: String, latDouble: Double, lonDouble: Double, pointInformation: MKPointAnnotation) -> UserData {
         let fullUserData: Dictionary<String, AnyObject> = userDataDictionary[OTMClient.ConstantsUdacity.USER] as! Dictionary<String, AnyObject>
         let tempFirstName: String = fullUserData[OTMClient.ConstantsData.firstNameUD] as! String
         let tempLstName:String = fullUserData[OTMClient.ConstantsData.lastNameUD] as! String
@@ -86,10 +91,21 @@ class Utils: NSObject {
     //
     // Set new local for local user
     //
-    func extractDataFromPUTUserResponse(putDataResponse putDataResponse: Dictionary<String, AnyObject>) -> (tempCreatedAt: String, tempObjectId: String) {
-        let tempCreateAt: String = putDataResponse[OTMClient.ConstantsData.createdAt] as! String
-        let tempObjectId: String = putDataResponse[OTMClient.ConstantsData.objectId] as! String
-        return (tempCreateAt, tempObjectId)
+    func extractDataFromPUTUserResponse(putDataResponse putDataResponse: Dictionary<String, AnyObject>) -> (tempAction: String, tempObjectId: String, typeAction: String) {
+        var tempAction: String!
+        var typeAction: String!
+        var tempObjectId: String!
+        
+        if let tempCreateAt: String = putDataResponse[OTMClient.ConstantsData.createdAt] as? String {
+            tempAction = tempCreateAt
+            typeAction = OTMClient.ConstantsData.createdAt
+            tempObjectId = putDataResponse[OTMClient.ConstantsData.objectId] as! String
+        } else if let tempUpdateAt: String = putDataResponse[OTMClient.ConstantsData.updatedAt] as? String{
+            tempAction = tempUpdateAt
+            typeAction = OTMClient.ConstantsData.updatedAt
+            tempObjectId = OTMClient.ConstantsGeneral.EMPTY_STR
+        }
+        return (tempAction, tempObjectId, typeAction)
     }
     
     

@@ -53,7 +53,14 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
         if (CLLocationManager.locationServicesEnabled()) {
             locationManager.delegate = self
         }
-
+        
+        if let tempMapString = otmTabBarController.localUserData.mapString {
+            textWithData.text = tempMapString
+        }
+        
+        if let tempMediaUrl = otmTabBarController.localUserData.mediaUrl {
+            personalUrl.text = tempMediaUrl
+        }
         
     }
     
@@ -175,7 +182,21 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
         let tempFullName: String = "\(tempUD.firstName) \(tempUD.lastName)"
         let tempAnnotation: MKPointAnnotation = utils.createMkPointAnnotation(fullName: tempFullName, urlStr: self.personalUrl.text!, latitude: self.latFromAddress, longitude: self.lonFromAddress)
         
-        self.otmTabBarController.localUserData = UserData(objectId: putUserResponse.tempObjectId, uniqueKey: tempUD.uniqueKey!, firstName: tempUD.firstName!, lastName: tempUD.lastName, mapString: self.textWithData.text!, mediaUrl: self.personalUrl.text!, latitude: self.latFromAddress, longitude: self.lonFromAddress, createdAt: putUserResponse.tempCreatedAt, updatedAt: putUserResponse.tempCreatedAt, userLocation: tempAnnotation)
+        var tempCreateAt: String = OTMClient.ConstantsGeneral.EMPTY_STR
+        var tempUpdatedAt: String = OTMClient.ConstantsGeneral.EMPTY_STR
+        var tempObjecId: String = OTMClient.ConstantsGeneral.EMPTY_STR
+        
+        if (putUserResponse.typeAction == OTMClient.ConstantsData.createdAt) {
+            tempCreateAt = putUserResponse.tempAction
+            tempUpdatedAt = putUserResponse.tempAction
+            tempObjecId = putUserResponse.tempObjectId
+        } else {
+            tempCreateAt = otmTabBarController.localUserData.createdAt
+            tempUpdatedAt = putUserResponse.tempAction
+            tempObjecId = otmTabBarController.localUserData.objectId
+        }
+        
+        self.otmTabBarController.localUserData = UserData(objectId: tempObjecId, uniqueKey: tempUD.uniqueKey!, firstName: tempUD.firstName!, lastName: tempUD.lastName, mapString: self.textWithData.text!, mediaUrl: self.personalUrl.text!, latitude: self.latFromAddress, longitude: self.lonFromAddress, createdAt: tempCreateAt, updatedAt: tempUpdatedAt, userLocation: tempAnnotation)
     }
     
     

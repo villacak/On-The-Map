@@ -39,7 +39,10 @@ class OTMTabBarController: UITabBarController {
                     completionHandler(result: false, error: NSError(domain: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, code: 0, userInfo: [NSLocalizedDescriptionKey: message]))
                 } else {
                     let utils: Utils = Utils()
-                    self.mapPoints = utils.populateLocationList(mapData: responseLoadMapDataAsNSDictinory)
+                    
+                    let tempTuples = utils.populateLocationList(mapData: responseLoadMapDataAsNSDictinory, uiTabBarController: self)
+                    self.mapPoints = tempTuples.annotationReturn
+                    self.localUserData = tempTuples.uiTabBarController.localUserData
                     completionHandler(result: true, error: nil)
                 }
             } else {
