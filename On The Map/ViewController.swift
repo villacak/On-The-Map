@@ -35,6 +35,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
         view.addGestureRecognizer(tap)
         subscribeToKeyboardNotifications()
+        
+
     }
     
     
@@ -207,6 +209,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                     self.otmTabBarController.localUserData = utils.createLocalUserData(userDataDictionary: responseLoadUserDataAsNSDictinory, objectId: OTMClient.ConstantsGeneral.EMPTY_STR, udacityKey: self.otmTabBarController.udacityKey, latDouble: 0, lonDouble: 0, pointInformation: tempEmptyMKPointAnnotation)
                     
                     self.navigationController?.navigationBarHidden = false
+                    self.otmTabBarController.tabBar.hidden = false
                     self.navigationController?.popViewControllerAnimated(true)
                 }
             }

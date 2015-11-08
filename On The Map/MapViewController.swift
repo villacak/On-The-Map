@@ -64,6 +64,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
         
         otmTabBarController.tabBar.hidden = false
+        navigationController?.navigationBarHidden = false
         
         mapView.mapType = MKMapType.Standard
         
@@ -232,7 +233,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     //
     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if control == view.rightCalloutAccessoryView {
-            if let urlStr: String = view.annotation!.subtitle! {
+            if let urlStr: String = view.annotation!.subtitle!! {
                 if (urlStr != OTMClient.ConstantsGeneral.EMPTY_STR) {
                     UIApplication.sharedApplication().openURL(NSURL(string: urlStr)!)
                 } else {

@@ -43,6 +43,11 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     }
     
     
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(true)
+    }
+    
+    
     //
     // Add view to show the spin
     //
@@ -72,8 +77,8 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     func checkIfLogged() {
         if otmTabBarController.udacityKey == OTMClient.ConstantsGeneral.EMPTY_STR {
             otmTabBarController.tabBar.hidden = true
-            performSegueWithIdentifier("LoginSegue2", sender: self)
-            self.storyboard!.instantiateViewControllerWithIdentifier("OTMFBAuthViewController")
+            navigationController?.navigationBarHidden = true
+            otmTabBarController.selectedIndex = 0;
         }
     }
 
@@ -106,6 +111,7 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
         if pointObject.subtitle! == OTMClient.ConstantsGeneral.EMPTY_STR {
             Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.ERROR_TITLE, messageStr: OTMClient.ConstantsMessages.NO_URL_DEFINED, controller: self)
         } else {
+            print(pointObject.subtitle!)
             let app = UIApplication.sharedApplication()
             app.openURL(NSURL(string: pointObject.subtitle!)!)
         }
@@ -135,7 +141,6 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
                     self.otmTabBarController.udacitySessionId = OTMClient.ConstantsGeneral.EMPTY_STR
                     self.otmTabBarController.udacityKey = OTMClient.ConstantsGeneral.EMPTY_STR
                     self.otmTabBarController.loggedOnUdacity = false
-                    self.navigationController?.navigationBarHidden = true
                     self.okDismissAlertAndPerformSegue(titleStr: OTMClient.ConstantsMessages.LOGOUT_SUCCESS, messageStr: OTMClient.ConstantsMessages.LOGOUT_SUCCESS_MESSAGE, controller: self)
                 }
             }

@@ -257,15 +257,19 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
     // Add the new text and URL to the location
     //
     @IBAction func findOnTheMapAction(sender: AnyObject) {
-        spinner = ActivityIndicatorView(text: "Saving...")
-        view.addSubview(spinner)
-        if otmTabBarController.localUserData.objectId != OTMClient.ConstantsGeneral.EMPTY_STR {
-            isCreate = false
+        if textWithData.text! != OTMClient.ConstantsGeneral.EMPTY_STR {
+            spinner = ActivityIndicatorView(text: "Saving...")
+            view.addSubview(spinner)
+            
+            if otmTabBarController.localUserData.objectId != OTMClient.ConstantsGeneral.EMPTY_STR {
+                isCreate = false
+            } else {
+                isCreate = true
+            }
+            getLatAndLongFromAddress(address: textWithData.text!)
         } else {
-            isCreate = true
+            Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOCATION_ERROR, messageStr: OTMClient.ConstantsMessages.LOCATION_NIL, controller: self)
         }
-        
-        getLatAndLongFromAddress(address: textWithData.text!)
     }
     
     
