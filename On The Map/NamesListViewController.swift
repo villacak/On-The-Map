@@ -39,7 +39,6 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     //
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
-//        loadData(numberToLoad: OTMClient.ConstantsParse.PAGINATION, cacheToPaginate: OTMClient.ConstantsGeneral.EMPTY_STR, orderListBy: OTMServicesNameEnum.updateAt)
     }
     
     
@@ -106,20 +105,16 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     //
     // Called when user did selected a row
     //
-    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-        let pointObject: MKPointAnnotation = otmTabBarController.mapPoints[indexPath.row]
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let pointObject: MKPointAnnotation = otmTabBarController.mapPoints[indexPath.row] as MKPointAnnotation
+       
         if pointObject.subtitle! == OTMClient.ConstantsGeneral.EMPTY_STR {
             Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.ERROR_TITLE, messageStr: OTMClient.ConstantsMessages.NO_URL_DEFINED, controller: self)
         } else {
-            print(pointObject.subtitle!)
+            let utils: Utils = Utils()
             let urlAsString: String = pointObject.subtitle!
             let app = UIApplication.sharedApplication()
-            if (urlAsString.containsString(OTMClient.ConstantsRequest.HTTP_START_WITH)) {
-                app.openURL(NSURL(string: urlAsString)!)
-            } else {
-                app.openURL(NSURL(string: "http://\(urlAsString)")!)
-            }
-            app.openURL(NSURL(string: pointObject.subtitle!)!)
+            app.openURL(NSURL(string: utils.checkUrlToCall(stringUrl: urlAsString))!)
         }
     }
   

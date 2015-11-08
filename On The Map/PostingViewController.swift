@@ -225,8 +225,6 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
                
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    print(self.personalUrl.text!)
-                    
                     let utils: Utils = Utils()
                     self.otmTabBarController.localUserData = utils.addLocationToLocalUserData(userData: self.otmTabBarController.localUserData, stringPlace: self.textWithData.text!, mediaUrl: self.personalUrl.text!, latitude: self.latFromAddress, longitude: self.lonFromAddress)
                     if (self.isCreate) {

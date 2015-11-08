@@ -225,17 +225,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(spinner)
     }
     
-    //
-    // Remove subView from spin
-    //
-    func dismissSpin() {        
-        spinner.hide()
-//        if let viewWithTag = self.view.viewWithTag(100) {
-//            viewWithTag.removeFromSuperview()
-//        }
-    }
-
-
     
     //
     // Signup link button

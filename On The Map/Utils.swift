@@ -116,4 +116,18 @@ class Utils: NSObject {
         let tempUserData: UserData = UserData(objectId: userData.objectId!, uniqueKey: userData.uniqueKey!, firstName: userData.firstName!, lastName: userData.lastName!, mapString: stringPlace, mediaUrl: mediaUrl, latitude: latitude, longitude: longitude, createdAt: userData.createdAt, updatedAt: userData.updatedAt, userLocation: userData.userLocation)
         return tempUserData
     }
+    
+    
+    //
+    // Check if the url contains or not the http to add it if it doesn't have it.
+    //
+    func checkUrlToCall(stringUrl stringUrl: String) -> String {
+        var stringUrlToReturn: String!
+        if (stringUrl.containsString(OTMClient.ConstantsRequest.HTTP_START_WITH)) {
+            stringUrlToReturn = stringUrl
+        } else {
+            stringUrlToReturn =  "http://\(stringUrl)"
+        }
+        return stringUrlToReturn
+    }
 }

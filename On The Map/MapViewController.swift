@@ -231,17 +231,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     //
     // Call the url into Safari if it exist.
     //
+    // Here I add http:// if the string doesn't have it the safari will not open
+    //
     func mapView(mapView: MKMapView, annotationView: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         
         if control == annotationView.rightCalloutAccessoryView {
             if let urlStr: String = annotationView.annotation!.subtitle!! {
                 if (urlStr != OTMClient.ConstantsGeneral.EMPTY_STR) {
+                    let utils: Utils = Utils()
                     let app = UIApplication.sharedApplication()
-                    if (urlStr.containsString(OTMClient.ConstantsRequest.HTTP_START_WITH)) {
-                        app.openURL(NSURL(string: urlStr)!)
-                    } else {
-                        app.openURL(NSURL(string: "http://\(urlStr)")!)
-                    }
+                    app.openURL(NSURL(string: utils.checkUrlToCall(stringUrl: urlStr))!)
                 } else {
                     dialogNoUrlFound()
                 }
