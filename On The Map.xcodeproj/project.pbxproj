@@ -14,6 +14,7 @@
 		3388FFA51BDDABE8004579FD /* ListUserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3388FFA41BDDABE8004579FD /* ListUserData.swift */; };
 		33918F821BC0816F007A43A5 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33918F811BC0816F007A43A5 /* MapViewController.swift */; };
 		33918F841BC0825D007A43A5 /* UdacitySignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33918F831BC0825D007A43A5 /* UdacitySignupViewController.swift */; };
+		3396620A1BF1801C0037E334 /* OTMServiceCaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339662091BF1801C0037E334 /* OTMServiceCaller.swift */; };
 		33D74EB11BC34A2A009DB02D /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33D74EB01BC34A2A009DB02D /* ActivityIndicatorView.swift */; };
 		33DA666F1BB0EC9000F7978B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA666E1BB0EC9000F7978B /* AppDelegate.swift */; };
 		33DA66711BB0EC9000F7978B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66701BB0EC9000F7978B /* ViewController.swift */; };
@@ -69,6 +70,7 @@
 		3388FFA41BDDABE8004579FD /* ListUserData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListUserData.swift; sourceTree = "<group>"; };
 		33918F811BC0816F007A43A5 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		33918F831BC0825D007A43A5 /* UdacitySignupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacitySignupViewController.swift; sourceTree = "<group>"; };
+		339662091BF1801C0037E334 /* OTMServiceCaller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMServiceCaller.swift; sourceTree = "<group>"; };
 		33D74EB01BC34A2A009DB02D /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		33DA666B1BB0EC9000F7978B /* On The Map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "On The Map.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		33DA666E1BB0EC9000F7978B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -252,6 +254,7 @@
 			children = (
 				33DA66B81BB23D6000F7978B /* OTMClient.swift */,
 				33DA66BA1BB23E4100F7978B /* OTMConstants.swift */,
+				339662091BF1801C0037E334 /* OTMServiceCaller.swift */,
 			);
 			name = RestUtils;
 			sourceTree = "<group>";
@@ -420,6 +423,7 @@
 				331B552A1BC4B2BA000812F5 /* OTMTabBarController.swift in Sources */,
 				33DA66711BB0EC9000F7978B /* ViewController.swift in Sources */,
 				33918F841BC0825D007A43A5 /* UdacitySignupViewController.swift in Sources */,
+				3396620A1BF1801C0037E334 /* OTMServiceCaller.swift in Sources */,
 				3388FFA31BDD78A0004579FD /* NamesListViewController.swift in Sources */,
 				337F6A681BE1AFE80014F9AC /* Utils.swift in Sources */,
 				33F98A341BB8DAED00536720 /* UserData.swift in Sources */,

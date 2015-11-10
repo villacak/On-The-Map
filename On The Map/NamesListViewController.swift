@@ -125,10 +125,11 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     @IBAction func logoutAction(sender: AnyObject) {
         startSpin(spinText: OTMClient.ConstantsMessages.LOGOUT_PROCESSING)
         
-        otmTabBarController.logout() {(result, error) in
+        let caller: OTMServiceCaller = OTMServiceCaller()
+        caller.logout() {(result, error) in
             var isSuccess = false
             if let tempError = error {
-                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGOUT_FAILED, messageStr: (tempError.description), controller: self)
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGOUT_FAILED, messageStr: tempError, controller: self)
             } else {
                 isSuccess = true
             }
@@ -174,11 +175,12 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     func loadData(numberToLoad numberToLoad: String, cacheToPaginate: String, orderListBy: OTMServicesNameEnum) {
         startSpin(spinText: OTMClient.ConstantsMessages.LOADING_DATA)
         
-        otmTabBarController.loadData(numberToLoad: numberToLoad, cacheToPaginate: cacheToPaginate, orderListBy: orderListBy) { (result, error) in
+        let caller: OTMServiceCaller = OTMServiceCaller()
+        caller.loadData(numberToLoad: numberToLoad, cacheToPaginate: cacheToPaginate, orderListBy: orderListBy, uiTabBarController: otmTabBarController) { (result, error) in
             
             var isSuccess = false
             if let tempError = error {
-                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: (tempError.description), controller: self)
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: tempError, controller: self)
             } else {
                 isSuccess = true
             }
@@ -189,6 +191,7 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
+                    
                     self.tableView.reloadData()
                 }
             }

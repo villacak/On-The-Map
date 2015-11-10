@@ -17,11 +17,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var password: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var signUpButton: UIButton!
-
+    
     var otmTabBarController: OTMTabBarController!
     var spinner: ActivityIndicatorView!
     var appDelegate: AppDelegate!
-
+    
     
     //
     // Called when view has been loaded
@@ -128,32 +128,20 @@ class ViewController: UIViewController, UITextFieldDelegate {
     // Login button
     //
     @IBAction func loginAction(sender: UIButton) {
-        DismissKeyboard()        
+        DismissKeyboard()
         startSpin(spinText: OTMClient.ConstantsMessages.LOGIN_PROCESSING)
-       
+        
         loginButton.enabled = false
         signUpButton.enabled = false
         
-        OTMClient.sharedInstance().udacityPOSTLogin(userName: email.text!, password: password.text!) {
-            (success, errorString)  in
+        let caller: OTMServiceCaller = OTMServiceCaller()
+        caller.login(userName: email.text!, password: password.text!, uiTabBarController: otmTabBarController) { (result, error) in
             
-            var isSuccess: Bool = false
-            if (success != nil) {
-                // Convert the NSDictionary that is received as AnyObject to Dictionary
-                let responseAsNSDictinory: Dictionary<String, AnyObject> = (success as! NSDictionary) as! Dictionary<String, AnyObject>
-                
-                // Check if the response contains any error or not
-                if ((responseAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
-                    let messageToDialog = OTMClient.sharedInstance().parseErrorReturned(responseAsNSDictinory)
-                    Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: messageToDialog, controller: self)
-                } else {
-                    let successResponse = OTMClient.sharedInstance().successLoginResponse(responseAsNSDictinory, otmTabBarController: self.otmTabBarController)
-                    isSuccess = successResponse.isSuccess
-                    self.otmTabBarController = successResponse.otmTabBarController
-                }
+            var isSuccess = false
+            if let tempError = error {
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: tempError, controller: self)
             } else {
-                // If success returns nil then it's necessary display an alert to the user
-                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: (errorString?.description)!, controller: self)
+                isSuccess = true
             }
             
             dispatch_async(dispatch_get_main_queue()) {
@@ -164,8 +152,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
+                    self.otmTabBarController = result
                     self.otmTabBarController.udacityUserId = self.email.text!
-                    self.loadUserData()
+                    self.loadUserData(uiTabBarController: self.otmTabBarController)
                 }
             }
         }
@@ -175,38 +164,22 @@ class ViewController: UIViewController, UITextFieldDelegate {
     //
     // Load the Udacity User Data
     //
-    func loadUserData() {
+    func loadUserData(uiTabBarController uiTabBarController: OTMTabBarController) {
         startSpin(spinText: OTMClient.ConstantsMessages.LOADING_DATA)
         
-        OTMClient.sharedInstance().udacityPOSTGetUserData(otmTabBarController.udacityUserId){
-            (success, errorString)  in
-            var isSuccess: Bool = false
-            var responseLoadUserDataAsNSDictinory: Dictionary<String, AnyObject>!
-            if (success != nil) {
-                responseLoadUserDataAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
-                
-                // Check if the response contains any error or not
-                if ((responseLoadUserDataAsNSDictinory.indexForKey(OTMClient.ConstantsUdacity.ERROR)) != nil) {
-                    let message: String = OTMClient.sharedInstance().parseErrorReturned(responseLoadUserDataAsNSDictinory)
-                    Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: message, controller: self)
-                } else {
-                    isSuccess = true
-                }
+        let caller: OTMServiceCaller = OTMServiceCaller()
+        caller.loadUserData(uiTabBarController: uiTabBarController) { (result, error) in
+            var isSuccess = false
+            if let tempError = error {
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: tempError, controller: self)
             } else {
-                // If success returns nil then it's necessary display an alert to the user
-                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: (errorString?.description)!, controller: self)
+                isSuccess = true
             }
             
             dispatch_async(dispatch_get_main_queue()) {
                 // Dismiss modal
-                self.spinner.hide()
-                
-                // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    let tempEmptyMKPointAnnotation: MKPointAnnotation = MKPointAnnotation()
-                    let utils: Utils = Utils()
-                    self.otmTabBarController.localUserData = utils.createLocalUserData(userDataDictionary: responseLoadUserDataAsNSDictinory, objectId: OTMClient.ConstantsGeneral.EMPTY_STR, udacityKey: self.otmTabBarController.udacityKey, latDouble: 0, lonDouble: 0, pointInformation: tempEmptyMKPointAnnotation)
-                    
+                    self.otmTabBarController = result
                     self.navigationController?.navigationBarHidden = false
                     self.otmTabBarController.tabBar.hidden = false
                     self.navigationController?.popViewControllerAnimated(true)
@@ -215,14 +188,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-
+    
     
     //
     // Add view to show the spin
     //
     func startSpin(spinText spinText: String) {
         spinner = ActivityIndicatorView(text: spinText)
-        view.tag = 100
         view.addSubview(spinner)
     }
     
@@ -234,4 +206,3 @@ class ViewController: UIViewController, UITextFieldDelegate {
         DismissKeyboard()
     }
 }
-
