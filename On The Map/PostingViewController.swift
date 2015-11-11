@@ -96,8 +96,8 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
     //
     // Post user location for the very first time, then once we have the objectId we just use updateData()
     //
-//    func putData() {
-//        var responseAsNSDictinory: Dictionary<String, AnyObject>!
+    func putData() {
+        var responseAsNSDictinory: Dictionary<String, AnyObject>!
 //        OTMClient.sharedInstance().putPOSTStudentLocation(userData: otmTabBarController.localUserData!){
 //            (success, errorString)  in
 //            var isSuccess: Bool = false
@@ -126,7 +126,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
 //                }
 //            })
 //        }
-//    }
+    }
   
     
     //

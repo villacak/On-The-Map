@@ -165,6 +165,8 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     // Refresh button
     //
     @IBAction func refreshAction(sender: AnyObject) {
+        otmTabBarController.userDataDic.removeAll()
+        otmTabBarController.mapPoints.removeAll()
         loadData(numberToLoad: OTMClient.ConstantsParse.PAGINATION, cacheToPaginate: OTMClient.ConstantsGeneral.EMPTY_STR, orderListBy: OTMServicesNameEnum.updateAt)
     }
     
@@ -191,7 +193,6 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    
                     self.tableView.reloadData()
                 }
             }

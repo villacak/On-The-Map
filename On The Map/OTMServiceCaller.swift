@@ -74,7 +74,7 @@ class OTMServiceCaller: NSObject {
     
     
     //
-    //  Load data for refresh
+    //  Load data
     //
     func loadData(numberToLoad numberToLoad: String, cacheToPaginate: String, orderListBy: OTMServicesNameEnum, uiTabBarController: OTMTabBarController, completionHandler: (result: OTMTabBarController?, error: String?) -> Void) {
         OTMClient.sharedInstance().parseGETStudentLocations(limit: numberToLoad, skip: cacheToPaginate, order: orderListBy){
@@ -124,26 +124,27 @@ class OTMServiceCaller: NSObject {
     //
     // Post user location for the very first time, then once we have the objectId we just use updateData()
     //
-//    func putData(localUserData localUserData: OTMTabBarController, completionHandler: (result: OTMTabBarController?, error: String?) -> Void) {
-//        var responseAsNSDictinory: Dictionary<String, AnyObject>!
-//        OTMClient.sharedInstance().putPOSTStudentLocation(userData: uiTabBarController.localUserData){
-//            (success, errorString)  in
-//            if (success != nil) {
-//                responseAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
-//                
-//                // Check if the response contains any error or not
-//                if let errorMessage = errorString  {
-//                    completionHandler(result: nil, error: errorMessage)
-//                } else {
-//                    let utils: Utils = Utils()
-//                    uiTabBarController = utils.addLocationToLocalUserData(userData: UserData, stringPlace: <#T##String#>, mediaUrl: <#T##String#>, latitude: <#T##Double#>, longitude: <#T##Double#>)
-//                }
-//            } else {
-//                // If success returns nil then it's necessary display an alert to the user
-//                completionHandler(result: nil, error: errorString)
-//            }
-//        }
-//    }
+    func putData(var uiTabBarController uiTabBarController: OTMTabBarController, stringPlace: String, mediaUrl: String, latitude: Double, longitude: Double,completionHandler: (result: OTMTabBarController?, error: String?) -> Void) {
+        var responseAsNSDictinory: Dictionary<String, AnyObject>!
+        OTMClient.sharedInstance().putPOSTStudentLocation(userData: uiTabBarController.localUserData){
+            (success, errorString)  in
+            if (success != nil) {
+                responseAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
+                
+                // Check if the response contains any error or not
+                if let errorMessage = errorString  {
+                    completionHandler(result: nil, error: errorMessage)
+                } else {
+                    let utils: Utils = Utils()
+                    uiTabBarController = utils.addPUTResponseToUserData(uiTabBarController: uiTabBarController, mediaUrl: mediaUrl, address: stringPlace, latitude: latitude, longitude: longitude, response: responseAsNSDictinory)
+                    completionHandler(result: uiTabBarController, error: nil)
+                }
+            } else {
+                // If success returns nil then it's necessary display an alert to the user
+                completionHandler(result: nil, error: errorString)
+            }
+        }
+    }
     
     
     //
@@ -152,24 +153,26 @@ class OTMServiceCaller: NSObject {
     //
     // Post user location for the very first time, then once we have the objectId we just use updateData()
     //
-//    func updateData(uiTabBarController uiTabBarController: OTMTabBarController, completionHandler: (result: OTMTabBarController?, error: String?) -> Void) {
-//        var responseAsNSDictinory: Dictionary<String, AnyObject>!
-//        OTMClient.sharedInstance().updatingPUTStudentLocation(userData: uiTabBarController.localUserData){
-//            (success, errorString)  in
-//            if (success != nil) {
-//                responseAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
-//                
-//                // Check if the response contains any error or not
-//                if let errorMessage = errorString  {
-//                    completionHandler(result: nil, error: errorMessage)
-//                } else {
-//                    isSuccess = true
-//                }
-//            } else {
-//                // If success returns nil then it's necessary display an alert to the user
-//                completionHandler(result: nil, error: errorString)
-//            }
-//        }
-//    }
+    func updateData(var uiTabBarController uiTabBarController: OTMTabBarController, stringPlace: String, mediaUrl: String, latitude: Double, longitude: Double,completionHandler: (result: OTMTabBarController?, error: String?) -> Void) {
+        var responseAsNSDictinory: Dictionary<String, AnyObject>!
+        OTMClient.sharedInstance().updatingPUTStudentLocation(userData: uiTabBarController.localUserData){
+            (success, errorString)  in
+            if (success != nil) {
+                responseAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
+                
+                // Check if the response contains any error or not
+                if let errorMessage = errorString  {
+                    completionHandler(result: nil, error: errorMessage)
+                } else {
+                    let utils: Utils = Utils()
+                    uiTabBarController = utils.addPUTResponseToUserData(uiTabBarController: uiTabBarController, mediaUrl: mediaUrl, address: stringPlace, latitude: latitude, longitude: longitude, response: responseAsNSDictinory)
+                    completionHandler(result: uiTabBarController, error: nil)
+                }
+            } else {
+                // If success returns nil then it's necessary display an alert to the user
+                completionHandler(result: nil, error: errorString)
+            }
+        }
+    }
 
 }

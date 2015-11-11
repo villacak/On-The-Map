@@ -157,10 +157,25 @@ class Utils: NSObject {
             tempObjecId = uiTabBarController.localUserData.objectId
         }
         
-        uiTabBarController.localUserData = UserData(objectId: tempObjecId, uniqueKey: tempUD.uniqueKey!, firstName: tempUD.firstName!, lastName: tempUD.lastName, mapString: address, mediaUrl: mediaUrl, latitude: latitude, longitude: longitude, createdAt: tempCreateAt, updatedAt: tempUpdatedAt, userLocation: tempAnnotation)
+        var tempUserData: UserData = UserData(objectId: tempObjecId, uniqueKey: tempUD.uniqueKey!, firstName: tempUD.firstName!, lastName: tempUD.lastName, mapString: address, mediaUrl: mediaUrl, latitude: latitude, longitude: longitude, createdAt: tempCreateAt, updatedAt: tempUpdatedAt, userLocation: tempAnnotation)
+        
+        // To don't have duplicates as the mandatory sort for data in the project is with updateAt field, ideally we shouldn't even sort it
+        // as by API documentation the returned data should already come ordered, via url parameter order.
+        if let _ = uiTabBarController.userDataDic[tempUpdatedAt] {
+            tempUserData.updatedAt = "\(tempUserData.updatedAt)\("_")"
+        }
+        uiTabBarController.userDataDic[tempUserData.updatedAt] = tempUserData
+        
+        if (tempUserData.uniqueKey == uiTabBarController.udacityKey) {
+            uiTabBarController.localUserData = tempUserData
+        }
         return uiTabBarController
         
     }
+    
+    
+    
+    
     
     
     /*

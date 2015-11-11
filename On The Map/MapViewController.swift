@@ -259,6 +259,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.ERROR_TITLE, messageStr: OTMClient.ConstantsMessages.NO_URL_DEFINED, controller: self)
     }
     
+    
     //
     // Logout button action
     //
@@ -317,6 +318,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     //
     @IBAction func refreshAction(sender: AnyObject) {
         if (mapView.annotations.count > 0) {
+            otmTabBarController.userDataDic.removeAll()
             otmTabBarController.mapPoints.removeAll()
             removeAnnotations()
         }
