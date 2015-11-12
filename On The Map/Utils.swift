@@ -133,8 +133,8 @@ class Utils: NSObject {
     
     
     //
-    // Function to help make the code cleaner, it assembly a new UserData struct and set it to the
-    // parent class OTMTabBarController
+    // Assembly a new UserData struct and set it to the
+    // parent class OTMTabBarController.localUserData and also into the dictionary
     //
     func addPUTResponseToUserData(uiTabBarController uiTabBarController: OTMTabBarController, mediaUrl: String, address: String, latitude: Double, longitude: Double, response: Dictionary<String, AnyObject>) -> OTMTabBarController {
         let utils: Utils = Utils()

@@ -97,35 +97,26 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
     // Post user location for the very first time, then once we have the objectId we just use updateData()
     //
     func putData() {
-        var responseAsNSDictinory: Dictionary<String, AnyObject>!
-//        OTMClient.sharedInstance().putPOSTStudentLocation(userData: otmTabBarController.localUserData!){
-//            (success, errorString)  in
-//            var isSuccess: Bool = false
-//            if (success != nil) {
-//                responseAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
-//                
-//                // Check if the response contains any error or not
-//                if let tempError = errorString {
-//                    Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: tempError, controller: self)
-//                } else {
-//                    isSuccess = true
-//                }
-//            } else {
-//                // If success returns nil then it's necessary display an alert to the user
-//                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: errorString!, controller: self)
-//            }
-//            
-//            dispatch_async(dispatch_get_main_queue(), {
-//                // Dismiss modal
-//                self.spinner.hide()
-//                
-//                // If success extracting data then call the TabBarController Map view
-//                if (isSuccess) {
-//                    self.addPUTResponseToUserData(response: responseAsNSDictinory)
-//                    self.dismissView()
-//                }
-//            })
-//        }
+        let caller: OTMServiceCaller = OTMServiceCaller()
+        caller.putData(uiTabBarController: otmTabBarController, stringPlace: textWithData.text!, mediaUrl: personalUrl.text!, latitude: latFromAddress, longitude: lonFromAddress) { (result, errorString)  in
+            var isSuccess = false
+            if let tempError = errorString {
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGOUT_FAILED, messageStr: tempError, controller: self)
+            } else {
+                isSuccess = true
+            }
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                // Dismiss modal
+                self.spinner.hide()
+                
+                // If success extracting data then call the TabBarController Map view
+                if (isSuccess) {
+                    self.otmTabBarController = result
+                    self.dismissView()
+                }
+            }
+        }
     }
   
     
@@ -135,67 +126,28 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
     //
     // Post user location for the very first time, then once we have the objectId we just use updateData()
     //
-//    func updateData() {
-//        var responseAsNSDictinory: Dictionary<String, AnyObject>!
-//        OTMClient.sharedInstance().updatingPUTStudentLocation(userData: otmTabBarController.localUserData){
-//            (success, errorString)  in
-//            var isSuccess: Bool = false
-//            if (success != nil) {
-//                responseAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
-//                
-//                // Check if the response contains any error or not
-//                if let tempError = errorString {
-//                    Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: tempError, controller: self)
-//                } else {
-//                    isSuccess = true
-//                }
-//            } else {
-//                // If success returns nil then it's necessary display an alert to the user
-//                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGIN_FAILED, messageStr: errorString!, controller: self)
-//            }
-//            
-//            dispatch_async(dispatch_get_main_queue(), {
-//                // Dismiss modal
-//                self.spinner.hide()
-//                
-//                // If success extracting data then call the TabBarController Map view
-//                if (isSuccess) {
-//                    self.addPUTResponseToUserData(response: responseAsNSDictinory)
-//                    self.dismissView()
-//                }
-//            })
-//        }
-//    }
-
-    
-    
-//    //
-//    // Function to help make the code cleaner, it assembly a new UserData struct and set it to the 
-//    // parent class OTMTabBarController
-//    //
-//    func addPUTResponseToUserData(response response: Dictionary<String, AnyObject>) {
-//        let utils: Utils = Utils()
-//        let putUserResponse = utils.extractDataFromPUTUserResponse(putDataResponse: response)
-//        let tempUD: UserData = self.otmTabBarController.localUserData
-//        let tempFullName: String = "\(tempUD.firstName) \(tempUD.lastName)"
-//        let tempAnnotation: MKPointAnnotation = utils.createMkPointAnnotation(fullName: tempFullName, urlStr: self.personalUrl.text!, latitude: self.latFromAddress, longitude: self.lonFromAddress)
-//        
-//        var tempCreateAt: String = OTMClient.ConstantsGeneral.EMPTY_STR
-//        var tempUpdatedAt: String = OTMClient.ConstantsGeneral.EMPTY_STR
-//        var tempObjecId: String = OTMClient.ConstantsGeneral.EMPTY_STR
-//        
-//        if (putUserResponse.typeAction == OTMClient.ConstantsData.createdAt) {
-//            tempCreateAt = putUserResponse.tempAction
-//            tempUpdatedAt = putUserResponse.tempAction
-//            tempObjecId = putUserResponse.tempObjectId
-//        } else {
-//            tempCreateAt = otmTabBarController.localUserData.createdAt
-//            tempUpdatedAt = putUserResponse.tempAction
-//            tempObjecId = otmTabBarController.localUserData.objectId
-//        }
-//        
-//        self.otmTabBarController.localUserData = UserData(objectId: tempObjecId, uniqueKey: tempUD.uniqueKey!, firstName: tempUD.firstName!, lastName: tempUD.lastName, mapString: self.textWithData.text!, mediaUrl: self.personalUrl.text!, latitude: self.latFromAddress, longitude: self.lonFromAddress, createdAt: tempCreateAt, updatedAt: tempUpdatedAt, userLocation: tempAnnotation)
-//    }
+    func updateData() {
+        let caller: OTMServiceCaller = OTMServiceCaller()
+        caller.updateData(uiTabBarController: otmTabBarController, stringPlace: textWithData.text!, mediaUrl: personalUrl.text!, latitude: latFromAddress, longitude: lonFromAddress) { (result, errorString)  in
+            var isSuccess = false
+            if let tempError = errorString {
+                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGOUT_FAILED, messageStr: tempError, controller: self)
+            } else {
+                isSuccess = true
+            }
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                // Dismiss modal
+                self.spinner.hide()
+                
+                // If success extracting data then call the TabBarController Map view
+                if (isSuccess) {
+                    self.otmTabBarController = result
+                    self.dismissView()
+                }
+            }
+        }
+    }
     
     
     
@@ -225,11 +177,11 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
                 if (isSuccess) {
                     let utils: Utils = Utils()
                     self.otmTabBarController.localUserData = utils.addLocationToLocalUserData(userData: self.otmTabBarController.localUserData, stringPlace: self.textWithData.text!, mediaUrl: self.personalUrl.text!, latitude: self.latFromAddress, longitude: self.lonFromAddress)
-//                    if (self.isCreate) {
-//                        self.putData()
-//                    } else {
-//                        self.updateData()
-//                    }
+                    if (self.isCreate) {
+                        self.putData()
+                    } else {
+                        self.updateData()
+                    }
                 }
             })
         }
