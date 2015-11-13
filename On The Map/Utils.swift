@@ -39,11 +39,7 @@ class Utils: NSObject {
         
         var annotationArrayReturn: [MKPointAnnotation] = [MKPointAnnotation]()
         if (arrayToExtract.count > 0) {
-            var pos: Int = 0;
-            
             for tempJsonUD in arrayToExtract {
-                pos++
-                print("pos \(pos)")
                 let firstName: String = tempJsonUD["firstName"] as! String
                 let lastName: String = tempJsonUD["lastName"] as! String
                 let urlStr: String = tempJsonUD["mediaURL"] as! String
