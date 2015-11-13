@@ -21,7 +21,9 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     
     var spinner: ActivityIndicatorView!
     var otmTabBarController: OTMTabBarController!
-
+    
+    var sortedKeysStr: [String]!
+    
     
     //
     // Call when view just have loaded
@@ -39,6 +41,7 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     //
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
+        sortedKeysStr = Array(otmTabBarController.userDataDic.keys).sort(backwards)
     }
     
     
@@ -55,6 +58,13 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
         view.addSubview(spinner)
     }
     
+    
+    //
+    // Sort Backwards
+    //
+    func backwards(s1: String, _ s2: String) -> Bool {
+        return s1 > s2
+    }
     
     
     //
@@ -93,11 +103,12 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     // Assemble the cell to the row
     //
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let pointObject: MKPointAnnotation = otmTabBarController.mapPoints[indexPath.row]
+        let tempSortedKey: String = sortedKeysStr[indexPath.row]
+        let tempUserData: UserData = otmTabBarController.userDataDic[tempSortedKey]!
         let cell: ListUserData = (tableView.dequeueReusableCellWithIdentifier(reusableCell, forIndexPath: indexPath)) as! ListUserData
         
-        cell.keyValue.text = String(indexPath.row)
-        cell.fullName.text = pointObject.title
+        cell.keyValue.text = tempSortedKey
+        cell.fullName.text = "\(tempUserData.firstName) \(tempUserData.lastName)"
         return cell
     }
     
@@ -106,13 +117,14 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     // Called when user did selected a row
     //
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let pointObject: MKPointAnnotation = otmTabBarController.mapPoints[indexPath.row] as MKPointAnnotation
+        let tempSortedKey: String = sortedKeysStr[indexPath.row]
+        let tempUserData: UserData = otmTabBarController.userDataDic[tempSortedKey]!
        
-        if pointObject.subtitle! == OTMClient.ConstantsGeneral.EMPTY_STR {
+        if tempUserData.mediaUrl! == OTMClient.ConstantsGeneral.EMPTY_STR {
             Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.ERROR_TITLE, messageStr: OTMClient.ConstantsMessages.NO_URL_DEFINED, controller: self)
         } else {
             let utils: Utils = Utils()
-            let urlAsString: String = pointObject.subtitle!
+            let urlAsString: String = tempUserData.mediaUrl!
             let app = UIApplication.sharedApplication()
             app.openURL(NSURL(string: utils.checkUrlToCall(stringUrl: urlAsString))!)
         }

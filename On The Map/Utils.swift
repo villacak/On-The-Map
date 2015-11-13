@@ -40,11 +40,27 @@ class Utils: NSObject {
         var annotationArrayReturn: [MKPointAnnotation] = [MKPointAnnotation]()
         if (arrayToExtract.count > 0) {
             for tempJsonUD in arrayToExtract {
-                let tempUD: UserData = UserData(objectId: tempJsonUD["objectId"] as! String, uniqueKey: tempJsonUD["uniqueKey"] as! String, firstName: tempJsonUD["firstName"] as! String, lastName: tempJsonUD["lastName"] as! String, mapString: tempJsonUD["mapString"] as! String, mediaUrl: tempJsonUD["mediaUrl"] as! String, latitude: tempJsonUD["latitude"] as! Double, longitude: tempJsonUD["longitude"] as! Double, createdAt: tempJsonUD["createdAt"] as! String, updatedAt: tempJsonUD["updatedAt"] as! String, userLocation: MKPointAnnotation())
+                let firstName: String = tempJsonUD["firstName"] as! String
+                let lastName: String = tempJsonUD["lastName"] as! String
+                let urlStr: String = tempJsonUD["mediaUrl"] as! String
+                let latitude: Double = tempJsonUD["latitude"] as! Double
+                let longitude: Double = tempJsonUD["longitude"] as! Double
+                let updatedAt: String = tempJsonUD["updatedAt"] as! String
+                
+                let tempAnnotation: MKPointAnnotation = populateUserData(firstName: firstName, lastName: lastName, urlAsString: urlStr, latitude: latitude, longitude: longitude)
+                annotationArrayReturn.append(tempAnnotation)
+                
+                var tempUD: UserData = UserData(objectId: tempJsonUD["objectId"] as! String, uniqueKey: tempJsonUD["uniqueKey"] as! String, firstName: firstName, lastName: lastName, mapString: tempJsonUD["mapString"] as! String, mediaUrl: urlStr, latitude: latitude, longitude: longitude, createdAt: tempJsonUD["createdAt"] as! String, updatedAt: updatedAt, userLocation: tempAnnotation)
+                
                 if (tempUD.uniqueKey == uiTabBarController.udacityKey) {
                     uiTabBarController.localUserData = tempUD
                 }
-                annotationArrayReturn.append(populateUserData(userData: tempUD))
+                
+                if let _ = uiTabBarController.userDataDic[updatedAt] {
+                    tempUD.updatedAt = "\(updatedAt)\("_")"
+                }
+                uiTabBarController.userDataDic[updatedAt] = tempUD
+                
             }
         }
         return (annotationArrayReturn, uiTabBarController)
@@ -54,9 +70,9 @@ class Utils: NSObject {
     //
     // Function that will populate the MKAnnotations and Locations to display in the map
     //
-    func populateUserData(userData userData: UserData) -> MKPointAnnotation {
-        let fullName: String = "\(userData.firstName) \(userData.lastName)"
-        let tempMKPointAnnotation: MKPointAnnotation = createMkPointAnnotation(fullName: fullName, urlStr: userData.mediaUrl, latitude: userData.latitude, longitude: userData.longitude)
+    func populateUserData(firstName firstName: String, lastName: String, urlAsString: String, latitude: Double, longitude: Double) -> MKPointAnnotation {
+        let fullName: String = "\(firstName) \(lastName)"
+        let tempMKPointAnnotation: MKPointAnnotation = createMkPointAnnotation(fullName: fullName, urlStr: urlAsString, latitude: latitude, longitude: longitude)
         return tempMKPointAnnotation
     }
     
