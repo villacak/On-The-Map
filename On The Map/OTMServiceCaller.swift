@@ -124,7 +124,7 @@ class OTMServiceCaller: NSObject {
     //
     // Post user location for the very first time, then once we have the objectId we just use updateData()
     //
-    func putData(var uiTabBarController uiTabBarController: OTMTabBarController, stringPlace: String, mediaUrl: String, latitude: Double, longitude: Double,completionHandler: (result: OTMTabBarController?, error: String?) -> Void) {
+    func putData(var uiTabBarController uiTabBarController: OTMTabBarController, stringPlace: String, mediaURL: String, latitude: Double, longitude: Double,completionHandler: (result: OTMTabBarController?, error: String?) -> Void) {
         var responseAsNSDictinory: Dictionary<String, AnyObject>!
         OTMClient.sharedInstance().putPOSTStudentLocation(userData: uiTabBarController.localUserData){
             (success, errorString)  in
@@ -136,7 +136,7 @@ class OTMServiceCaller: NSObject {
                     completionHandler(result: nil, error: errorMessage)
                 } else {
                     let utils: Utils = Utils()
-                    uiTabBarController = utils.addPUTResponseToUserData(uiTabBarController: uiTabBarController, mediaUrl: mediaUrl, address: stringPlace, latitude: latitude, longitude: longitude, response: responseAsNSDictinory)
+                    uiTabBarController = utils.addPUTResponseToUserData(uiTabBarController: uiTabBarController, mediaURL: mediaURL, address: stringPlace, latitude: latitude, longitude: longitude, response: responseAsNSDictinory)
                     completionHandler(result: uiTabBarController, error: nil)
                 }
             } else {
@@ -153,7 +153,7 @@ class OTMServiceCaller: NSObject {
     //
     // Post user location for the very first time, then once we have the objectId we just use updateData()
     //
-    func updateData(var uiTabBarController uiTabBarController: OTMTabBarController, stringPlace: String, mediaUrl: String, latitude: Double, longitude: Double,completionHandler: (result: OTMTabBarController?, error: String?) -> Void) {
+    func updateData(var uiTabBarController uiTabBarController: OTMTabBarController, stringPlace: String, mediaURL: String, latitude: Double, longitude: Double,completionHandler: (result: OTMTabBarController?, error: String?) -> Void) {
         var responseAsNSDictinory: Dictionary<String, AnyObject>!
         OTMClient.sharedInstance().updatingPUTStudentLocation(userData: uiTabBarController.localUserData){
             (success, errorString)  in
@@ -165,7 +165,7 @@ class OTMServiceCaller: NSObject {
                     completionHandler(result: nil, error: errorMessage)
                 } else {
                     let utils: Utils = Utils()
-                    uiTabBarController = utils.addPUTResponseToUserData(uiTabBarController: uiTabBarController, mediaUrl: mediaUrl, address: stringPlace, latitude: latitude, longitude: longitude, response: responseAsNSDictinory)
+                    uiTabBarController = utils.addPUTResponseToUserData(uiTabBarController: uiTabBarController, mediaURL: mediaURL, address: stringPlace, latitude: latitude, longitude: longitude, response: responseAsNSDictinory)
                     completionHandler(result: uiTabBarController, error: nil)
                 }
             } else {

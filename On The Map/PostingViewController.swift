@@ -58,7 +58,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
             textWithData.text = tempMapString
         }
         
-        if let tempMediaUrl = otmTabBarController.localUserData.mediaUrl {
+        if let tempMediaUrl = otmTabBarController.localUserData.mediaURL {
             personalUrl.text = tempMediaUrl
         }
         
@@ -98,7 +98,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
     //
     func putData() {
         let caller: OTMServiceCaller = OTMServiceCaller()
-        caller.putData(uiTabBarController: otmTabBarController, stringPlace: textWithData.text!, mediaUrl: personalUrl.text!, latitude: latFromAddress, longitude: lonFromAddress) { (result, errorString)  in
+        caller.putData(uiTabBarController: otmTabBarController, stringPlace: textWithData.text!, mediaURL: personalUrl.text!, latitude: latFromAddress, longitude: lonFromAddress) { (result, errorString)  in
             var isSuccess = false
             if let tempError = errorString {
                 Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGOUT_FAILED, messageStr: tempError, controller: self)
@@ -128,7 +128,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
     //
     func updateData() {
         let caller: OTMServiceCaller = OTMServiceCaller()
-        caller.updateData(uiTabBarController: otmTabBarController, stringPlace: textWithData.text!, mediaUrl: personalUrl.text!, latitude: latFromAddress, longitude: lonFromAddress) { (result, errorString)  in
+        caller.updateData(uiTabBarController: otmTabBarController, stringPlace: textWithData.text!, mediaURL: personalUrl.text!, latitude: latFromAddress, longitude: lonFromAddress) { (result, errorString)  in
             var isSuccess = false
             if let tempError = errorString {
                 Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGOUT_FAILED, messageStr: tempError, controller: self)
@@ -176,7 +176,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
                     let utils: Utils = Utils()
-                    self.otmTabBarController.localUserData = utils.addLocationToLocalUserData(userData: self.otmTabBarController.localUserData, stringPlace: self.textWithData.text!, mediaUrl: self.personalUrl.text!, latitude: self.latFromAddress, longitude: self.lonFromAddress)
+                    self.otmTabBarController.localUserData = utils.addLocationToLocalUserData(userData: self.otmTabBarController.localUserData, stringPlace: self.textWithData.text!, mediaURL: self.personalUrl.text!, latitude: self.latFromAddress, longitude: self.lonFromAddress)
                     if (self.isCreate) {
                         self.putData()
                     } else {

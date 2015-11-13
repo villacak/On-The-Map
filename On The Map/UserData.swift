@@ -20,7 +20,7 @@ struct UserData {
     var firstName: String!
     var lastName: String!
     var mapString: String!
-    var mediaUrl: String!
+    var mediaURL: String!
     var latitude: Double!
     var longitude: Double!
     var createdAt: String!
@@ -37,7 +37,7 @@ struct UserData {
         firstName = OTMClient.ConstantsGeneral.EMPTY_STR
         lastName = OTMClient.ConstantsGeneral.EMPTY_STR
         mapString = OTMClient.ConstantsGeneral.EMPTY_STR
-        mediaUrl = OTMClient.ConstantsGeneral.EMPTY_STR
+        mediaURL = OTMClient.ConstantsGeneral.EMPTY_STR
         latitude = 0.00
         longitude = 0.00
         createdAt = OTMClient.ConstantsGeneral.EMPTY_STR
@@ -49,13 +49,13 @@ struct UserData {
     //
     // Init with values
     //
-    init(objectId: String!, uniqueKey: String!, firstName: String!, lastName: String!,  mapString: String!, mediaUrl: String!, latitude: Double!, longitude: Double!, createdAt: String!, updatedAt: String!, userLocation: MKPointAnnotation!) {
+    init(objectId: String!, uniqueKey: String!, firstName: String!, lastName: String!,  mapString: String!, mediaURL: String!, latitude: Double!, longitude: Double!, createdAt: String!, updatedAt: String!, userLocation: MKPointAnnotation!) {
         self.objectId = objectId
         self.uniqueKey = uniqueKey
         self.firstName = firstName
         self.lastName = lastName
         self.mapString = mapString
-        self.mediaUrl = mediaUrl
+        self.mediaURL = mediaURL
         self.latitude = latitude
         self.longitude = longitude
         self.createdAt = updatedAt

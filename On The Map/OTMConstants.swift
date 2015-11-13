@@ -19,10 +19,10 @@ extension OTMClient {
         static let CLIENT_API_KEY: String = "aiBuGRmnE489l7VeXBLCzBoFzAObn0SDgYRZ1OBk"
         
         static let REST_API_KEY_STR: String = "X-Parse-REST-API-Key"
-        static let REST_API_KEY: String = "yENQUrV58F0e3ImCAGJEICDp6UcmAatBdahluzMp"
+        static let REST_API_KEY: String = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
         
         static let APPLICATION_ID_STR: String = "X-Parse-Application-Id"
-        static let APPLICATION_ID_KEY: String = "8giE02DqBln6EvyGCirPg6FBYpG8zNFZusGFamhq"
+        static let APPLICATION_ID_KEY: String = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
         
         static let PARSE_STUDENT_LOCATION_URL = "https://api.parse.com/1/classes/StudentLocation"
         
@@ -104,7 +104,7 @@ extension OTMClient {
         static let lastName: String = "lastName"
         static let lastNameUD: String = "last_name"
         static let mapString: String = "mapString"
-        static let mediaUrl: String = "mediaUrl"
+        static let mediaURL: String = "mediaURL"
         static let latitude: String = "latitude"
         static let longitude: String = "longitude"
         static let createdAt: String = "createdAt"

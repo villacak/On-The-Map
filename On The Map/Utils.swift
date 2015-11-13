@@ -39,10 +39,14 @@ class Utils: NSObject {
         
         var annotationArrayReturn: [MKPointAnnotation] = [MKPointAnnotation]()
         if (arrayToExtract.count > 0) {
+            var pos: Int = 0;
+            
             for tempJsonUD in arrayToExtract {
+                pos++
+                print("pos \(pos)")
                 let firstName: String = tempJsonUD["firstName"] as! String
                 let lastName: String = tempJsonUD["lastName"] as! String
-                let urlStr: String = tempJsonUD["mediaUrl"] as! String
+                let urlStr: String = tempJsonUD["mediaURL"] as! String
                 let latitude: Double = tempJsonUD["latitude"] as! Double
                 let longitude: Double = tempJsonUD["longitude"] as! Double
                 let updatedAt: String = tempJsonUD["updatedAt"] as! String
@@ -50,7 +54,7 @@ class Utils: NSObject {
                 let tempAnnotation: MKPointAnnotation = populateUserData(firstName: firstName, lastName: lastName, urlAsString: urlStr, latitude: latitude, longitude: longitude)
                 annotationArrayReturn.append(tempAnnotation)
                 
-                var tempUD: UserData = UserData(objectId: tempJsonUD["objectId"] as! String, uniqueKey: tempJsonUD["uniqueKey"] as! String, firstName: firstName, lastName: lastName, mapString: tempJsonUD["mapString"] as! String, mediaUrl: urlStr, latitude: latitude, longitude: longitude, createdAt: tempJsonUD["createdAt"] as! String, updatedAt: updatedAt, userLocation: tempAnnotation)
+                var tempUD: UserData = UserData(objectId: tempJsonUD["objectId"] as! String, uniqueKey: tempJsonUD["uniqueKey"] as! String, firstName: firstName, lastName: lastName, mapString: tempJsonUD["mapString"] as! String, mediaURL: urlStr, latitude: latitude, longitude: longitude, createdAt: tempJsonUD["createdAt"] as! String, updatedAt: updatedAt, userLocation: tempAnnotation)
                 
                 if (tempUD.uniqueKey == uiTabBarController.udacityKey) {
                     uiTabBarController.localUserData = tempUD
@@ -99,7 +103,7 @@ class Utils: NSObject {
         let tempLstName:String = fullUserData[OTMClient.ConstantsData.lastNameUD] as! String
         
         
-        let tempUserData: UserData = UserData(objectId: objectId, uniqueKey: udacityKey, firstName: tempFirstName, lastName: tempLstName, mapString: OTMClient.ConstantsGeneral.EMPTY_STR, mediaUrl: OTMClient.ConstantsGeneral.EMPTY_STR, latitude: latDouble, longitude: lonDouble, createdAt: OTMClient.ConstantsGeneral.EMPTY_STR, updatedAt: OTMClient.ConstantsGeneral.EMPTY_STR, userLocation: pointInformation)
+        let tempUserData: UserData = UserData(objectId: objectId, uniqueKey: udacityKey, firstName: tempFirstName, lastName: tempLstName, mapString: OTMClient.ConstantsGeneral.EMPTY_STR, mediaURL: OTMClient.ConstantsGeneral.EMPTY_STR, latitude: latDouble, longitude: lonDouble, createdAt: OTMClient.ConstantsGeneral.EMPTY_STR, updatedAt: OTMClient.ConstantsGeneral.EMPTY_STR, userLocation: pointInformation)
         return tempUserData
     }
     
@@ -128,8 +132,8 @@ class Utils: NSObject {
     //
     // Add location to localUserData var
     //
-    func addLocationToLocalUserData(userData userData: UserData, stringPlace: String, mediaUrl: String, latitude: Double, longitude: Double) -> UserData {
-        let tempUserData: UserData = UserData(objectId: userData.objectId!, uniqueKey: userData.uniqueKey!, firstName: userData.firstName!, lastName: userData.lastName!, mapString: stringPlace, mediaUrl: mediaUrl, latitude: latitude, longitude: longitude, createdAt: userData.createdAt, updatedAt: userData.updatedAt, userLocation: userData.userLocation)
+    func addLocationToLocalUserData(userData userData: UserData, stringPlace: String, mediaURL: String, latitude: Double, longitude: Double) -> UserData {
+        let tempUserData: UserData = UserData(objectId: userData.objectId!, uniqueKey: userData.uniqueKey!, firstName: userData.firstName!, lastName: userData.lastName!, mapString: stringPlace, mediaURL: mediaURL, latitude: latitude, longitude: longitude, createdAt: userData.createdAt, updatedAt: userData.updatedAt, userLocation: userData.userLocation)
         return tempUserData
     }
     
@@ -152,12 +156,12 @@ class Utils: NSObject {
     // Assembly a new UserData struct and set it to the
     // parent class OTMTabBarController.localUserData and also into the dictionary
     //
-    func addPUTResponseToUserData(uiTabBarController uiTabBarController: OTMTabBarController, mediaUrl: String, address: String, latitude: Double, longitude: Double, response: Dictionary<String, AnyObject>) -> OTMTabBarController {
+    func addPUTResponseToUserData(uiTabBarController uiTabBarController: OTMTabBarController, mediaURL: String, address: String, latitude: Double, longitude: Double, response: Dictionary<String, AnyObject>) -> OTMTabBarController {
         let utils: Utils = Utils()
         let putUserResponse = utils.extractDataFromPUTUserResponse(putDataResponse: response)
         let tempUD: UserData = uiTabBarController.localUserData
         let tempFullName: String = "\(tempUD.firstName) \(tempUD.lastName)"
-        let tempAnnotation: MKPointAnnotation = utils.createMkPointAnnotation(fullName: tempFullName, urlStr: mediaUrl, latitude: latitude, longitude: longitude)
+        let tempAnnotation: MKPointAnnotation = utils.createMkPointAnnotation(fullName: tempFullName, urlStr: mediaURL, latitude: latitude, longitude: longitude)
         
         var tempCreateAt: String = OTMClient.ConstantsGeneral.EMPTY_STR
         var tempUpdatedAt: String = OTMClient.ConstantsGeneral.EMPTY_STR
@@ -173,7 +177,7 @@ class Utils: NSObject {
             tempObjecId = uiTabBarController.localUserData.objectId
         }
         
-        var tempUserData: UserData = UserData(objectId: tempObjecId, uniqueKey: tempUD.uniqueKey!, firstName: tempUD.firstName!, lastName: tempUD.lastName, mapString: address, mediaUrl: mediaUrl, latitude: latitude, longitude: longitude, createdAt: tempCreateAt, updatedAt: tempUpdatedAt, userLocation: tempAnnotation)
+        var tempUserData: UserData = UserData(objectId: tempObjecId, uniqueKey: tempUD.uniqueKey!, firstName: tempUD.firstName!, lastName: tempUD.lastName, mapString: address, mediaURL: mediaURL, latitude: latitude, longitude: longitude, createdAt: tempCreateAt, updatedAt: tempUpdatedAt, userLocation: tempAnnotation)
         
         // To don't have duplicates as the mandatory sort for data in the project is with updateAt field, ideally we shouldn't even sort it
         // as by API documentation the returned data should already come ordered, via url parameter order.
@@ -226,7 +230,7 @@ class Utils: NSObject {
             tempDictionary[OTMClient.ConstantsData.firstName] = userData.firstName
             tempDictionary[OTMClient.ConstantsData.lastName] = userData.lastName
             tempDictionary[OTMClient.ConstantsData.mapString] = userData.mapString
-            tempDictionary[OTMClient.ConstantsData.mediaUrl] = userData.mediaUrl
+            tempDictionary[OTMClient.ConstantsData.mediaURL] = userData.mediaURL
             tempDictionary[OTMClient.ConstantsData.latitude] = userData.latitude
             tempDictionary[OTMClient.ConstantsData.longitude] = userData.longitude
             
