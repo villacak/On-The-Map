@@ -177,6 +177,7 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     // Refresh button
     //
     @IBAction func refreshAction(sender: AnyObject) {
+        sortedKeysStr.removeAll()
         otmTabBarController.userDataDic.removeAll()
         otmTabBarController.mapPoints.removeAll()
         loadData(numberToLoad: OTMClient.ConstantsParse.PAGINATION, cacheToPaginate: OTMClient.ConstantsGeneral.EMPTY_STR, orderListBy: OTMServicesNameEnum.updatedAtInverted)
@@ -205,6 +206,7 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
+                    self.sortedKeysStr = Array(self.otmTabBarController.userDataDic.keys).sort(self.backwards)
                     self.tableView.reloadData()
                 }
             }
