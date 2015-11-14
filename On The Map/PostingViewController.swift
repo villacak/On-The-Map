@@ -53,8 +53,8 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
             locationManager.delegate = self
         }
         
-        if let tempMapString = otmTabBarController.localUserData.mapString {
-            textWithData.text = tempMapString
+        if otmTabBarController.localUserData.mapString != OTMClient.ConstantsGeneral.EMPTY_STR {
+            textWithData.text = otmTabBarController.localUserData.mapString
         }
     }
     

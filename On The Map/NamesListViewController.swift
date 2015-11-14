@@ -120,11 +120,11 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
         let tempSortedKey: String = sortedKeysStr[indexPath.row]
         let tempUserData: UserData = otmTabBarController.userDataDic[tempSortedKey]!
        
-        if tempUserData.mediaURL! == OTMClient.ConstantsGeneral.EMPTY_STR {
+        if tempUserData.mediaURL == OTMClient.ConstantsGeneral.EMPTY_STR {
             Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.ERROR_TITLE, messageStr: OTMClient.ConstantsMessages.NO_URL_DEFINED, controller: self)
         } else {
             let utils: Utils = Utils()
-            let urlAsString: String = tempUserData.mediaURL!
+            let urlAsString: String = tempUserData.mediaURL
             let app = UIApplication.sharedApplication()
             app.openURL(NSURL(string: utils.checkUrlToCall(stringUrl: urlAsString))!)
         }

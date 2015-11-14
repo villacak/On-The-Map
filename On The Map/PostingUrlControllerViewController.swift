@@ -184,6 +184,7 @@ class PostingUrlControllerViewController: UIViewController, UITextFieldDelegate,
                 self.spinner.hide()
                 
                 if (isSuccess) {
+                    self.otmTabBarController.tabBar.hidden = false
                     self.otmTabBarController = result
                     self.navigationController?.popToRootViewControllerAnimated(true)
                     self.navigationController?.navigationBarHidden = false
