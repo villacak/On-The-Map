@@ -179,7 +179,7 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     @IBAction func refreshAction(sender: AnyObject) {
         otmTabBarController.userDataDic.removeAll()
         otmTabBarController.mapPoints.removeAll()
-        loadData(numberToLoad: OTMClient.ConstantsParse.PAGINATION, cacheToPaginate: OTMClient.ConstantsGeneral.EMPTY_STR, orderListBy: OTMServicesNameEnum.updateAt)
+        loadData(numberToLoad: OTMClient.ConstantsParse.PAGINATION, cacheToPaginate: OTMClient.ConstantsGeneral.EMPTY_STR, orderListBy: OTMServicesNameEnum.updatedAtInverted)
     }
     
     

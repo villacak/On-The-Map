@@ -15,6 +15,7 @@
 		33918F821BC0816F007A43A5 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33918F811BC0816F007A43A5 /* MapViewController.swift */; };
 		33918F841BC0825D007A43A5 /* UdacitySignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33918F831BC0825D007A43A5 /* UdacitySignupViewController.swift */; };
 		3396620A1BF1801C0037E334 /* OTMServiceCaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339662091BF1801C0037E334 /* OTMServiceCaller.swift */; };
+		3398D51E1BF6318E0092CCCE /* PostingUrlControllerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3398D51D1BF6318E0092CCCE /* PostingUrlControllerViewController.swift */; };
 		33D74EB11BC34A2A009DB02D /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33D74EB01BC34A2A009DB02D /* ActivityIndicatorView.swift */; };
 		33DA666F1BB0EC9000F7978B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA666E1BB0EC9000F7978B /* AppDelegate.swift */; };
 		33DA66711BB0EC9000F7978B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA66701BB0EC9000F7978B /* ViewController.swift */; };
@@ -71,6 +72,7 @@
 		33918F811BC0816F007A43A5 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		33918F831BC0825D007A43A5 /* UdacitySignupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacitySignupViewController.swift; sourceTree = "<group>"; };
 		339662091BF1801C0037E334 /* OTMServiceCaller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMServiceCaller.swift; sourceTree = "<group>"; };
+		3398D51D1BF6318E0092CCCE /* PostingUrlControllerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostingUrlControllerViewController.swift; sourceTree = "<group>"; };
 		33D74EB01BC34A2A009DB02D /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		33DA666B1BB0EC9000F7978B /* On The Map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "On The Map.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		33DA666E1BB0EC9000F7978B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 				33918F831BC0825D007A43A5 /* UdacitySignupViewController.swift */,
 				33EB6EE61BD4783A00CCFA71 /* On The Map-Bridging-Header.h */,
 				33EB6EE91BD48D3900CCFA71 /* PostingViewController.swift */,
+				3398D51D1BF6318E0092CCCE /* PostingUrlControllerViewController.swift */,
 				3388FFA21BDD78A0004579FD /* NamesListViewController.swift */,
 			);
 			path = "On The Map";
@@ -429,6 +432,7 @@
 				33F98A341BB8DAED00536720 /* UserData.swift in Sources */,
 				3320FF071BBB73B0003543BC /* Dialog.swift in Sources */,
 				33DA66BF1BB245AD00F7978B /* OTMServicesNameEnum.swift in Sources */,
+				3398D51E1BF6318E0092CCCE /* PostingUrlControllerViewController.swift in Sources */,
 				33918F821BC0816F007A43A5 /* MapViewController.swift in Sources */,
 				33DA66B91BB23D6000F7978B /* OTMClient.swift in Sources */,
 				33DA66BB1BB23E4100F7978B /* OTMConstants.swift in Sources */,

@@ -162,7 +162,7 @@ class OTMClient: NSObject {
     *                 Prefixing a key name with a negative sign reverses the order (default order is descending)
     *
     */
-    func parseGETStudentLocations(limit limit: String?, skip: String?, order: OTMServicesNameEnum?, completionHandler: (result: AnyObject!, error: String?) -> Void) -> NSURLSessionDataTask {
+    func parseGETStudentLocations( limit limit: String?, skip: String?, order: OTMServicesNameEnum?, completionHandler: (result: AnyObject!, error: String?) -> Void) -> NSURLSessionDataTask {
         
         let utils: Utils = Utils()
         let tempUrl: String = utils.getUrlForParameters(limitP: limit, skipP: skip, orderP: order)

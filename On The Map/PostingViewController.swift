@@ -16,7 +16,6 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
 
     @IBOutlet weak var findOnTheMapButton: UIButton!
     @IBOutlet weak var textWithData: UITextField!
-    @IBOutlet weak var personalUrl: UITextField!
     
     var otmTabBarController: OTMTabBarController!
     var spinner: ActivityIndicatorView!
@@ -24,7 +23,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
     var userLocation: CLLocationCoordinate2D!
     var latFromAddress: Double = 0
     var lonFromAddress: Double = 0
-    var isCreate: Bool = false
+
     
     //
     // Called just after view did load
@@ -57,11 +56,6 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
         if let tempMapString = otmTabBarController.localUserData.mapString {
             textWithData.text = tempMapString
         }
-        
-        if let tempMediaUrl = otmTabBarController.localUserData.mediaURL {
-            personalUrl.text = tempMediaUrl
-        }
-        
     }
     
     
@@ -93,63 +87,6 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
     }
 
     
-    //
-    // Post user location for the very first time, then once we have the objectId we just use updateData()
-    //
-    func putData() {
-        let caller: OTMServiceCaller = OTMServiceCaller()
-        caller.putData(uiTabBarController: otmTabBarController, stringPlace: textWithData.text!, mediaURL: personalUrl.text!, latitude: latFromAddress, longitude: lonFromAddress) { (result, errorString)  in
-            var isSuccess = false
-            if let tempError = errorString {
-                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGOUT_FAILED, messageStr: tempError, controller: self)
-            } else {
-                isSuccess = true
-            }
-            
-            dispatch_async(dispatch_get_main_queue()) {
-                // Dismiss modal
-                self.spinner.hide()
-                
-                // If success extracting data then call the TabBarController Map view
-                if (isSuccess) {
-                    self.otmTabBarController = result
-                    self.dismissView()
-                }
-            }
-        }
-    }
-  
-    
-    //
-    // Function called always that the local user already has a objectId form parse
-    //
-    //
-    // Post user location for the very first time, then once we have the objectId we just use updateData()
-    //
-    func updateData() {
-        let caller: OTMServiceCaller = OTMServiceCaller()
-        caller.updateData(uiTabBarController: otmTabBarController, stringPlace: textWithData.text!, mediaURL: personalUrl.text!, latitude: latFromAddress, longitude: lonFromAddress) { (result, errorString)  in
-            var isSuccess = false
-            if let tempError = errorString {
-                Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGOUT_FAILED, messageStr: tempError, controller: self)
-            } else {
-                isSuccess = true
-            }
-            
-            dispatch_async(dispatch_get_main_queue()) {
-                // Dismiss modal
-                self.spinner.hide()
-                
-                // If success extracting data then call the TabBarController Map view
-                if (isSuccess) {
-                    self.otmTabBarController = result
-                    self.dismissView()
-                }
-            }
-        }
-    }
-    
-    
     
     //
     // Function that do the Address to Latitude and Longitude
@@ -175,29 +112,17 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
                
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    let utils: Utils = Utils()
-                    self.otmTabBarController.localUserData = utils.addLocationToLocalUserData(userData: self.otmTabBarController.localUserData, stringPlace: self.textWithData.text!, mediaURL: self.personalUrl.text!, latitude: self.latFromAddress, longitude: self.lonFromAddress)
-                    if (self.isCreate) {
-                        self.putData()
-                    } else {
-                        self.updateData()
-                    }
+                    self.navigationController?.navigationBarHidden = false
+                    self.otmTabBarController.tabBar.hidden = true
+                    let controller = self.storyboard!.instantiateViewControllerWithIdentifier("PostingURLView") as! PostingUrlControllerViewController
+                    controller.addressString = self.textWithData.text!
+                    controller.mediaUrlString = self.otmTabBarController.localUserData.mediaURL
+                    controller.latitudeReceived = self.latFromAddress
+                    controller.longitudeReceived = self.lonFromAddress
+                    self.navigationController?.pushViewController(controller, animated: true)
                 }
             })
         }
-    }
-    
-    
-    
-    //
-    // Dismiss view returning
-    //
-    func dismissView() {
-        dispatch_async(dispatch_get_main_queue(), {
-            // Dismiss modal
-            self.navigationController?.popViewControllerAnimated(true)
-            self.navigationController?.navigationBarHidden = false
-        })
     }
 
     
@@ -205,19 +130,8 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
     // Add the new text and URL to the location
     //
     @IBAction func findOnTheMapAction(sender: AnyObject) {
-        if textWithData.text! != OTMClient.ConstantsGeneral.EMPTY_STR {
-            spinner = ActivityIndicatorView(text: "Saving...")
-            view.addSubview(spinner)
-            
-            if otmTabBarController.localUserData.objectId != OTMClient.ConstantsGeneral.EMPTY_STR {
-                isCreate = false
-            } else {
-                isCreate = true
-            }
-            getLatAndLongFromAddress(address: textWithData.text!)
-        } else {
-            Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOCATION_ERROR, messageStr: OTMClient.ConstantsMessages.LOCATION_NIL, controller: self)
-        }
+        spinner = ActivityIndicatorView(text: "Saving...")
+        getLatAndLongFromAddress(address: textWithData.text!)
     }
     
     
@@ -225,7 +139,9 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
     // Cancel Button action
     //
     @IBAction func cancelAction(sender: AnyObject) {
-        dismissView()
+        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.navigationBarHidden = false
+
     }
     
 }

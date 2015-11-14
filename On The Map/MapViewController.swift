@@ -78,7 +78,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         if (CLLocationManager.locationServicesEnabled()) {
             locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
-            //            locationManager.startUpdatingLocation()
         }
         checkIfLogged()
     }
@@ -114,7 +113,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         } else {
             // We will always repopulate the map points to have always 'fresh' data
             removeAnnotations()
-            loadData(numberToLoad: OTMClient.ConstantsParse.PAGINATION, cacheToPaginate: initialCache, orderListBy: OTMServicesNameEnum.updateAt)
+            loadData(numberToLoad: OTMClient.ConstantsParse.PAGINATION, cacheToPaginate: initialCache, orderListBy: OTMServicesNameEnum.updatedAtInverted)
         }
     }
     

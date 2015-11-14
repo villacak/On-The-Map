@@ -11,13 +11,17 @@
 
 
 enum OTMServicesNameEnum: CustomStringConvertible {
-    case updateAt
+    case updatedAt
     case createdAt
+    case createdAtInverted
+    case updatedAtInverted
     
     var description: String {
         switch self {
-            case .createdAt: return "createAt"
-            case .updateAt: return "updateAt"
+            case .createdAt: return "createdAt"
+            case .updatedAt: return "updatedAt"
+            case .createdAtInverted: return "-createdAt"
+            case .updatedAtInverted: return "-updatedAt"
         }
     }
 }
