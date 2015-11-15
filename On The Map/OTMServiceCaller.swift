@@ -14,7 +14,7 @@ class OTMServiceCaller: NSObject {
     //
     // Login button
     //
-    func login(userName userName: String, password: String, var uiTabBarController: OTMTabBarController, completionHandler: (result: OTMTabBarController?, error: String?) -> Void) {
+    func login(userName userName: String, password: String, var domainUtils: OTMDomainUtils, completionHandler: (result: OTMDomainUtils?, error: String?) -> Void) {
         OTMClient.sharedInstance().udacityPOSTLogin(userName: userName, password: password) {
             (success, errorString)  in
             
@@ -28,11 +28,11 @@ class OTMServiceCaller: NSObject {
                     completionHandler(result: nil, error: errorString)
                 } else {
                     let utils: Utils = Utils()
-                    let successResponse = utils.successLoginResponse(responseAsNSDictinory, otmTabBarController: uiTabBarController)
+                    let successResponse = utils.successLoginResponse(responseAsNSDictinory, domainUtils: domainUtils)
                     isSuccess = successResponse.isSuccess
                     if (isSuccess) {
-                        uiTabBarController = successResponse.otmTabBarController
-                        completionHandler(result: uiTabBarController, error: nil)
+                        domainUtils = successResponse.domainUtils
+                        completionHandler(result: domainUtils, error: nil)
                     } else {
                         completionHandler(result: nil, error: errorString)
                     }
@@ -47,8 +47,8 @@ class OTMServiceCaller: NSObject {
     //
     // Load the Udacity User Data
     //
-    func loadUserData(uiTabBarController uiTabBarController: OTMTabBarController, completionHandler: (result: OTMTabBarController?, error: String?) -> Void) {
-        OTMClient.sharedInstance().udacityPOSTGetUserData(udacityId: uiTabBarController.udacityKey){
+    func loadUserData(domainUtils domainUtils: OTMDomainUtils, completionHandler: (result: OTMDomainUtils?, error: String?) -> Void) {
+        OTMClient.sharedInstance().udacityPOSTGetUserData(udacityId: domainUtils.udacityKey){
             (success, errorString)  in
             var responseLoadUserDataAsNSDictinory: Dictionary<String, AnyObject>!
             if (success != nil) {
@@ -60,8 +60,8 @@ class OTMServiceCaller: NSObject {
                 } else {
                     let tempEmptyMKPointAnnotation: MKPointAnnotation = MKPointAnnotation()
                     let utils: Utils = Utils()
-                    uiTabBarController.localUserData = utils.createLocalUserData(userDataDictionary: responseLoadUserDataAsNSDictinory, objectId: OTMClient.ConstantsGeneral.EMPTY_STR, udacityKey: uiTabBarController.udacityKey, latDouble: 0, lonDouble: 0, pointInformation: tempEmptyMKPointAnnotation)
-                    completionHandler(result: uiTabBarController, error: nil)
+                    domainUtils.localUserData = utils.createLocalUserData(userDataDictionary: responseLoadUserDataAsNSDictinory, objectId: OTMClient.ConstantsGeneral.EMPTY_STR, udacityKey: domainUtils.udacityKey, latDouble: 0, lonDouble: 0, pointInformation: tempEmptyMKPointAnnotation)
+                    completionHandler(result: domainUtils, error: nil)
                 }
             } else {
                 // If success returns nil then it's necessary display an alert to the user
@@ -76,7 +76,7 @@ class OTMServiceCaller: NSObject {
     //
     //  Load data
     //
-    func loadData(numberToLoad numberToLoad: String, cacheToPaginate: String, orderListBy: OTMServicesNameEnum, uiTabBarController: OTMTabBarController, completionHandler: (result: OTMTabBarController?, error: String?) -> Void) {
+    func loadData(numberToLoad numberToLoad: String, cacheToPaginate: String, orderListBy: OTMServicesNameEnum, domainUtils: OTMDomainUtils, completionHandler: (result: OTMDomainUtils?, error: String?) -> Void) {
         OTMClient.sharedInstance().parseGETStudentLocations(limit: numberToLoad, skip: cacheToPaginate, order: orderListBy){
             (success, errorString)  in
             var responseLoadMapDataAsNSDictinory: Dictionary<String, AnyObject>!
@@ -87,10 +87,10 @@ class OTMServiceCaller: NSObject {
                     completionHandler(result: nil, error: errorMessage)
                 } else {
                     let utils: Utils = Utils()
-                    let tempTuples = utils.populateLocationList(mapData: responseLoadMapDataAsNSDictinory, uiTabBarController: uiTabBarController)
-                    uiTabBarController.mapPoints = tempTuples.annotationReturn
-                    uiTabBarController.localUserData = tempTuples.uiTabBarController.localUserData
-                    completionHandler(result: uiTabBarController, error: nil)
+                    let tempTuples = utils.populateLocationList(mapData: responseLoadMapDataAsNSDictinory, domainUtils: domainUtils)
+                    domainUtils.mapPoints = tempTuples.annotationReturn
+                    domainUtils.localUserData = tempTuples.domainUtils.localUserData
+                    completionHandler(result: domainUtils, error: nil)
                 }
             } else {
                 // If success returns nil then it's necessary display an alert to the user
@@ -124,14 +124,14 @@ class OTMServiceCaller: NSObject {
     //
     // Post user location for the very first time, then once we have the objectId we just use updateData()
     //
-    func putData(var uiTabBarController uiTabBarController: OTMTabBarController, stringPlace: String, mediaURL: String, latitude: Double, longitude: Double,completionHandler: (result: OTMTabBarController?, error: String?) -> Void) {
+    func putData(var domainUtils domainUtils: OTMDomainUtils, stringPlace: String, mediaURL: String, latitude: Double, longitude: Double,completionHandler: (result: OTMDomainUtils?, error: String?) -> Void) {
         var responseAsNSDictinory: Dictionary<String, AnyObject>!
-        uiTabBarController.localUserData.mapString = stringPlace
-        uiTabBarController.localUserData.mediaURL = mediaURL
-        uiTabBarController.localUserData.latitude = latitude
-        uiTabBarController.localUserData.longitude = longitude
+        domainUtils.localUserData.mapString = stringPlace
+        domainUtils.localUserData.mediaURL = mediaURL
+        domainUtils.localUserData.latitude = latitude
+        domainUtils.localUserData.longitude = longitude
         
-        OTMClient.sharedInstance().putPOSTStudentLocation(userData: uiTabBarController.localUserData){
+        OTMClient.sharedInstance().putPOSTStudentLocation(userData: domainUtils.localUserData){
             (success, errorString)  in
             if (success != nil) {
                 responseAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
@@ -142,12 +142,12 @@ class OTMServiceCaller: NSObject {
                 } else {
                     let utils: Utils = Utils()
                     let extractedData = utils.extractDataFromPUTUserResponse(putDataResponse: responseAsNSDictinory)
-                    uiTabBarController.localUserData.objectId = extractedData.tempObjectId
-                    uiTabBarController.localUserData.createdAt = extractedData.tempAction
-                    uiTabBarController.localUserData.updatedAt = extractedData.tempAction
+                    domainUtils.localUserData.objectId = extractedData.tempObjectId
+                    domainUtils.localUserData.createdAt = extractedData.tempAction
+                    domainUtils.localUserData.updatedAt = extractedData.tempAction
                     
-                    uiTabBarController = utils.addPUTResponseToUserData(uiTabBarController: uiTabBarController, mediaURL: mediaURL, address: stringPlace, latitude: latitude, longitude: longitude, response: responseAsNSDictinory)
-                    completionHandler(result: uiTabBarController, error: nil)
+                    domainUtils = utils.addPUTResponseToUserData(domainUtils: domainUtils, mediaURL: mediaURL, address: stringPlace, latitude: latitude, longitude: longitude, response: responseAsNSDictinory)
+                    completionHandler(result: domainUtils, error: nil)
                 }
             } else {
                 // If success returns nil then it's necessary display an alert to the user
@@ -163,14 +163,14 @@ class OTMServiceCaller: NSObject {
     //
     // Post user location for the very first time, then once we have the objectId we just use updateData()
     //
-    func updateData(var uiTabBarController uiTabBarController: OTMTabBarController, stringPlace: String, mediaURL: String, latitude: Double, longitude: Double,completionHandler: (result: OTMTabBarController?, error: String?) -> Void) {
+    func updateData(var domainUtils domainUtils: OTMDomainUtils, stringPlace: String, mediaURL: String, latitude: Double, longitude: Double,completionHandler: (result: OTMDomainUtils?, error: String?) -> Void) {
         var responseAsNSDictinory: Dictionary<String, AnyObject>!
-        uiTabBarController.localUserData.mapString = stringPlace
-        uiTabBarController.localUserData.mediaURL = mediaURL
-        uiTabBarController.localUserData.latitude = latitude
-        uiTabBarController.localUserData.longitude = longitude
+        domainUtils.localUserData.mapString = stringPlace
+        domainUtils.localUserData.mediaURL = mediaURL
+        domainUtils.localUserData.latitude = latitude
+        domainUtils.localUserData.longitude = longitude
         
-        OTMClient.sharedInstance().updatingPUTStudentLocation(userData: uiTabBarController.localUserData){
+        OTMClient.sharedInstance().updatingPUTStudentLocation(userData: domainUtils.localUserData){
             (success, errorString)  in
             if (success != nil) {
                 responseAsNSDictinory = (success as! NSDictionary) as! Dictionary<String, AnyObject>
@@ -181,11 +181,11 @@ class OTMServiceCaller: NSObject {
                 } else {
                     let utils: Utils = Utils()
                     let extractedData = utils.extractDataFromPUTUserResponse(putDataResponse: responseAsNSDictinory)
-                    uiTabBarController.localUserData.objectId = extractedData.tempObjectId
-                    uiTabBarController.localUserData.updatedAt = extractedData.tempAction
+                    domainUtils.localUserData.objectId = extractedData.tempObjectId
+                    domainUtils.localUserData.updatedAt = extractedData.tempAction
                     
-                    uiTabBarController = utils.addPUTResponseToUserData(uiTabBarController: uiTabBarController, mediaURL: mediaURL, address: stringPlace, latitude: latitude, longitude: longitude, response: responseAsNSDictinory)
-                    completionHandler(result: uiTabBarController, error: nil)
+                    domainUtils = utils.addPUTResponseToUserData(domainUtils: domainUtils, mediaURL: mediaURL, address: stringPlace, latitude: latitude, longitude: longitude, response: responseAsNSDictinory)
+                    completionHandler(result: domainUtils, error: nil)
                 }
             } else {
                 // If success returns nil then it's necessary display an alert to the user

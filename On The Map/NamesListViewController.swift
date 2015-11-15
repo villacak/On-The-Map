@@ -21,6 +21,7 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     
     var spinner: ActivityIndicatorView!
     var otmTabBarController: OTMTabBarController!
+    var appDelegate: AppDelegate!
     
     var sortedKeysStr: [String]!
     
@@ -33,6 +34,7 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
         tableView.delegate = self
         tableView.dataSource = self
         otmTabBarController = tabBarController as! OTMTabBarController
+        appDelegate = otmTabBarController.appDelegate
     }
     
     
@@ -41,12 +43,13 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     //
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
-        sortedKeysStr = Array(otmTabBarController.userDataDic.keys).sort(backwards)
+        sortedKeysStr = Array(appDelegate.domainUtils.userDataDic.keys).sort(backwards)
     }
     
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(true)
+        otmTabBarController.appDelegate = appDelegate
     }
     
     
@@ -84,7 +87,7 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     // Check if the user is logged
     //
     func checkIfLogged() {
-        if otmTabBarController.udacityKey == OTMClient.ConstantsGeneral.EMPTY_STR {
+        if appDelegate.domainUtils.udacityKey == OTMClient.ConstantsGeneral.EMPTY_STR {
             otmTabBarController.tabBar.hidden = true
             navigationController?.navigationBarHidden = true
             otmTabBarController.selectedIndex = 0;
@@ -95,7 +98,7 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     // Return the number if rows in to be displayed
     //
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return otmTabBarController.mapPoints.count
+        return appDelegate.domainUtils.mapPoints.count
     }
     
     
@@ -104,7 +107,7 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     //
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let tempSortedKey: String = sortedKeysStr[indexPath.row]
-        let tempUserData: UserData = otmTabBarController.userDataDic[tempSortedKey]!
+        let tempUserData: UserData = appDelegate.domainUtils.userDataDic[tempSortedKey]!
         let cell: ListUserData = (tableView.dequeueReusableCellWithIdentifier(reusableCell, forIndexPath: indexPath)) as! ListUserData
         
         cell.keyValue.text = tempSortedKey
@@ -118,7 +121,7 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     //
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let tempSortedKey: String = sortedKeysStr[indexPath.row]
-        let tempUserData: UserData = otmTabBarController.userDataDic[tempSortedKey]!
+        let tempUserData: UserData = appDelegate.domainUtils.userDataDic[tempSortedKey]!
        
         if tempUserData.mediaURL == OTMClient.ConstantsGeneral.EMPTY_STR {
             Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.ERROR_TITLE, messageStr: OTMClient.ConstantsMessages.NO_URL_DEFINED, controller: self)
@@ -152,9 +155,9 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    self.otmTabBarController.udacitySessionId = OTMClient.ConstantsGeneral.EMPTY_STR
-                    self.otmTabBarController.udacityKey = OTMClient.ConstantsGeneral.EMPTY_STR
-                    self.otmTabBarController.loggedOnUdacity = false
+                    self.appDelegate.domainUtils.udacitySessionId = OTMClient.ConstantsGeneral.EMPTY_STR
+                    self.appDelegate.domainUtils.udacityKey = OTMClient.ConstantsGeneral.EMPTY_STR
+                    self.appDelegate.domainUtils.loggedOnUdacity = false
                     self.okDismissAlertAndPerformSegue(titleStr: OTMClient.ConstantsMessages.LOGOUT_SUCCESS, messageStr: OTMClient.ConstantsMessages.LOGOUT_SUCCESS_MESSAGE, controller: self)
                 }
             }
@@ -178,8 +181,8 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
     //
     @IBAction func refreshAction(sender: AnyObject) {
         sortedKeysStr.removeAll()
-        otmTabBarController.userDataDic.removeAll()
-        otmTabBarController.mapPoints.removeAll()
+        appDelegate.domainUtils.userDataDic.removeAll()
+        appDelegate.domainUtils.mapPoints.removeAll()
         loadData(numberToLoad: OTMClient.ConstantsParse.PAGINATION, cacheToPaginate: OTMClient.ConstantsGeneral.EMPTY_STR, orderListBy: OTMServicesNameEnum.updatedAtInverted)
     }
     
@@ -191,7 +194,7 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
         startSpin(spinText: OTMClient.ConstantsMessages.LOADING_DATA)
         
         let caller: OTMServiceCaller = OTMServiceCaller()
-        caller.loadData(numberToLoad: numberToLoad, cacheToPaginate: cacheToPaginate, orderListBy: orderListBy, uiTabBarController: otmTabBarController) { (result, error) in
+        caller.loadData(numberToLoad: numberToLoad, cacheToPaginate: cacheToPaginate, orderListBy: orderListBy, domainUtils: appDelegate.domainUtils) { (result, error) in
             
             var isSuccess = false
             if let tempError = error {
@@ -206,7 +209,7 @@ class NamesListViewController: UIViewController, UITableViewDataSource, UITableV
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    self.sortedKeysStr = Array(self.otmTabBarController.userDataDic.keys).sort(self.backwards)
+                    self.sortedKeysStr = Array(self.appDelegate.domainUtils.userDataDic.keys).sort(self.backwards)
                     self.tableView.reloadData()
                 }
             }

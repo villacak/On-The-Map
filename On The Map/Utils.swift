@@ -17,45 +17,45 @@ class Utils: NSObject {
     //
     // Populate the pins from the list into the map
     //
-    func populateLocationList(mapData mapData: Dictionary<String, AnyObject>, var uiTabBarController: OTMTabBarController) -> (annotationReturn: [MKPointAnnotation], uiTabBarController: OTMTabBarController) {
+    func populateLocationList(mapData mapData: Dictionary<String, AnyObject>, var domainUtils: OTMDomainUtils) -> (annotationReturn: [MKPointAnnotation], domainUtils: OTMDomainUtils) {
         var annotationReturn: [MKPointAnnotation] = [MKPointAnnotation]()
         // Populate the map with the list
         if mapData.count > 0 {
             for (_, value) in mapData {
                 let valuesDic: [Dictionary<String, AnyObject>] = value as! [Dictionary<String, AnyObject>]
-                let tempTupplesReturn = extractArrayOfDictionary(arrayToExtract: valuesDic, uiTabBarController: uiTabBarController)
+                let tempTupplesReturn = extractArrayOfDictionary(arrayToExtract: valuesDic, domainUtils: domainUtils)
                 annotationReturn = tempTupplesReturn.annotationArrayReturn
-                uiTabBarController = tempTupplesReturn.uiTabBarController
+                domainUtils = tempTupplesReturn.domainUtils
             }
         }
-        return (annotationReturn, uiTabBarController)
+        return (annotationReturn, domainUtils)
     }
     
     
     //
     // Extract the those dictionaries from the Array
     //
-    func extractArrayOfDictionary(arrayToExtract arrayToExtract: [Dictionary<String, AnyObject>], uiTabBarController: OTMTabBarController) -> (annotationArrayReturn: [MKPointAnnotation], uiTabBarController: OTMTabBarController) {
+    func extractArrayOfDictionary(arrayToExtract arrayToExtract: [Dictionary<String, AnyObject>], domainUtils: OTMDomainUtils) -> (annotationArrayReturn: [MKPointAnnotation], domainUtils: OTMDomainUtils) {
         
         var annotationArrayReturn: [MKPointAnnotation] = [MKPointAnnotation]()
         if (arrayToExtract.count > 0) {
             for tempJsonUD in arrayToExtract {
                 var tempUD: UserData = UserData(dictionaryForUserData: tempJsonUD)
                 
-                if (tempUD.uniqueKey == uiTabBarController.udacityKey) {
-                    uiTabBarController.localUserData = tempUD
+                if (tempUD.uniqueKey == domainUtils.udacityKey) {
+                    domainUtils.localUserData = tempUD
                 }
                 
-                if let _ = uiTabBarController.userDataDic[tempUD.updatedAt] {
+                if let _ = domainUtils.userDataDic[tempUD.updatedAt] {
                     tempUD.updatedAt = "\(tempUD.updatedAt)\("_")"
                 }
                 
                 annotationArrayReturn.append(tempUD.userLocation)
-                uiTabBarController.userDataDic[tempUD.updatedAt] = tempUD
+                domainUtils.userDataDic[tempUD.updatedAt] = tempUD
                 
             }
         }
-        return (annotationArrayReturn, uiTabBarController)
+        return (annotationArrayReturn, domainUtils)
     }
     
     
@@ -137,10 +137,10 @@ class Utils: NSObject {
     // Assembly a new UserData struct and set it to the
     // parent class OTMTabBarController.localUserData and also into the dictionary
     //
-    func addPUTResponseToUserData(uiTabBarController uiTabBarController: OTMTabBarController, mediaURL: String, address: String, latitude: Double, longitude: Double, response: Dictionary<String, AnyObject>) -> OTMTabBarController {
+    func addPUTResponseToUserData(domainUtils domainUtils: OTMDomainUtils, mediaURL: String, address: String, latitude: Double, longitude: Double, response: Dictionary<String, AnyObject>) -> OTMDomainUtils {
         let utils: Utils = Utils()
         let putUserResponse = utils.extractDataFromPUTUserResponse(putDataResponse: response)
-        let tempUD: UserData = uiTabBarController.localUserData
+        let tempUD: UserData = domainUtils.localUserData
         let tempFullName: String = "\(tempUD.firstName) \(tempUD.lastName)"
         let tempAnnotation: MKPointAnnotation = utils.createMkPointAnnotation(fullName: tempFullName, urlStr: mediaURL, latitude: latitude, longitude: longitude)
         
@@ -153,24 +153,24 @@ class Utils: NSObject {
             tempUpdatedAt = putUserResponse.tempAction
             tempObjecId = putUserResponse.tempObjectId
         } else {
-            tempCreateAt = uiTabBarController.localUserData.createdAt
+            tempCreateAt = domainUtils.localUserData.createdAt
             tempUpdatedAt = putUserResponse.tempAction
-            tempObjecId = uiTabBarController.localUserData.objectId
+            tempObjecId = domainUtils.localUserData.objectId
         }
         
         var tempUserData: UserData = UserData(objectId: tempObjecId, uniqueKey: tempUD.uniqueKey, firstName: tempUD.firstName, lastName: tempUD.lastName, mapString: address, mediaURL: mediaURL, latitude: latitude, longitude: longitude, createdAt: tempCreateAt, updatedAt: tempUpdatedAt, userLocation: tempAnnotation)
         
         // To don't have duplicates as the mandatory sort for data in the project is with updateAt field, ideally we shouldn't even sort it
         // as by API documentation the returned data should already come ordered, via url parameter order.
-        if let _ = uiTabBarController.userDataDic[tempUpdatedAt] {
+        if let _ = domainUtils.userDataDic[tempUpdatedAt] {
             tempUserData.updatedAt = "\(tempUserData.updatedAt)\("_")"
         }
-        uiTabBarController.userDataDic[tempUserData.updatedAt] = tempUserData
+        domainUtils.userDataDic[tempUserData.updatedAt] = tempUserData
         
-        if (tempUserData.uniqueKey == uiTabBarController.udacityKey) {
-            uiTabBarController.localUserData = tempUserData
+        if (tempUserData.uniqueKey == domainUtils.udacityKey) {
+            domainUtils.localUserData = tempUserData
         }
-        return uiTabBarController
+        return domainUtils
         
     }
     
@@ -291,21 +291,21 @@ class Utils: NSObject {
     // Success login helper,
     // Stores key and id in AppDelegate to use for sub-sequent requests
     //
-    func successLoginResponse(responseDictionary: Dictionary<String, AnyObject>, otmTabBarController: OTMTabBarController)-> (isSuccess:Bool, otmTabBarController: OTMTabBarController) {
+    func successLoginResponse(responseDictionary: Dictionary<String, AnyObject>, domainUtils: OTMDomainUtils)-> (isSuccess:Bool, domainUtils: OTMDomainUtils) {
         var isSuccess:Bool = false
-        otmTabBarController.loggedOnUdacity = true
+        domainUtils.loggedOnUdacity = true
         let account: Dictionary<String, AnyObject> = responseDictionary[OTMClient.ConstantsUdacity.ACCOUNT] as! Dictionary<String, AnyObject>
         
-        otmTabBarController.udacityKey = account[OTMClient.ConstantsUdacity.ACCOUNT_KEY] as! String
+        domainUtils.udacityKey = account[OTMClient.ConstantsUdacity.ACCOUNT_KEY] as! String
         
         let session: Dictionary<String, AnyObject> = responseDictionary[OTMClient.ConstantsUdacity.SESSION] as! Dictionary<String, AnyObject>
         
-        otmTabBarController.udacitySessionId = session[OTMClient.ConstantsUdacity.SESSION_ID] as! String
+        domainUtils.udacitySessionId = session[OTMClient.ConstantsUdacity.SESSION_ID] as! String
         
-        if (otmTabBarController.udacityKey != OTMClient.ConstantsGeneral.EMPTY_STR && otmTabBarController.udacitySessionId != OTMClient.ConstantsGeneral.EMPTY_STR) {
+        if (domainUtils.udacityKey != OTMClient.ConstantsGeneral.EMPTY_STR && domainUtils.udacitySessionId != OTMClient.ConstantsGeneral.EMPTY_STR) {
             isSuccess = true
         }
-        return (isSuccess, otmTabBarController)
+        return (isSuccess, domainUtils)
     }
 
 }

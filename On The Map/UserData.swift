@@ -28,6 +28,11 @@ struct UserData {
     var userLocation: MKPointAnnotation = MKPointAnnotation()
     
     
+    //
+    // Empty initializer
+    //
+    init() {}
+    
     
     //
     // Init with values

@@ -23,6 +23,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
     var userLocation: CLLocationCoordinate2D!
     var latFromAddress: Double = 0
     var lonFromAddress: Double = 0
+    var appDelegate: AppDelegate!
 
     
     //
@@ -31,6 +32,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
     override func viewDidLoad() {
         super.viewDidLoad()
         otmTabBarController = tabBarController as! OTMTabBarController
+        appDelegate = otmTabBarController.appDelegate
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
         view.addGestureRecognizer(tap)
@@ -53,8 +55,8 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
             locationManager.delegate = self
         }
         
-        if otmTabBarController.localUserData.mapString != OTMClient.ConstantsGeneral.EMPTY_STR {
-            textWithData.text = otmTabBarController.localUserData.mapString
+        if appDelegate.domainUtils.localUserData.mapString != OTMClient.ConstantsGeneral.EMPTY_STR {
+            textWithData.text = appDelegate.domainUtils.localUserData.mapString
         }
     }
     
@@ -66,6 +68,13 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
         super.viewWillAppear(true)
     }
     
+    
+    //
+    // Set the delegate and values back
+    //
+    override func viewWillDisappear(animated: Bool) {
+        otmTabBarController.appDelegate = appDelegate
+    }
     
     
     
@@ -116,7 +125,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
                     self.otmTabBarController.tabBar.hidden = true
                     let controller = self.storyboard!.instantiateViewControllerWithIdentifier("PostingURLView") as! PostingUrlControllerViewController
                     controller.addressString = self.textWithData.text!
-                    controller.mediaUrlString = self.otmTabBarController.localUserData.mediaURL
+                    controller.mediaUrlString = self.appDelegate.domainUtils.localUserData.mediaURL
                     controller.latitudeReceived = self.latFromAddress
                     controller.longitudeReceived = self.lonFromAddress
                     self.navigationController?.pushViewController(controller, animated: true)
@@ -131,6 +140,7 @@ class PostingViewController: UIViewController, UITextFieldDelegate, CLLocationMa
     //
     @IBAction func findOnTheMapAction(sender: AnyObject) {
         spinner = ActivityIndicatorView(text: "Saving...")
+        view.addSubview(spinner)
         getLatAndLongFromAddress(address: textWithData.text!)
     }
     

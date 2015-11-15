@@ -18,6 +18,7 @@ class PostingUrlControllerViewController: UIViewController, UITextFieldDelegate,
     
     var otmTabBarController: OTMTabBarController!
     var spinner: ActivityIndicatorView!
+    var appDelegate: AppDelegate!
     
     var latitudeReceived: Double!
     var longitudeReceived: Double!
@@ -40,7 +41,7 @@ class PostingUrlControllerViewController: UIViewController, UITextFieldDelegate,
         let backButton = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.Plain, target: navigationController, action: nil)
         navigationItem.leftBarButtonItem = backButton
         otmTabBarController = tabBarController as! OTMTabBarController
-        otmTabBarController.appDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        appDelegate = otmTabBarController.appDelegate
         
         urlMapView.mapType = MKMapType.Standard
     }
@@ -70,6 +71,11 @@ class PostingUrlControllerViewController: UIViewController, UITextFieldDelegate,
         urlMapView.setRegion(viewRegion, animated: false)
         
         
+    }
+    
+    
+    override func viewWillDisappear(animated: Bool) {
+        otmTabBarController.appDelegate = appDelegate
     }
     
     
@@ -103,7 +109,7 @@ class PostingUrlControllerViewController: UIViewController, UITextFieldDelegate,
     //
     func putData() {
         let caller: OTMServiceCaller = OTMServiceCaller()
-        caller.putData(uiTabBarController: otmTabBarController, stringPlace: addressLabel.text!, mediaURL: mediaURL.text!, latitude: latitudeReceived, longitude: longitudeReceived) { (result, errorString)  in
+        caller.putData(domainUtils: appDelegate.domainUtils, stringPlace: addressLabel.text!, mediaURL: mediaURL.text!, latitude: latitudeReceived, longitude: longitudeReceived) { (result, errorString)  in
             var isSuccess = false
             if let tempError = errorString {
                 Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGOUT_FAILED, messageStr: tempError, controller: self)
@@ -117,7 +123,7 @@ class PostingUrlControllerViewController: UIViewController, UITextFieldDelegate,
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    self.otmTabBarController = result
+                    self.appDelegate.domainUtils = result
                     self.updateDataAndDismissView()
                 }
             }
@@ -133,7 +139,7 @@ class PostingUrlControllerViewController: UIViewController, UITextFieldDelegate,
     //
     func updateData() {
         let caller: OTMServiceCaller = OTMServiceCaller()
-        caller.updateData(uiTabBarController: otmTabBarController, stringPlace: addressLabel.text!, mediaURL: mediaURL.text!, latitude: latitudeReceived, longitude: longitudeReceived) { (result, errorString)  in
+        caller.updateData(domainUtils: appDelegate.domainUtils, stringPlace: addressLabel.text!, mediaURL: mediaURL.text!, latitude: latitudeReceived, longitude: longitudeReceived) { (result, errorString)  in
             var isSuccess = false
             if let tempError = errorString {
                 Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOGOUT_FAILED, messageStr: tempError, controller: self)
@@ -147,7 +153,7 @@ class PostingUrlControllerViewController: UIViewController, UITextFieldDelegate,
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    self.otmTabBarController = result
+                    self.appDelegate.domainUtils = result
                     self.updateDataAndDismissView()
                 }
             }
@@ -170,7 +176,7 @@ class PostingUrlControllerViewController: UIViewController, UITextFieldDelegate,
         startSpin(spinText: OTMClient.ConstantsMessages.LOADING_DATA)
         
         let caller: OTMServiceCaller = OTMServiceCaller()
-        caller.loadData(numberToLoad: numberToLoad, cacheToPaginate: cacheToPaginate, orderListBy: orderListBy, uiTabBarController: otmTabBarController) { (result, error) in
+        caller.loadData(numberToLoad: numberToLoad, cacheToPaginate: cacheToPaginate, orderListBy: orderListBy, domainUtils: appDelegate.domainUtils) { (result, error) in
             
             var isSuccess = false
             if let tempError = error {
@@ -185,7 +191,7 @@ class PostingUrlControllerViewController: UIViewController, UITextFieldDelegate,
                 
                 if (isSuccess) {
                     self.otmTabBarController.tabBar.hidden = false
-                    self.otmTabBarController = result
+                    self.appDelegate.domainUtils = result
                     self.navigationController?.popToRootViewControllerAnimated(true)
                     self.navigationController?.navigationBarHidden = false
                 }
@@ -198,8 +204,8 @@ class PostingUrlControllerViewController: UIViewController, UITextFieldDelegate,
     // Dismiss view returning
     //
     func updateDataAndDismissView() {
-        otmTabBarController.userDataDic.removeAll()
-        otmTabBarController.mapPoints.removeAll()
+        appDelegate.domainUtils.userDataDic.removeAll()
+        appDelegate.domainUtils.mapPoints.removeAll()
         loadData(numberToLoad: OTMClient.ConstantsParse.PAGINATION, cacheToPaginate: OTMClient.ConstantsGeneral.EMPTY_STR, orderListBy: OTMServicesNameEnum.updatedAtInverted)
     }
     
@@ -223,7 +229,7 @@ class PostingUrlControllerViewController: UIViewController, UITextFieldDelegate,
         if mediaURL.text!.characters.count > 0 {
             spinner = ActivityIndicatorView(text: "Saving...")
             view.addSubview(spinner)
-            if otmTabBarController.localUserData.objectId != OTMClient.ConstantsGeneral.EMPTY_STR {
+            if appDelegate.domainUtils.localUserData.objectId != OTMClient.ConstantsGeneral.EMPTY_STR {
                 isCreate = false
             } else {
                 isCreate = true

@@ -29,7 +29,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var latDouble: Double = 0
     var lonDouble: Double = 0
     
-    
+    var appDelegate: AppDelegate!
     
     
     //
@@ -48,7 +48,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
         otmTabBarController = tabBarController as! OTMTabBarController
-        otmTabBarController.appDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        appDelegate = otmTabBarController.appDelegate
         
         // Set the locationManager, if by some problem we create a new object
         if let tempLocation = otmTabBarController.appDelegate.locationManager {
@@ -91,6 +91,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             self,
             name: UIApplicationWillEnterForegroundNotification,
             object: nil)
+        
+        otmTabBarController.appDelegate = appDelegate
     }
     
     
@@ -106,14 +108,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     // Check if the user have already logged or not, if logged load data, if not redirect to the login page
     //
     func checkIfLogged() {
-        if otmTabBarController.udacityKey == OTMClient.ConstantsGeneral.EMPTY_STR {
+        if appDelegate.domainUtils.udacityKey == OTMClient.ConstantsGeneral.EMPTY_STR {
             otmTabBarController.tabBar.hidden = true
             performSegueWithIdentifier("LoginSegue", sender: self)
             self.storyboard!.instantiateViewControllerWithIdentifier("OTMFBAuthViewController")
         } else {
             // We will always repopulate the map points to have always 'fresh' data
-            removeAnnotations()
-            loadData(numberToLoad: OTMClient.ConstantsParse.PAGINATION, cacheToPaginate: initialCache, orderListBy: OTMServicesNameEnum.updatedAtInverted)
+            if (appDelegate.domainUtils.mapPoints.count == 0) {
+                removeAnnotations()
+                loadData(numberToLoad: OTMClient.ConstantsParse.PAGINATION, cacheToPaginate: initialCache, orderListBy: OTMServicesNameEnum.updatedAtInverted)
+            }
         }
     }
     
@@ -182,7 +186,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     func loadData(numberToLoad numberToLoad: String, cacheToPaginate: String, orderListBy: OTMServicesNameEnum) {
         startSpin(spinText: OTMClient.ConstantsMessages.LOADING_DATA)
         let caller: OTMServiceCaller = OTMServiceCaller()
-        caller.loadData(numberToLoad: numberToLoad, cacheToPaginate: cacheToPaginate, orderListBy: orderListBy, uiTabBarController: otmTabBarController) { (result, error) in
+        caller.loadData(numberToLoad: numberToLoad, cacheToPaginate: cacheToPaginate, orderListBy: orderListBy, domainUtils: appDelegate.domainUtils) { (result, error) in
             
             var isSuccess = false
             if let tempError = error {
@@ -197,8 +201,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    self.otmTabBarController = result
-                    self.mapView.addAnnotations(self.otmTabBarController.mapPoints)
+                    self.appDelegate.domainUtils = result
+                    self.mapView.addAnnotations(self.appDelegate.domainUtils.mapPoints)
                     self.mapView.showAnnotations(self.mapView.annotations, animated: true)
                 }
             }
@@ -280,9 +284,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    self.otmTabBarController.udacitySessionId = OTMClient.ConstantsGeneral.EMPTY_STR
-                    self.otmTabBarController.udacityKey = OTMClient.ConstantsGeneral.EMPTY_STR
-                    self.otmTabBarController.loggedOnUdacity = false
+                    self.appDelegate.domainUtils.udacitySessionId = OTMClient.ConstantsGeneral.EMPTY_STR
+                    self.appDelegate.domainUtils.udacityKey = OTMClient.ConstantsGeneral.EMPTY_STR
+                    self.appDelegate.domainUtils.loggedOnUdacity = false
                     self.navigationController?.navigationBarHidden = true
                     self.okDismissAlertAndPerformSegue(titleStr: OTMClient.ConstantsMessages.LOGOUT_SUCCESS, messageStr: OTMClient.ConstantsMessages.LOGOUT_SUCCESS_MESSAGE, controller: self)
                 }
@@ -317,8 +321,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     //
     @IBAction func refreshAction(sender: AnyObject) {
         if (mapView.annotations.count > 0) {
-            otmTabBarController.userDataDic.removeAll()
-            otmTabBarController.mapPoints.removeAll()
+            appDelegate.domainUtils.userDataDic.removeAll()
+            appDelegate.domainUtils.mapPoints.removeAll()
             removeAnnotations()
         }
         checkIfLogged()

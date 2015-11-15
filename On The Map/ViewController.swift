@@ -30,7 +30,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         otmTabBarController = tabBarController as! OTMTabBarController
         
-        appDelegate = (UIApplication.sharedApplication().delegate as! AppDelegate)
+        appDelegate = otmTabBarController.appDelegate
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
         view.addGestureRecognizer(tap)
@@ -49,11 +49,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     
+    
     //
     // Called when view will disappear
     //
     override func viewWillDisappear(animated: Bool) {
         unsubscribeFromKeyboardNotifications()
+        otmTabBarController.appDelegate = appDelegate
     }
     
     
@@ -136,7 +138,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         signUpButton.enabled = false
         
         let caller: OTMServiceCaller = OTMServiceCaller()
-        caller.login(userName: email.text!, password: password.text!, uiTabBarController: otmTabBarController) { (result, error) in
+        caller.login(userName: email.text!, password: password.text!, domainUtils: appDelegate.domainUtils) { (result, error) in
             
             var isSuccess = false
             if let tempError = error {
@@ -153,8 +155,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 
                 // If success extracting data then call the TabBarController Map view
                 if (isSuccess) {
-                    self.otmTabBarController = result
-                    self.otmTabBarController.udacityUserId = self.email.text!
+                    self.appDelegate.domainUtils = result
+                    self.appDelegate.domainUtils.udacityUserId = self.email.text!
                     self.loadUserData(uiTabBarController: self.otmTabBarController)
                 }
             }
@@ -169,7 +171,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         startSpin(spinText: OTMClient.ConstantsMessages.LOADING_DATA)
         
         let caller: OTMServiceCaller = OTMServiceCaller()
-        caller.loadUserData(uiTabBarController: uiTabBarController) { (result, error) in
+        caller.loadUserData(domainUtils: appDelegate.domainUtils) { (result, error) in
             var isSuccess = false
             if let tempError = error {
                 Dialog().okDismissAlert(titleStr: OTMClient.ConstantsMessages.LOADING_DATA_FAILED, messageStr: tempError, controller: self)
@@ -180,7 +182,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             dispatch_async(dispatch_get_main_queue()) {
                 // Dismiss modal
                 if (isSuccess) {
-                    self.otmTabBarController = result
+                    self.appDelegate.domainUtils = result!
                     self.navigationController?.navigationBarHidden = false
                     self.otmTabBarController.tabBar.hidden = false
                     self.navigationController?.popViewControllerAnimated(true)

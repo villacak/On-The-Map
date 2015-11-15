@@ -18,6 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var locationManager: CLLocationManager?
     var ACL: PFACL!
     
+    var domainUtils: OTMDomainUtils!
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         Parse.enableLocalDatastore()
         PFUser.enableAutomaticUser()
@@ -39,7 +41,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         locationManager = CLLocationManager()
         locationManager?.requestWhenInUseAuthorization()
         locationManager?.requestAlwaysAuthorization()
-
+        
+        domainUtils = OTMDomainUtils()
+        
         return true
     }
 
